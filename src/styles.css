@@ -1,0 +1,437 @@
+/* ==========================================================================
+   Matt Ladner — site styles
+   Built from the brand packet (sections 02–10).
+   ========================================================================== */
+
+@font-face {
+  font-family: "Brutaze";
+  src: url("/fonts/MN-Brutaze-Blurred.otf") format("opentype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Proto Mono";
+  src: url("/fonts/Proto-Mono-Medium.otf") format("opentype");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  /* Color — Foundation */
+  --paper: #f4ecdd;
+  --bone: #e7d8bf;
+  --travertine: #c8b08b;
+
+  /* Color — Ink */
+  --terra: #3d2b1f;
+  --clay: #8f6e4e;
+
+  /* Color — Accents */
+  --dusk: #5b6269;
+  --ember: #a65f3c;
+
+  /* Type — Families */
+  --font-display: "Brutaze", "Times New Roman", serif;
+  --font-body: "Proto Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
+  /* Type — Scale */
+  --display-xl: clamp(4.5rem, 12vw, 10rem);
+  --display: clamp(2.75rem, 7vw, 5.5rem);
+  --display-md: clamp(1.75rem, 3.6vw, 2.75rem);
+  --h2: 1.5rem;
+  --eyebrow: 0.75rem;
+  --body-lg: 1.125rem;
+  --body: 1rem;
+  --caption: 0.8125rem;
+
+  /* Spacing */
+  --gutter: clamp(24px, 5vw, 80px);
+  --section-y: clamp(96px, 12vw, 160px);
+  --content-max: 720px;
+  --layout-max: 1280px;
+}
+
+/* --------------------------------------------------------------------------
+   Reset
+   -------------------------------------------------------------------------- */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--terra);
+  font-family: var(--font-body);
+  font-size: var(--body);
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+  height: auto;
+}
+
+ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+p {
+  margin: 0 0 1.25em;
+}
+
+p:last-child {
+  margin-bottom: 0;
+}
+
+/* --------------------------------------------------------------------------
+   Typography primitives
+   -------------------------------------------------------------------------- */
+
+.display {
+  font-family: var(--font-display);
+  font-weight: 400;
+  margin: 0;
+  color: var(--terra);
+  letter-spacing: -0.02em;
+  line-height: 0.95;
+}
+
+.display--xl {
+  font-size: var(--display-xl);
+  line-height: 0.92;
+}
+
+.display--md {
+  font-size: var(--display-md);
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+  margin-bottom: 0.6em;
+}
+
+.h2 {
+  font-family: var(--font-body);
+  font-size: var(--h2);
+  line-height: 1.3;
+  font-weight: 500;
+  margin: 0 0 0.5em;
+  color: var(--terra);
+}
+
+.eyebrow {
+  font-family: var(--font-body);
+  font-size: var(--eyebrow);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--clay);
+  margin: 0 0 1.5em;
+}
+
+.eyebrow--inline {
+  margin-top: 3em;
+  margin-bottom: 0.75em;
+}
+
+.body-lg {
+  font-size: var(--body-lg);
+  line-height: 1.65;
+}
+
+.caption {
+  font-size: var(--caption);
+  line-height: 1.5;
+  color: var(--clay);
+}
+
+/* --------------------------------------------------------------------------
+   Links
+   -------------------------------------------------------------------------- */
+
+a {
+  color: var(--terra);
+  text-decoration: underline;
+  text-decoration-color: var(--travertine);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+  transition: color 200ms ease-out, text-decoration-color 200ms ease-out,
+    text-decoration-thickness 200ms ease-out;
+}
+
+a:hover,
+a:focus-visible {
+  color: var(--ember);
+  text-decoration-color: var(--ember);
+  text-decoration-thickness: 2px;
+}
+
+a:focus-visible {
+  outline: 2px solid var(--ember);
+  outline-offset: 4px;
+  border-radius: 2px;
+}
+
+/* --------------------------------------------------------------------------
+   Layout primitives
+   -------------------------------------------------------------------------- */
+
+main {
+  display: block;
+}
+
+.section {
+  max-width: var(--layout-max);
+  margin: 0 auto;
+  padding: var(--section-y) var(--gutter);
+}
+
+.section--narrow > * {
+  max-width: var(--content-max);
+}
+
+.rule {
+  border: 0;
+  height: 1px;
+  background: var(--travertine);
+  opacity: 0.6;
+  max-width: var(--layout-max);
+  margin: 0 auto;
+  width: calc(100% - 2 * var(--gutter));
+}
+
+/* --------------------------------------------------------------------------
+   Hero
+   -------------------------------------------------------------------------- */
+
+.hero {
+  max-width: var(--layout-max);
+  margin: 0 auto;
+  padding: clamp(120px, 14vw, 200px) var(--gutter) var(--section-y);
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(48px, 6vw, 96px);
+  align-items: center;
+}
+
+.hero__text .eyebrow {
+  margin-bottom: 2em;
+}
+
+.hero__text .display--xl {
+  margin-top: 0;
+}
+
+.hero__image {
+  margin: 0;
+}
+
+.hero__image img {
+  width: 100%;
+  height: auto;
+  border-radius: 2px;
+}
+
+@media (min-width: 900px) {
+  .hero {
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+  }
+
+  .hero__image {
+    max-width: 480px;
+    justify-self: end;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Craft
+   -------------------------------------------------------------------------- */
+
+.craft {
+  display: flex;
+  flex-direction: column;
+  gap: 2.75em;
+}
+
+.craft__item {
+  margin: 0;
+}
+
+.craft__item p {
+  color: var(--terra);
+}
+
+/* --------------------------------------------------------------------------
+   Selected Work
+   -------------------------------------------------------------------------- */
+
+.work {
+  border-top: 1px solid var(--travertine);
+  margin-top: 1em;
+}
+
+.work__item {
+  border-bottom: 1px solid var(--travertine);
+  padding: 1.75em 0;
+  display: grid;
+  gap: 0.5em;
+}
+
+@media (min-width: 700px) {
+  .work__item {
+    grid-template-columns: minmax(180px, 1fr) 2fr;
+    gap: 2em;
+    align-items: baseline;
+  }
+}
+
+.work__client {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+  color: var(--terra);
+  margin: 0;
+}
+
+.work__blurb {
+  margin: 0;
+  color: var(--clay);
+}
+
+/* --------------------------------------------------------------------------
+   Calls to action / inline links
+   -------------------------------------------------------------------------- */
+
+.cta-line {
+  margin-top: 1.5em;
+  font-size: var(--body-lg);
+}
+
+.cta {
+  font-family: var(--font-body);
+  font-weight: 500;
+  letter-spacing: 0.01em;
+}
+
+/* --------------------------------------------------------------------------
+   Featured / contact lists
+   -------------------------------------------------------------------------- */
+
+.featured {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+  color: var(--clay);
+}
+
+.featured li {
+  padding: 0.25em 0;
+}
+
+.contact {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75em;
+  margin-top: 1.5em;
+  font-size: var(--body-lg);
+}
+
+.contact li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.5em;
+}
+
+.contact__icon {
+  display: inline-block;
+  width: 1.25em;
+  text-align: center;
+  font-style: normal;
+}
+
+.contact__label {
+  font-weight: 500;
+  color: var(--terra);
+}
+
+/* --------------------------------------------------------------------------
+   Footer
+   -------------------------------------------------------------------------- */
+
+.footer {
+  text-align: center;
+  padding: clamp(64px, 8vw, 120px) var(--gutter);
+  font-size: var(--caption);
+  color: var(--clay);
+  border-top: 1px solid var(--travertine);
+  max-width: var(--layout-max);
+  margin: 0 auto;
+}
+
+.footer p {
+  margin: 0;
+  font-style: italic;
+  letter-spacing: 0.04em;
+}
+
+/* --------------------------------------------------------------------------
+   Scroll reveal (paired with main.js)
+   -------------------------------------------------------------------------- */
+
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 600ms ease-out, transform 400ms ease-out;
+  will-change: opacity, transform;
+}
+
+[data-reveal].is-revealed {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  [data-reveal] {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0ms !important;
+    animation-duration: 0ms !important;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Selection
+   -------------------------------------------------------------------------- */
+
+::selection {
+  background: var(--bone);
+  color: var(--terra);
+}
