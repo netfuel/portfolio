@@ -26,7 +26,7 @@
   --travertine: #c8b08b;
 
   /* Color — Ink */
-  --terra: #3d2b1f;
+  --terra: #2b1e16;
   --clay: #8f6e4e;
 
   /* Color — Accents */
@@ -126,11 +126,6 @@ p:last-child {
   margin-bottom: 0.6em;
 }
 
-#intro .display--md {
-  font-size: clamp(2rem, 4.1vw, 3.1rem);
-  letter-spacing: 2px;
-  filter: blur(2px);
-}
 
 .h2 {
   font-family: var(--font-body);
@@ -227,6 +222,7 @@ main {
 
 .hero {
   position: relative;
+  z-index: 0;
   height: 100vh;
   height: 100svh;
   min-height: 560px;
@@ -237,25 +233,31 @@ main {
   display: flex;
   align-items: center;
   justify-content: center;
-  overflow: hidden;
+  overflow: visible;
+  background: transparent;
+}
+
+.content {
+  position: relative;
+  z-index: 1;
   background: var(--paper);
+  margin: 40px;
 }
 
 .hero__video {
-  position: absolute;
+  position: fixed;
   inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
-  z-index: 0;
+  z-index: -1;
   pointer-events: none;
 }
 
-.hero::after {
-  content: "";
-  position: absolute;
+.hero__overlay {
+  position: fixed;
   inset: 0;
-  z-index: 1;
+  z-index: -1;
   background: linear-gradient(
     180deg,
     rgba(244, 236, 221, 0.35) 0%,
@@ -367,6 +369,7 @@ main {
 
   .hero {
     background: var(--bone);
+    overflow: hidden;
   }
 
   .hero__text .display--xl {
@@ -381,55 +384,243 @@ main {
 }
 
 /* --------------------------------------------------------------------------
-   Intro — portrait + body copy
+   Intro — full-bleed photo background with parallax floating text
    -------------------------------------------------------------------------- */
 
 .intro {
+  position: relative;
+  overflow: hidden;
+  height: calc(100vh - 80px);
+  height: calc(100svh - 80px);
+  min-height: 480px;
   display: flex;
   flex-direction: column;
-  gap: 2em;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 1.5em;
+  background: transparent;
+  padding: calc(30vh - 60px) 40px 40px;
+  margin: 40px auto;
+  max-width: min(var(--layout-max), calc(100% - 80px));
+  width: calc(100% - 80px);
 }
 
-.intro__portrait {
-  flex-shrink: 0;
-  width: clamp(120px, 22vw, 200px);
-  height: clamp(120px, 22vw, 200px);
-  border-radius: 50%;
-  overflow: hidden;
-  align-self: flex-start;
-}
-
-.intro__portrait img {
+.intro__bg {
+  position: absolute;
+  top: -10%;
+  left: 0;
   width: 100%;
-  height: 100%;
+  height: 120%;
   object-fit: cover;
-  object-position: center top;
+  object-position: center center;
+  z-index: 0;
+  will-change: transform;
+  pointer-events: none;
 }
 
-@media (min-width: 640px) {
-  .intro {
-    flex-direction: row;
-    align-items: flex-start;
-    gap: clamp(2em, 4vw, 3.5em);
+.intro__heading,
+.intro__text {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  max-width: var(--content-max);
+  color: #a8ccd8;
+}
+
+.intro__heading {
+  font-size: clamp(2rem, 4.1vw, 3.1rem);
+  letter-spacing: 2px;
+  filter: blur(10px);  /* initial — overridden by JS on scroll */
+  margin-bottom: 0.5em;
+}
+
+.intro__text {
+  color: #c8dfe8;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .intro__bg {
+    top: 0;
+    height: 100%;
   }
 }
+
+/* Intro with dark overlay — used for Writing & Talks panel */
+.intro--overlay::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: rgba(15, 12, 20, 0.62);
+  pointer-events: none;
+}
+
+.intro--overlay .intro__content {
+  position: relative;
+  z-index: 2;
+  max-width: var(--content-max);
+  width: 100%;
+  color: #fff;
+}
+
+.intro--overlay .intro__content .eyebrow {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.intro--overlay .intro__content .body-lg,
+.intro--overlay .intro__content .cta-line,
+.intro--overlay .intro__content .featured li {
+  color: #fff;
+}
+
+.intro--overlay .intro__content a {
+  color: #fff;
+  text-decoration-color: rgba(255, 255, 255, 0.45);
+}
+
+.intro--overlay .intro__content a:hover {
+  color: #fff;
+  text-decoration-color: #fff;
+}
+
+/* --------------------------------------------------------------------------
+   Bio float — centered card over video
+   -------------------------------------------------------------------------- */
+
+.bio-float {
+  background: var(--paper);
+  color: var(--terra);
+}
+
+.bio-float .body-lg {
+  max-width: 100%;
+  margin-bottom: 2.5em;
+}
+
+/* --------------------------------------------------------------------------
+   Craft section — transparent, floats over video
+   -------------------------------------------------------------------------- */
+
+.craft-section {
+  background: transparent;
+  margin: 40px;
+  max-width: calc(100% - 80px);
+}
+
 
 /* --------------------------------------------------------------------------
    Craft
    -------------------------------------------------------------------------- */
 
 .craft {
-  display: flex;
-  flex-direction: column;
-  gap: 2.75em;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.25em;
 }
 
 .craft__item {
+  aspect-ratio: 4 / 5;
+  perspective: 1200px;
+}
+
+.craft__inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 0.65s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@media (hover: hover) {
+  .craft__item:hover .craft__inner {
+    transform: rotateY(180deg);
+  }
+}
+
+.craft__front,
+.craft__back {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: clamp(1.25em, 2.5vw, 2em);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.craft__front {
+  background: var(--bone);
+  background-size: cover;
+  background-position: center;
+}
+
+.craft__front .h2 {
   margin: 0;
 }
 
-.craft__item p {
-  color: var(--terra);
+/* Craft card photo backgrounds */
+.bio-float .craft__item:nth-child(1) .craft__front {
+  background-image: linear-gradient(rgba(244,236,221,0.35), rgba(244,236,221,0.35)), url('/images/craft-spheres-row.jpg');
+}
+
+.bio-float .craft__item:nth-child(2) .craft__front {
+  background-image: linear-gradient(rgba(244,236,221,0.35), rgba(244,236,221,0.35)), url('/images/craft-marbles.jpg');
+}
+
+.bio-float .craft__item:nth-child(3) .craft__front {
+  background-image: linear-gradient(rgba(244,236,221,0.35), rgba(244,236,221,0.35)), url('/images/craft-spheres-tower.jpg');
+}
+
+.craft__back {
+  background: var(--terra);
+  transform: rotateY(180deg);
+}
+
+.craft__back p {
+  margin: 0;
+  color: #fff;
+  font-size: var(--body);
+  line-height: 1.65;
+}
+
+.craft__back a {
+  color: rgba(255, 255, 255, 0.75);
+  text-decoration-color: rgba(255, 255, 255, 0.4);
+}
+
+.craft__back a:hover {
+  color: #fff;
+  text-decoration-color: #fff;
+}
+
+@media (max-width: 640px) {
+  .craft {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Let's Talk section
+   -------------------------------------------------------------------------- */
+
+.lets-talk {
+  background: var(--paper);
+  margin-bottom: 40px;
+}
+
+/* --------------------------------------------------------------------------
+   Ventures section — paper panel outside .content, mirrors bio-float
+   -------------------------------------------------------------------------- */
+
+.ventures-section {
+  background: var(--paper);
+}
+
+.ventures {
+  margin-top: 2em;
 }
 
 /* --------------------------------------------------------------------------
@@ -517,10 +708,16 @@ main {
 }
 
 .contact__icon {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   width: 1.25em;
-  text-align: center;
-  font-style: normal;
+  flex-shrink: 0;
+}
+
+.contact__icon svg {
+  display: block;
+  color: var(--clay);
 }
 
 .contact__label {
@@ -528,18 +725,65 @@ main {
   color: var(--terra);
 }
 
+.reveal-email {
+  background: none;
+  border: none;
+  padding: 0;
+  font-family: var(--font-body);
+  font-size: inherit;
+  line-height: inherit;
+  color: var(--terra);
+  text-decoration: underline;
+  text-decoration-color: var(--travertine);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+  cursor: pointer;
+  transition: color 200ms ease-out, text-decoration-color 200ms ease-out;
+}
+
+.reveal-email:hover,
+.reveal-email:focus-visible {
+  color: var(--ember);
+  text-decoration-color: var(--ember);
+}
+
+.reveal-email:focus-visible {
+  outline: 2px solid var(--ember);
+  outline-offset: 4px;
+  border-radius: 2px;
+}
+
+/* --------------------------------------------------------------------------
+   Credits
+   -------------------------------------------------------------------------- */
+
+.credits {
+  padding-top: 2em;
+  padding-bottom: 2em;
+}
+
+.credits .caption {
+  margin-bottom: 0.25em;
+}
+
+.credits .caption:last-child {
+  margin-bottom: 0;
+}
+
 /* --------------------------------------------------------------------------
    Footer
    -------------------------------------------------------------------------- */
 
 .footer {
+  position: relative;
+  z-index: 1;
+  background: var(--paper);
   text-align: center;
   padding: clamp(64px, 8vw, 120px) var(--gutter);
   font-size: var(--caption);
   color: var(--clay);
   border-top: 1px solid var(--travertine);
-  max-width: var(--layout-max);
-  margin: 0 auto;
+  width: 100%;
 }
 
 .footer p {
@@ -648,3 +892,4 @@ body.is-loading .hero__text .display--xl {
     color: var(--clay);
   }
 }
+

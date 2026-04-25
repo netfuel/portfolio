@@ -67,6 +67,73 @@ const initPreloader = () => {
   }, 8000);
 };
 
+const initScrollBlur = () => {
+  const targets = document.querySelectorAll("[data-scroll-blur]");
+  if (!targets.length) return;
+
+  const MIN_BLUR = 2;
+  const MAX_BLUR = 10;
+  const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  let ticking = false;
+
+  const update = () => {
+    const viewH = window.innerHeight;
+    const viewCenter = viewH / 2;
+
+    targets.forEach((el) => {
+      const rect = el.getBoundingClientRect();
+      const elCenter = rect.top + rect.height / 2;
+      const distance = Math.abs(elCenter - viewCenter);
+      const t = Math.min(distance / viewCenter, 1); // 0 at center, 1 at viewport edge
+      const blur = reduced ? MIN_BLUR : MIN_BLUR + (MAX_BLUR - MIN_BLUR) * t;
+      el.style.filter = `blur(${blur.toFixed(2)}px)`;
+    });
+    ticking = false;
+  };
+
+  window.addEventListener("scroll", () => {
+    if (!ticking) {
+      requestAnimationFrame(update);
+      ticking = true;
+    }
+  }, { passive: true });
+
+  update();
+};
+
+const initParallax = () => {
+  const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (reduced) return;
+
+  const targets = document.querySelectorAll("[data-parallax]");
+  if (!targets.length) return;
+
+  let ticking = false;
+
+  const update = () => {
+    targets.forEach((el) => {
+      const section = el.closest("section");
+      if (!section) return;
+      const rect = section.getBoundingClientRect();
+      const viewH = window.innerHeight;
+      const progress = (viewH - rect.top) / (viewH + rect.height);
+      const offset = (progress - 0.5) * 120; // ±60px travel
+      el.style.transform = `translateY(${offset}px)`;
+    });
+    ticking = false;
+  };
+
+  window.addEventListener("scroll", () => {
+    if (!ticking) {
+      requestAnimationFrame(update);
+      ticking = true;
+    }
+  }, { passive: true });
+
+  update();
+};
+
 const reveal = () => {
   const targets = document.querySelectorAll("[data-reveal]");
   if (!targets.length) return;
@@ -92,9 +159,24 @@ const reveal = () => {
   targets.forEach((el) => observer.observe(el));
 };
 
+const initRevealEmail = () => {
+  document.querySelectorAll(".reveal-email").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const email = btn.dataset.u + "@" + btn.dataset.d;
+      const link = document.createElement("a");
+      link.href = "mailto:" + email;
+      link.textContent = email;
+      btn.replaceWith(link);
+    }, { once: true });
+  });
+};
+
 const init = () => {
   initPreloader();
+  initScrollBlur();
+  initParallax();
   reveal();
+  initRevealEmail();
 };
 
 if (document.readyState === "loading") {

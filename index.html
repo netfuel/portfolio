@@ -19,18 +19,20 @@
       <div class="preloader__anim" id="preloader-anim"></div>
     </div>
 
+    <video
+      class="hero__video"
+      src="/videos/cover-fog.mp4"
+      autoplay
+      muted
+      loop
+      playsinline
+      preload="auto"
+      aria-hidden="true"
+    ></video>
+    <div class="hero__overlay" aria-hidden="true"></div>
+
     <main>
       <section class="hero" data-reveal>
-        <video
-          class="hero__video"
-          src="/videos/cover-fog.mp4"
-          autoplay
-          muted
-          loop
-          playsinline
-          preload="auto"
-          aria-hidden="true"
-        ></video>
         <p class="eyebrow hero__eyebrow">•&nbsp;&nbsp;Senior Experience Designer&nbsp;&nbsp;•</p>
         <div class="hero__text">
           <h1 class="display display--xl">Matthew<br />Ladner</h1>
@@ -42,98 +44,175 @@
         </a>
       </section>
 
-      <hr class="rule" aria-hidden="true" />
-
-      <section class="section section--narrow intro" id="intro" data-reveal>
-        <div class="intro__portrait">
-          <img
-            src="/images/matt-headshot.jpg"
-            alt="Matt Ladner"
-            width="800"
-            height="1067"
-            loading="lazy"
-            decoding="async"
-          />
-        </div>
-        <div class="intro__body">
-          <h2 class="display display--md">Hi, I&rsquo;m Matt</h2>
-          <p class="body-lg">
-            Senior UX designer at Adobe, where I spend my days bridging creativity and technology, designing intuitive, scalable experiences with a focus on developer experience and extensibility. I&rsquo;ve been doing this for nearly three decades, shaping products used by millions: from Adobe Express to platforms for Hilton Hotels, Target, the U.S. Air Force, and St. Jude Children&rsquo;s Research Hospital. Lately most of my time lives at the front edge of agentic user experiences. I&rsquo;m figuring out what it means to design for a world where the interface thinks back.
-          </p>
-        </div>
-      </section>
-
-      <hr class="rule" aria-hidden="true" />
-
-      <section class="section section--narrow" data-reveal>
-        <p class="eyebrow">My Craft</p>
+      <section class="section bio-float" data-reveal>
+        <p class="eyebrow">Craft</p>
+        <p class="body-lg">
+          I&rsquo;m a Senior UX designer at Adobe, where I spend my days bridging creativity and technology, designing intuitive, scalable experiences with a focus on developer tools and extensibility. I&rsquo;ve been doing this for nearly three decades, shaping products used by millions: from Adobe Express to platforms for Hilton Hotels, Target, the U.S. Air Force, and St. Jude Children&rsquo;s Research Hospital. Lately, most of my time has been spent at the front edge of agentic user experiences. I&rsquo;m figuring out what it means to design for a world where interfaces are malleable.
+        </p>
         <div class="craft">
           <article class="craft__item">
-            <h3 class="h2">Product UX &amp; Strategy</h3>
-            <p>I architect user experiences for industry-leading platforms, translating complex workflows into simple, intuitive, and effective interactions for millions of users.</p>
+            <div class="craft__inner">
+              <div class="craft__front">
+                <h3 class="h2">Product UX &amp; Strategy</h3>
+              </div>
+              <div class="craft__back">
+                <p>I architect user experiences for industry-leading platforms, translating complex workflows into simple, intuitive, and effective interactions for millions of users.</p>
+              </div>
+            </div>
           </article>
           <article class="craft__item">
-            <h3 class="h2">Emerging Tech</h3>
-            <p>Focused on the future of UX &mdash; AI, generative design, and the new interfaces quietly reshaping how we work.</p>
+            <div class="craft__inner">
+              <div class="craft__front">
+                <h3 class="h2">Emerging Tech</h3>
+              </div>
+              <div class="craft__back">
+                <p>Focused on the future of UX &mdash; AI, generative design, and the new interfaces quietly reshaping how we work.</p>
+              </div>
+            </div>
           </article>
           <article class="craft__item">
-            <h3 class="h2">Graphic &amp; Brand Design</h3>
-            <p>My love for visual storytelling extends beyond product into branding and graphic design, where I craft visual identities for brands I believe in. Follow the evolving collection on <a href="https://www.instagram.com/mattladner.design" target="_blank" rel="noreferrer noopener">Instagram</a>.</p>
+            <div class="craft__inner">
+              <div class="craft__front">
+                <h3 class="h2">Graphic &amp; Brand Design</h3>
+              </div>
+              <div class="craft__back">
+                <p>My love for visual storytelling extends beyond product into branding and graphic design, where I craft visual identities for brands I believe in. Follow the evolving collection on <a href="https://www.instagram.com/mattladner.design" target="_blank" rel="noreferrer noopener">Instagram</a>.</p>
+              </div>
+            </div>
           </article>
         </div>
       </section>
 
-      <hr class="rule" aria-hidden="true" />
+      <!-- Intro Photo #1 -->
+      <section class="section intro" id="intro" data-reveal>
+        <img
+          class="intro__bg"
+          data-parallax
+          src="/images/matt-headshot.jpg"
+          alt=""
+          aria-hidden="true"
+          width="800"
+          height="1067"
+          loading="lazy"
+          decoding="async"
+        />
+        <h2 class="display display--md intro__heading" data-scroll-blur>Hi, I&rsquo;m Matt</h2>
+      </section>
 
-      <section class="section section--narrow" data-reveal>
+      <!-- Creative Ventures — paper panel with flip cards -->
+      <section class="section ventures-section" data-reveal>
         <p class="eyebrow">Creative Ventures</p>
         <p class="body-lg">
-          I channel my design philosophy into tangible creative ventures &mdash; exploring form, function, and culture through original clothing, music, and a rotating cast of side projects. These are my laboratory: a place to experiment, express, and occasionally embarrass myself in public.
+          I channel my design philosophy into tangible creative ventures &mdash; exploring form, function, and culture through original clothing, music, and a rotating cast of side projects.
         </p>
-        <p class="cta-line">
-          Own a piece of the process &rarr;
-          <a class="cta" href="https://public-domain.co/" target="_blank" rel="noreferrer noopener">public-domain.co</a>
-        </p>
+        <div class="craft ventures">
+          <article class="craft__item">
+            <div class="craft__inner">
+              <div class="craft__front">
+                <h3 class="h2">Public-Domain</h3>
+              </div>
+              <div class="craft__back">
+                <p>Original clothing and objects. Own a piece of the process &rarr; <a href="https://public-domain.co/" target="_blank" rel="noreferrer noopener">public-domain.co</a></p>
+              </div>
+            </div>
+          </article>
+          <article class="craft__item">
+            <div class="craft__inner">
+              <div class="craft__front">
+                <h3 class="h2">Sauna</h3>
+              </div>
+              <div class="craft__back">
+                <p>Coming soon.</p>
+              </div>
+            </div>
+          </article>
+          <article class="craft__item">
+            <div class="craft__inner">
+              <div class="craft__front">
+                <h3 class="h2">MarceauxMarceaux</h3>
+              </div>
+              <div class="craft__back">
+                <p>Coming soon.</p>
+              </div>
+            </div>
+          </article>
+        </div>
       </section>
 
-      <hr class="rule" aria-hidden="true" />
-
-      <section class="section section--narrow" data-reveal>
-        <p class="eyebrow">Writing &amp; Talks</p>
-        <p class="body-lg">
-          I write about design, emerging tech, and the quiet shifts happening in how we make things. You can find it all on Medium.
-        </p>
-        <p class="cta-line">
-          <a class="cta" href="https://mattladner.medium.com/" target="_blank" rel="noreferrer noopener">mattladner.medium.com</a>
-        </p>
-        <p class="eyebrow eyebrow--inline">Featured pieces</p>
-        <ul class="featured">
-          <li>Title of piece &mdash; coming soon</li>
-          <li>Title of piece &mdash; coming soon</li>
-          <li>Title of piece &mdash; coming soon</li>
-        </ul>
+      <!-- Intro Photo #2 — iridescent background with Writing & Talks -->
+      <section class="section intro intro--overlay" data-reveal>
+        <img
+          class="intro__bg"
+          data-parallax
+          src="/images/iridescent-bg.jpg"
+          alt=""
+          aria-hidden="true"
+          width="1280"
+          height="960"
+          loading="lazy"
+          decoding="async"
+        />
+        <div class="intro__content">
+          <p class="eyebrow">Writing &amp; Talks</p>
+          <p class="body-lg">
+            I write about design, emerging tech, and the quiet shifts happening in how we make things. You can find it all on Medium.
+          </p>
+          <p class="cta-line">
+            <a class="cta" href="https://mattladner.medium.com/" target="_blank" rel="noreferrer noopener">mattladner.medium.com</a>
+          </p>
+          <p class="eyebrow eyebrow--inline">Featured pieces</p>
+          <ul class="featured">
+            <li>Title of piece &mdash; coming soon</li>
+            <li>Title of piece &mdash; coming soon</li>
+            <li>Title of piece &mdash; coming soon</li>
+          </ul>
+        </div>
       </section>
 
-      <hr class="rule" aria-hidden="true" />
-
-      <section class="section section--narrow" data-reveal>
+      <section class="section lets-talk" data-reveal>
         <p class="eyebrow">Let&rsquo;s Talk</p>
         <h2 class="display display--md">Working on something interesting?</h2>
         <p class="body-lg">
           Want to trade notes on agentic UX, design systems, or where all of this is headed? I&rsquo;d love to hear from you.
         </p>
         <ul class="contact">
-          <li><span class="contact__icon" aria-hidden="true">&#9993;&#65039;</span> <span class="contact__label">Email</span> &mdash; <a href="mailto:m@ttladner.co">m@ttladner.co</a></li>
-          <li><span class="contact__icon" aria-hidden="true">&#128188;</span> <span class="contact__label">LinkedIn</span> &mdash; <a href="https://www.linkedin.com/in/mattladner/" target="_blank" rel="noreferrer noopener">linkedin.com/in/mattladner</a></li>
-          <li><span class="contact__icon" aria-hidden="true">&#128248;</span> <span class="contact__label">Instagram</span> &mdash; <a href="https://www.instagram.com/mattladner.design" target="_blank" rel="noreferrer noopener">@mattladner.design</a></li>
-          <li><span class="contact__icon" aria-hidden="true">&#9997;&#65039;</span> <span class="contact__label">Medium</span> &mdash; <a href="https://mattladner.medium.com/" target="_blank" rel="noreferrer noopener">mattladner.medium.com</a></li>
-          <li><span class="contact__icon" aria-hidden="true">&#128717;&#65039;</span> <span class="contact__label">Store</span> &mdash; <a href="https://public-domain.co/" target="_blank" rel="noreferrer noopener">public-domain.co</a></li>
+          <li>
+            <span class="contact__icon" aria-hidden="true">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="14" height="10" rx="1.5"/><path d="M1 4.5l7 5 7-5"/></svg>
+            </span>
+            <span class="contact__label">Email</span> &mdash; <button class="reveal-email" data-u="m" data-d="ttladner.co" aria-label="Reveal email address">click or tap to show</button>
+          </li>
+          <li>
+            <span class="contact__icon" aria-hidden="true">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><rect x="1" y="5.5" width="2.5" height="9" rx="0.5"/><circle cx="2.25" cy="2.5" r="1.5"/><path d="M6 5.5h2.3v1.3C8.8 5.9 9.9 5.5 11 5.5c2.2 0 3.5 1.4 3.5 4v5h-2.5v-4.5c0-1.2-.7-2-1.8-2s-1.7.8-1.7 2v4.5H6V5.5z"/></svg>
+            </span>
+            <span class="contact__label">LinkedIn</span> &mdash; <a href="https://www.linkedin.com/in/mattladner/" target="_blank" rel="noreferrer noopener">linkedin.com/in/mattladner</a>
+          </li>
+          <li>
+            <span class="contact__icon" aria-hidden="true">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="1" width="14" height="14" rx="4"/><circle cx="8" cy="8" r="3"/><circle cx="12" cy="4" r="0.75" fill="currentColor" stroke="none"/></svg>
+            </span>
+            <span class="contact__label">Instagram</span> &mdash; <a href="https://www.instagram.com/mattladner.design" target="_blank" rel="noreferrer noopener">@mattladner.design</a>
+          </li>
+          <li>
+            <span class="contact__icon" aria-hidden="true">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M2.5 4h1.2l4.3 7 4.3-7h1.2v8H12V6.5l-3.7 5.8h-.6L4 6.5V12H2.5V4z"/></svg>
+            </span>
+            <span class="contact__label">Medium</span> &mdash; <a href="https://mattladner.medium.com/" target="_blank" rel="noreferrer noopener">mattladner.medium.com</a>
+          </li>
+          <li>
+            <span class="contact__icon" aria-hidden="true">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 5.5h11l-1.2 7.5H3.7L2.5 5.5z"/><path d="M5.5 5.5V4a2.5 2.5 0 015 0v1.5"/></svg>
+            </span>
+            <span class="contact__label">Store</span> &mdash; <a href="https://public-domain.co/" target="_blank" rel="noreferrer noopener">public-domain.co</a>
+          </li>
         </ul>
       </section>
     </main>
 
     <footer class="footer">
       <p>Made in Memphis.</p>
+      <p>Photography by Jamie Harmon, Daniel Far&ograve; and Caroline Fayette. Video by Joey Bania.</p>
     </footer>
 
     <script type="module" src="/src/main.js"></script>
