@@ -134,6 +134,7 @@ const initParallax = () => {
   update();
 };
 
+// Section-level reveal — hero entrance only
 const reveal = () => {
   const targets = document.querySelectorAll("[data-reveal]");
   if (!targets.length) return;
@@ -159,6 +160,60 @@ const reveal = () => {
   targets.forEach((el) => observer.observe(el));
 };
 
+// Element-level reveal — individual items fade up as they scroll in
+const initReveal = () => {
+  const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (reduced || !("IntersectionObserver" in window)) return;
+
+  const selectors = [
+    ".bio-float .eyebrow",
+    ".bio-float .body-lg",
+    ".ventures-section .eyebrow",
+    ".ventures-section .body-lg",
+    ".intro__heading",
+    ".intro__content > .eyebrow",
+    ".intro__content > .body-lg",
+    ".intro__content > .cta-line",
+    ".intro__content > .eyebrow--inline",
+    ".intro__content > .featured",
+    ".lets-talk .eyebrow",
+    ".lets-talk .display",
+    ".lets-talk .body-lg",
+    ".contact > li",
+    ".footer > p",
+    ".craft__item",
+  ].join(",");
+
+  const items = [...document.querySelectorAll(selectors)];
+  if (!items.length) return;
+
+  // Stagger siblings within grouped containers
+  [".craft", ".ventures", ".contact", ".featured"].forEach((containerSel) => {
+    document.querySelectorAll(containerSel).forEach((container) => {
+      const children = [...container.children].filter((c) => items.includes(c));
+      children.forEach((child, i) => {
+        if (i > 0) child.style.setProperty("--reveal-delay", `${i * 80}ms`);
+      });
+    });
+  });
+
+  items.forEach((el) => el.classList.add("reveal-item"));
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("is-visible");
+          observer.unobserve(entry.target);
+        }
+      });
+    },
+    { rootMargin: "0px 0px -6% 0px", threshold: 0.05 }
+  );
+
+  items.forEach((el) => observer.observe(el));
+};
+
 const initRevealEmail = () => {
   document.querySelectorAll(".reveal-email").forEach((btn) => {
     btn.addEventListener("click", () => {
@@ -176,6 +231,7 @@ const init = () => {
   initScrollBlur();
   initParallax();
   reveal();
+  initReveal();
   initRevealEmail();
 };
 

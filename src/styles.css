@@ -623,6 +623,25 @@ main {
   margin-top: 2em;
 }
 
+/* Venture card photo backgrounds */
+.ventures .craft__item:nth-child(1) .craft__front {
+  background-image: linear-gradient(rgba(244,236,221,0.25), rgba(244,236,221,0.25)), url('/images/venture-public-domain.jpg');
+  background-size: cover;
+  background-position: center top;
+}
+
+.ventures .craft__item:nth-child(2) .craft__front {
+  background-image: linear-gradient(rgba(244,236,221,0.25), rgba(244,236,221,0.25)), url('/images/venture-sauna.jpg');
+  background-size: cover;
+  background-position: center;
+}
+
+.ventures .craft__item:nth-child(3) .craft__front {
+  background-image: linear-gradient(rgba(244,236,221,0.25), rgba(244,236,221,0.25)), url('/images/venture-marceaux.jpg');
+  background-size: cover;
+  background-position: center top;
+}
+
 /* --------------------------------------------------------------------------
    Selected Work
    -------------------------------------------------------------------------- */
@@ -796,6 +815,7 @@ main {
    Scroll reveal (paired with main.js)
    -------------------------------------------------------------------------- */
 
+/* Section-level — hero entrance only */
 [data-reveal] {
   opacity: 0;
   transform: translateY(16px);
@@ -808,12 +828,34 @@ main {
   transform: none;
 }
 
+/* Element-level — individual items below the hero */
+.reveal-item {
+  opacity: 0;
+  transform: translateY(20px);
+  transition:
+    opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  transition-delay: var(--reveal-delay, 0ms);
+  will-change: opacity, transform;
+}
+
+.reveal-item.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
   }
 
   [data-reveal] {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  .reveal-item {
     opacity: 1;
     transform: none;
     transition: none;
