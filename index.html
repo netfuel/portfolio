@@ -14,32 +14,40 @@
     <link rel="stylesheet" href="/src/styles.css" />
     <title>Matt Ladner — Senior Experience Designer</title>
   </head>
-  <body>
+  <body class="is-loading">
+    <div class="preloader" id="preloader" role="status" aria-label="Loading">
+      <div class="preloader__anim" id="preloader-anim"></div>
+    </div>
+
     <main>
       <section class="hero" data-reveal>
+        <video
+          class="hero__video"
+          src="/videos/cover-fog.mp4"
+          autoplay
+          muted
+          loop
+          playsinline
+          preload="auto"
+          aria-hidden="true"
+        ></video>
+        <p class="eyebrow hero__eyebrow">•&nbsp;&nbsp;Senior Experience Designer&nbsp;&nbsp;•</p>
         <div class="hero__text">
-          <p class="eyebrow">Senior Experience Designer · Memphis, TN</p>
-          <h1 class="display display--xl">Matt<br />Ladner</h1>
+          <h1 class="display display--xl">Matthew<br />Ladner</h1>
         </div>
-        <figure class="hero__image">
-          <img
-            src="/images/hero-bubbles.jpg"
-            alt="Macro photograph of bubbles suspended in golden liquid, soft warm light"
-            width="1600"
-            height="1067"
-            decoding="async"
-            fetchpriority="high"
-          />
-        </figure>
+        <a class="hero__scroll" href="#intro" aria-label="Scroll to intro">
+          <svg class="hero__scroll-icon" width="20" height="28" viewBox="0 0 20 28" aria-hidden="true" focusable="false">
+            <path d="M10 2 L10 22 M3 16 L10 23 L17 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </a>
       </section>
 
       <hr class="rule" aria-hidden="true" />
 
-      <section class="section section--narrow" data-reveal>
-        <p class="eyebrow">Intro</p>
-        <h2 class="display display--md">Hey, I&rsquo;m Matt.</h2>
+      <section class="section section--narrow" id="intro" data-reveal>
+        <h2 class="display display--md">Hi, I&rsquo;m Matt</h2>
         <p class="body-lg">
-          Senior UX designer at Adobe, where I spend my days bridging creativity and technology &mdash; designing intuitive, scalable experiences with a focus on developer experience and extensibility. I&rsquo;ve been doing this for nearly three decades, shaping products used by millions: from Adobe Express to platforms for Hilton Hotels, Target, the U.S. Air Force, and St. Jude Children&rsquo;s Research Hospital. Lately most of my time lives at the front edge of agentic user experiences &mdash; figuring out what it means to design for a world where the interface thinks back.
+          Senior UX designer at Adobe, where I spend my days bridging creativity and technology, designing intuitive, scalable experiences with a focus on developer experience and extensibility. I&rsquo;ve been doing this for nearly three decades, shaping products used by millions: from Adobe Express to platforms for Hilton Hotels, Target, the U.S. Air Force, and St. Jude Children&rsquo;s Research Hospital. Lately most of my time lives at the front edge of agentic user experiences. I&rsquo;m figuring out what it means to design for a world where the interface thinks back.
         </p>
       </section>
 
@@ -61,35 +69,6 @@
             <p>My love for visual storytelling extends beyond product into branding and graphic design, where I craft visual identities for brands I believe in. Follow the evolving collection on <a href="https://www.instagram.com/mattladner.design" target="_blank" rel="noreferrer noopener">Instagram</a>.</p>
           </article>
         </div>
-      </section>
-
-      <hr class="rule" aria-hidden="true" />
-
-      <section class="section section--narrow" data-reveal>
-        <p class="eyebrow">Selected Work</p>
-        <h2 class="display display--md">A few of the places<br />my work has lived.</h2>
-        <ul class="work">
-          <li class="work__item">
-            <h3 class="work__client">Adobe Express</h3>
-            <p class="work__blurb">Short case study blurb &mdash; coming soon.</p>
-          </li>
-          <li class="work__item">
-            <h3 class="work__client">Hilton Hotels</h3>
-            <p class="work__blurb">Short case study blurb &mdash; coming soon.</p>
-          </li>
-          <li class="work__item">
-            <h3 class="work__client">Target</h3>
-            <p class="work__blurb">Short case study blurb &mdash; coming soon.</p>
-          </li>
-          <li class="work__item">
-            <h3 class="work__client">U.S. Air Force</h3>
-            <p class="work__blurb">Short case study blurb &mdash; coming soon.</p>
-          </li>
-          <li class="work__item">
-            <h3 class="work__client">St. Jude Children&rsquo;s Research Hospital</h3>
-            <p class="work__blurb">Short case study blurb &mdash; coming soon.</p>
-          </li>
-        </ul>
       </section>
 
       <hr class="rule" aria-hidden="true" />

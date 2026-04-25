@@ -126,6 +126,12 @@ p:last-child {
   margin-bottom: 0.6em;
 }
 
+#intro .display--md {
+  font-size: clamp(2rem, 4.1vw, 3.1rem);
+  letter-spacing: 2px;
+  filter: blur(2px);
+}
+
 .h2 {
   font-family: var(--font-body);
   font-size: var(--h2);
@@ -216,45 +222,161 @@ main {
 }
 
 /* --------------------------------------------------------------------------
-   Hero
+   Hero — full-viewport with looping video background
    -------------------------------------------------------------------------- */
 
 .hero {
-  max-width: var(--layout-max);
-  margin: 0 auto;
-  padding: clamp(120px, 14vw, 200px) var(--gutter) var(--section-y);
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: clamp(48px, 6vw, 96px);
+  position: relative;
+  height: 100vh;
+  height: 100svh;
+  min-height: 560px;
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
   align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: var(--paper);
 }
 
-.hero__text .eyebrow {
-  margin-bottom: 2em;
+.hero__video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(
+    180deg,
+    rgba(244, 236, 221, 0.35) 0%,
+    rgba(244, 236, 221, 0.15) 40%,
+    rgba(244, 236, 221, 0.45) 100%
+  );
+  pointer-events: none;
+}
+
+.hero__eyebrow {
+  position: absolute;
+  top: 15%;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+  margin: 0;
+  color: var(--terra);
+  text-align: center;
+  max-width: calc(100% - 2 * var(--gutter));
+}
+
+.hero__text {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  text-align: center;
 }
 
 .hero__text .display--xl {
-  margin-top: 0;
-}
-
-.hero__image {
   margin: 0;
-}
-
-.hero__image img {
   width: 100%;
-  height: auto;
-  border-radius: 2px;
+  font-size: clamp(5.4rem, 14.4vw, 12rem);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--paper);
+  filter: blur(30px);
+  animation:
+    hero-defog 10s ease-out 0s 1 forwards,
+    hero-undulate 9s ease-in-out 10s infinite;
 }
 
-@media (min-width: 900px) {
-  .hero {
-    grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+@keyframes hero-defog {
+  from {
+    filter: blur(30px);
+  }
+  to {
+    filter: blur(5px);
+  }
+}
+
+@keyframes hero-undulate {
+  0% {
+    filter: blur(5px);
+  }
+  50% {
+    filter: blur(2px);
+  }
+  100% {
+    filter: blur(5px);
+  }
+}
+
+.hero__scroll {
+  position: absolute;
+  bottom: clamp(20px, 4vw, 56px);
+  left: 50%;
+  z-index: 3;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  color: var(--terra);
+  text-decoration: none;
+  opacity: 0.7;
+  transition: opacity 200ms ease-out, color 200ms ease-out;
+  animation: hero-scroll-bob 2.6s ease-in-out infinite;
+}
+
+.hero__scroll:hover,
+.hero__scroll:focus-visible {
+  opacity: 1;
+  color: var(--ember);
+  text-decoration: none;
+}
+
+.hero__scroll-icon {
+  width: 18px;
+  height: 26px;
+  display: block;
+}
+
+@keyframes hero-scroll-bob {
+  0%,
+  100% {
+    transform: translate(-50%, 0);
+  }
+  50% {
+    transform: translate(-50%, 8px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero__video {
+    display: none;
   }
 
-  .hero__image {
-    max-width: 480px;
-    justify-self: end;
+  .hero {
+    background: var(--bone);
+  }
+
+  .hero__text .display--xl {
+    animation: none;
+    filter: blur(5px);
+  }
+
+  .hero__scroll {
+    animation: none;
+    transform: translateX(-50%);
   }
 }
 
@@ -434,4 +556,61 @@ main {
 ::selection {
   background: var(--bone);
   color: var(--terra);
+}
+
+/* --------------------------------------------------------------------------
+   Preloader — fades when the hero video is ready to play through
+   -------------------------------------------------------------------------- */
+
+.preloader {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--paper);
+  transition: opacity 600ms ease-out, visibility 0s linear 600ms;
+}
+
+.preloader.is-hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.preloader__anim {
+  width: clamp(96px, 14vw, 160px);
+  height: clamp(96px, 14vw, 160px);
+}
+
+.preloader__anim svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* Lock scroll + pause hero defog/undulate while preloader is up. */
+body.is-loading {
+  overflow: hidden;
+}
+
+body.is-loading .hero__text .display--xl {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .preloader__anim {
+    width: auto;
+    height: auto;
+  }
+
+  .preloader__anim::before {
+    content: "Loading";
+    font-family: var(--font-body);
+    font-size: var(--caption);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--clay);
+  }
 }
