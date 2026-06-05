@@ -6,6 +6,7 @@ export default defineConfig({
       output: {
         manualChunks: {
           gsap: ["gsap"],
+          three: ["three"],
         },
       },
     },

@@ -1,53 +1,41 @@
 /**
- * Lens Distortion Effect with Chromatic Aberration
- * Uses CSS blur, contrast, and color overlays for dramatic lens effect
+ * Lens Barrel Distortion Effect
+ * Creates a pronounced convex bulge effect using CSS transforms and filters
  */
 
 export function initLensDistortion(hero) {
   if (!hero) return null;
 
-  // Get or create a distortion wrapper for the rings
   const rings = hero.querySelector('.hero__rings');
   if (!rings) return null;
 
-  // Create overlay divs for RGB split and glow effect
-  const redOverlay = document.createElement('div');
-  redOverlay.style.position = 'absolute';
-  redOverlay.style.top = '0';
-  redOverlay.style.left = '0';
-  redOverlay.style.width = '100%';
-  redOverlay.style.height = '100%';
-  redOverlay.style.pointerEvents = 'none';
-  redOverlay.style.zIndex = '2';
-  redOverlay.style.opacity = '0';
-  hero.appendChild(redOverlay);
+  // Create chromatic aberration layers for color split
+  const redGlow = document.createElement('div');
+  redGlow.style.position = 'absolute';
+  redGlow.style.top = '0';
+  redGlow.style.left = '0';
+  redGlow.style.width = '100%';
+  redGlow.style.height = '100%';
+  redGlow.style.pointerEvents = 'none';
+  redGlow.style.zIndex = '2';
+  redGlow.style.opacity = '0';
+  hero.appendChild(redGlow);
 
-  const blueOverlay = document.createElement('div');
-  blueOverlay.style.position = 'absolute';
-  blueOverlay.style.top = '0';
-  blueOverlay.style.left = '0';
-  blueOverlay.style.width = '100%';
-  blueOverlay.style.height = '100%';
-  blueOverlay.style.pointerEvents = 'none';
-  blueOverlay.style.zIndex = '2';
-  blueOverlay.style.opacity = '0';
-  hero.appendChild(blueOverlay);
-
-  // Chromatic aberration wrapper - creates the RGB split
-  const chromaticLayer = document.createElement('div');
-  chromaticLayer.style.position = 'absolute';
-  chromaticLayer.style.top = '0';
-  chromaticLayer.style.left = '0';
-  chromaticLayer.style.width = '100%';
-  chromaticLayer.style.height = '100%';
-  chromaticLayer.style.pointerEvents = 'none';
-  chromaticLayer.style.zIndex = '2';
-  chromaticLayer.style.opacity = '0';
-  chromaticLayer.style.mixBlendMode = 'lighten';
-  hero.appendChild(chromaticLayer);
+  const blueGlow = document.createElement('div');
+  blueGlow.style.position = 'absolute';
+  blueGlow.style.top = '0';
+  blueGlow.style.left = '0';
+  blueGlow.style.width = '100%';
+  blueGlow.style.height = '100%';
+  blueGlow.style.pointerEvents = 'none';
+  blueGlow.style.zIndex = '2';
+  blueGlow.style.opacity = '0';
+  hero.appendChild(blueGlow);
 
   const state = {
     distortionAmount: 0,
+    redGlow,
+    blueGlow,
   };
 
   return {
@@ -55,60 +43,53 @@ export function initLensDistortion(hero) {
       amount = Math.max(0, Math.min(1, amount));
       state.distortionAmount = amount;
 
-      // Barrel distortion via CSS blur and scale on rings
-      const blurAmount = amount * 6;
-      const scaleFactor = 1 + amount * 0.2;
-      rings.style.filter = `blur(${blurAmount}px) brightness(${0.85 + amount * 0.15})`;
-      rings.style.transform = `scale(${scaleFactor})`;
+      // Barrel bulge effect: scale center more, create convex lens appearance
+      const bulgeFactor = 1 + amount * 0.4; // Up to 40% scale increase
+      const blurAmount = amount * 3;
 
-      // Dramatic red chromatic glow on right/top
-      const shiftAmount = amount * 40;
-      redOverlay.style.opacity = (amount * 0.55).toString();
-      redOverlay.style.background = `
+      // Primary distortion: scale and blur to create glass lens effect
+      rings.style.transform = `scale(${bulgeFactor})`;
+      rings.style.filter = `blur(${blurAmount}px)`;
+
+      // Create prominent red chromatic aberration on edges (right/top)
+      const redOpacity = amount * 0.6;
+      const redShift = amount * 30;
+      redGlow.style.opacity = redOpacity.toString();
+      redGlow.style.background = `
         radial-gradient(
-          ellipse at calc(50% + ${shiftAmount * 0.5}px) calc(50% - ${shiftAmount * 0.4}px),
-          rgba(255, 40, 40, ${amount * 0.8}) 0%,
-          rgba(255, 80, 80, ${amount * 0.5}) 20%,
-          rgba(255, 120, 120, ${amount * 0.2}) 40%,
-          transparent 70%
+          circle at calc(50% + ${redShift * 0.3}%) calc(50% - ${redShift * 0.3}%),
+          rgba(255, 50, 80, ${amount * 0.8}) 0%,
+          rgba(255, 100, 120, ${amount * 0.5}) 15%,
+          rgba(255, 150, 150, ${amount * 0.2}) 30%,
+          transparent 60%
         )
       `;
-      redOverlay.style.boxShadow = `
-        inset ${shiftAmount}px ${-shiftAmount * 0.6}px ${shiftAmount * 1.2}px rgba(255, 60, 60, ${amount * 0.4}),
-        0 0 ${amount * 60}px rgba(255, 60, 60, ${amount * 0.25})
+      redGlow.style.boxShadow = `
+        0 0 ${amount * 80}px rgba(255, 60, 100, ${amount * 0.5}),
+        inset 0 0 ${amount * 50}px rgba(255, 80, 120, ${amount * 0.3})
       `;
 
-      // Dramatic blue chromatic glow on left/bottom
-      blueOverlay.style.opacity = (amount * 0.55).toString();
-      blueOverlay.style.background = `
+      // Create prominent blue chromatic aberration on opposite edges (left/bottom)
+      const blueOpacity = amount * 0.6;
+      const blueShift = amount * 30;
+      blueGlow.style.opacity = blueOpacity.toString();
+      blueGlow.style.background = `
         radial-gradient(
-          ellipse at calc(50% - ${shiftAmount * 0.5}px) calc(50% + ${shiftAmount * 0.4}px),
-          rgba(40, 100, 255, ${amount * 0.8}) 0%,
-          rgba(80, 130, 255, ${amount * 0.5}) 20%,
-          rgba(120, 160, 255, ${amount * 0.2}) 40%,
-          transparent 70%
+          circle at calc(50% - ${blueShift * 0.3}%) calc(50% + ${blueShift * 0.3}%),
+          rgba(80, 120, 255, ${amount * 0.8}) 0%,
+          rgba(120, 150, 255, ${amount * 0.5}) 15%,
+          rgba(150, 180, 255, ${amount * 0.2}) 30%,
+          transparent 60%
         )
       `;
-      blueOverlay.style.boxShadow = `
-        inset ${-shiftAmount}px ${shiftAmount * 0.6}px ${shiftAmount * 1.2}px rgba(60, 100, 255, ${amount * 0.4}),
-        0 0 ${amount * 60}px rgba(60, 100, 255, ${amount * 0.25})
-      `;
-
-      // Additional chromatic fringing at edges
-      chromaticLayer.style.opacity = (amount * 0.6).toString();
-      chromaticLayer.style.borderTop = `${Math.max(0, amount * 10)}px solid rgba(255, 60, 60, ${amount * 0.3})`;
-      chromaticLayer.style.borderRight = `${Math.max(0, amount * 10)}px solid rgba(60, 100, 255, ${amount * 0.3})`;
-      chromaticLayer.style.boxShadow = `
-        0 0 ${amount * 80}px rgba(255, 60, 60, ${amount * 0.25}),
-        0 0 ${amount * 60}px rgba(60, 100, 255, ${amount * 0.25}),
-        inset 0 0 ${amount * 40}px rgba(255, 100, 100, ${amount * 0.15}),
-        inset 0 0 ${amount * 40}px rgba(100, 150, 255, ${amount * 0.15})
+      blueGlow.style.boxShadow = `
+        0 0 ${amount * 80}px rgba(80, 120, 255, ${amount * 0.5}),
+        inset 0 0 ${amount * 50}px rgba(100, 150, 255, ${amount * 0.3})
       `;
     },
     dispose: () => {
-      redOverlay.remove();
-      blueOverlay.remove();
-      chromaticLayer.remove();
+      redGlow.remove();
+      blueGlow.remove();
     },
   };
 }
