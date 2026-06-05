@@ -1,15 +1,7 @@
 /* ==========================================================================
-   Matt Ladner — site styles
-   Built from the brand packet (sections 02–10).
+   Matt Ladner — Brutalist Archive
+   Ring tunnel (GSAP scroll-scrub) + card-stack panels
    ========================================================================== */
-
-@font-face {
-  font-family: "Brutaze";
-  src: url("/fonts/MN-Brutaze-Blurred.otf") format("opentype");
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
 
 @font-face {
   font-family: "Proto Mono";
@@ -19,919 +11,426 @@
   font-display: swap;
 }
 
-:root {
-  /* Color — Foundation */
-  --paper: #f4ecdd;
-  --bone: #e7d8bf;
-  --travertine: #c8b08b;
-
-  /* Color — Ink */
-  --terra: #2b1e16;
-  --clay: #8f6e4e;
-
-  /* Color — Accents */
-  --dusk: #5b6269;
-  --ember: #a65f3c;
-
-  /* Type — Families */
-  --font-display: "Brutaze", "Times New Roman", serif;
-  --font-body: "Proto Mono", ui-monospace, "SF Mono", Menlo, monospace;
-
-  /* Type — Scale */
-  --display-xl: clamp(4.5rem, 12vw, 10rem);
-  --display: clamp(2.75rem, 7vw, 5.5rem);
-  --display-md: clamp(1.75rem, 3.6vw, 2.75rem);
-  --h2: 1.5rem;
-  --eyebrow: 0.75rem;
-  --body-lg: 1.125rem;
-  --body: 1rem;
-  --caption: 0.8125rem;
-
-  /* Spacing */
-  --gutter: clamp(24px, 5vw, 80px);
-  --section-y: clamp(96px, 12vw, 160px);
-  --content-max: 720px;
-  --layout-max: 1280px;
+@font-face {
+  font-family: "Proto Mono";
+  src: url("/fonts/Proto-Mono-Medium.otf") format("opentype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
 }
 
-/* --------------------------------------------------------------------------
-   Reset
-   -------------------------------------------------------------------------- */
+/* ── Tokens ────────────────────────────────────────────────────────────── */
+
+:root {
+  --olive:       #ffffff;
+  --rust:        #ffffff;
+  --rust-2:      #ffbaa2;
+  --peach:       #ffffff;
+  --info:        #d2dbdb;
+  --cream:       #e8e4d0;
+  --ink:         #1a1a1a;
+
+  --font-display: "Proto Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  --font-body:    "Space Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+
+  --gutter:      clamp(20px, 4.37vw, 80px);
+  --pad-l:       clamp(20px, 2.98vw, 56px);
+  --pad-r:       clamp(16px, 2.27vw, 44px);
+  --gap-col:     clamp(16px, 2.1vw, 36px);
+  --gap-entry:   clamp(8px, 1.05vw, 18px);
+}
+
+/* ── Reset ─────────────────────────────────────────────────────────────── */
 
 *,
 *::before,
-*::after {
-  box-sizing: border-box;
-}
+*::after { box-sizing: border-box; }
 
 html {
-  scroll-behavior: smooth;
   -webkit-text-size-adjust: 100%;
 }
 
 body {
   margin: 0;
-  background: var(--paper);
-  color: var(--terra);
+  background: var(--olive);
+  color: var(--ink);
   font-family: var(--font-body);
-  font-size: var(--body);
-  line-height: 1.65;
+  font-weight: 400;
+  font-size: clamp(13px, 1.225vw, 18px);
+  line-height: 1.45;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
 }
 
-img {
-  max-width: 100%;
-  display: block;
-  height: auto;
-}
-
-ul {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-p {
-  margin: 0 0 1.25em;
-}
-
-p:last-child {
-  margin-bottom: 0;
-}
-
-/* --------------------------------------------------------------------------
-   Typography primitives
-   -------------------------------------------------------------------------- */
-
-.display {
-  font-family: var(--font-display);
-  font-weight: 400;
-  margin: 0;
-  color: var(--terra);
-  letter-spacing: -0.02em;
-  line-height: 0.95;
-}
-
-.display--xl {
-  font-size: var(--display-xl);
-  line-height: 0.92;
-}
-
-.display--md {
-  font-size: var(--display-md);
-  line-height: 1.05;
-  letter-spacing: -0.01em;
-  margin-bottom: 0.6em;
-}
-
-
-.h2 {
-  font-family: var(--font-body);
-  font-size: var(--h2);
-  line-height: 1.3;
-  font-weight: 500;
-  margin: 0 0 0.5em;
-  color: var(--terra);
-}
-
-.eyebrow {
-  font-family: var(--font-body);
-  font-size: var(--eyebrow);
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--clay);
-  margin: 0 0 1.5em;
-}
-
-.eyebrow--inline {
-  margin-top: 3em;
-  margin-bottom: 0.75em;
-}
-
-.body-lg {
-  font-size: var(--body-lg);
-  line-height: 1.65;
-}
-
-.caption {
-  font-size: var(--caption);
-  line-height: 1.5;
-  color: var(--clay);
-}
-
-/* --------------------------------------------------------------------------
-   Links
-   -------------------------------------------------------------------------- */
+p { margin: 0; }
+ul, ol { margin: 0; padding: 0; list-style: none; }
+dl, dd, dt { margin: 0; }
+h1, h2, h3, h4 { margin: 0; font-weight: inherit; }
 
 a {
-  color: var(--terra);
+  color: inherit;
   text-decoration: underline;
-  text-decoration-color: var(--travertine);
   text-decoration-thickness: 1px;
-  text-underline-offset: 0.2em;
-  transition: color 200ms ease-out, text-decoration-color 200ms ease-out,
-    text-decoration-thickness 200ms ease-out;
+  text-underline-offset: 0.18em;
+  transition: opacity 150ms;
 }
+a:hover { opacity: 0.6; }
 
-a:hover,
-a:focus-visible {
-  color: var(--ember);
-  text-decoration-color: var(--ember);
-  text-decoration-thickness: 2px;
-}
-
-a:focus-visible {
-  outline: 2px solid var(--ember);
-  outline-offset: 4px;
-  border-radius: 2px;
-}
-
-/* --------------------------------------------------------------------------
-   Layout primitives
-   -------------------------------------------------------------------------- */
-
-main {
-  display: block;
-}
-
-.section {
-  max-width: var(--layout-max);
-  margin: 0 auto;
-  padding: var(--section-y) var(--gutter);
-}
-
-.section--narrow > * {
-  max-width: var(--content-max);
-}
-
-.rule {
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
   border: 0;
-  height: 1px;
-  background: var(--travertine);
-  opacity: 0.6;
-  max-width: var(--layout-max);
-  margin: 0 auto;
-  width: calc(100% - 2 * var(--gutter));
+  padding: 0;
+  cursor: pointer;
 }
 
-/* --------------------------------------------------------------------------
-   Hero — full-viewport with looping video background
-   -------------------------------------------------------------------------- */
+/* ── HERO — 100vh, pinned by GSAP during tunnel scroll ────────────────── */
 
 .hero {
   position: relative;
-  z-index: 0;
   height: 100vh;
-  height: 100svh;
-  min-height: 560px;
-  width: 100%;
-  max-width: none;
-  margin: 0;
-  padding: 0;
+  height: 100dvh;
+  background: var(--olive);
+  overflow: hidden;
+  color: var(--ink);
+  z-index: 1;
+}
+
+/* Centered name — flexbox centering (GSAP-proof, no transform needed) */
+.hero__name {
+  position: absolute;
+  z-index: 3;
+  inset: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  overflow: visible;
-  background: transparent;
-}
-
-.content {
-  position: relative;
-  z-index: 1;
-  background: var(--paper);
-  margin: 40px;
-}
-
-.hero__video {
-  position: fixed;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  z-index: -1;
+  gap: 0.4em;
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(16px, 2.1vw, 32px);
+  line-height: 1;
+  letter-spacing: 0.04em;
+  text-align: center;
+  color: var(--ink);
+  white-space: nowrap;
   pointer-events: none;
+  perspective: 400px;
 }
 
-.hero__overlay {
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  background: linear-gradient(
-    180deg,
-    rgba(244, 236, 221, 0.35) 0%,
-    rgba(244, 236, 221, 0.15) 40%,
-    rgba(244, 236, 221, 0.45) 100%
-  );
-  pointer-events: none;
+/* Word spans for the split animation */
+.word-l,
+.word-r {
+  display: inline-block;
 }
 
-.hero__eyebrow {
+/* SplitText chars */
+.hero__name .char {
+  display: inline-block;
+  will-change: transform, opacity;
+  transform-origin: 50% 100%;
+}
+
+/* ── Concentric keyword rings ─────────────────────────────────────────── */
+
+.hero__rings {
   position: absolute;
-  top: 15%;
+  z-index: 1;
+  top: 50%;
   left: 50%;
-  transform: translateX(-50%);
-  z-index: 2;
-  margin: 0;
-  color: var(--terra);
-  text-align: center;
-  max-width: calc(100% - 2 * var(--gutter));
+  width: 100vw;
+  height: 100vh;
+  margin-left: -50vw;
+  margin-top: -50vh;
+  transform: scale(2.8);
+  pointer-events: none;
+  user-select: none;
 }
 
-.hero__text {
-  position: relative;
-  z-index: 2;
-  width: 100%;
-  margin: 0;
-  padding: 0;
-  text-align: center;
-}
-
-.hero__text .display--xl {
-  margin: 0;
-  width: 100%;
-  font-size: clamp(5.4rem, 14.4vw, 12rem);
+.hero__ring text {
+  font-family: var(--font-display);
+  font-weight: 700;
+  fill: var(--ink);
+  letter-spacing: 0.06em;
   text-transform: uppercase;
-  letter-spacing: 2px;
-  color: var(--paper);
-  filter: blur(30px);
-  animation:
-    hero-defog 10s ease-out 0s 1 forwards,
-    hero-undulate 9s ease-in-out 10s infinite;
 }
 
-@keyframes hero-defog {
-  from {
-    filter: blur(30px);
-  }
-  to {
-    filter: blur(5px);
-  }
-}
+.hero__ring--inner text  { font-size: 14px; }
+.hero__ring--middle text { font-size: 18px; }
+.hero__ring--outer text  { font-size: 28px; }
 
-@keyframes hero-undulate {
-  0% {
-    filter: blur(5px);
-  }
-  50% {
-    filter: blur(2px);
-  }
-  100% {
-    filter: blur(5px);
-  }
-}
+/* NO CSS @keyframes rotation — GSAP scroll-scrub owns both rotation + scale
+   so there's no transform conflict. transform-origin at center. */
+.hero__ring--inner  { transform-origin: 50% 50%; }
+.hero__ring--middle { transform-origin: 50% 50%; }
+.hero__ring--outer  { transform-origin: 50% 50%; }
 
+/* Scroll cue */
 .hero__scroll {
   position: absolute;
-  bottom: clamp(20px, 4vw, 56px);
+  z-index: 4;
   left: 50%;
-  z-index: 3;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 36px;
-  height: 36px;
-  color: var(--terra);
-  text-decoration: none;
-  opacity: 0.7;
-  transition: opacity 200ms ease-out, color 200ms ease-out;
-  animation: hero-scroll-bob 2.6s ease-in-out infinite;
-}
-
-.hero__scroll:hover,
-.hero__scroll:focus-visible {
-  opacity: 1;
-  color: var(--ember);
-  text-decoration: none;
-}
-
-.hero__scroll-icon {
-  width: 18px;
-  height: 26px;
-  display: block;
-}
-
-@keyframes hero-scroll-bob {
-  0%,
-  100% {
-    transform: translate(-50%, 0);
-  }
-  50% {
-    transform: translate(-50%, 8px);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .hero__video {
-    display: none;
-  }
-
-  .hero {
-    background: var(--bone);
-    overflow: hidden;
-  }
-
-  .hero__text .display--xl {
-    animation: none;
-    filter: blur(5px);
-  }
-
-  .hero__scroll {
-    animation: none;
-    transform: translateX(-50%);
-  }
-}
-
-/* --------------------------------------------------------------------------
-   Intro — full-bleed photo background with parallax floating text
-   -------------------------------------------------------------------------- */
-
-.intro {
-  position: relative;
-  overflow: hidden;
-  height: calc(100vh - 80px);
-  height: calc(100svh - 80px);
-  min-height: 480px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-  gap: 1.5em;
-  background: transparent;
-  padding: calc(30vh - 60px) 40px 40px;
-  margin: 40px auto;
-  max-width: min(var(--layout-max), calc(100% - 80px));
-  width: calc(100% - 80px);
-}
-
-.intro__bg {
-  position: absolute;
-  top: -10%;
-  left: 0;
-  width: 100%;
-  height: 120%;
-  object-fit: cover;
-  object-position: center center;
-  z-index: 0;
-  will-change: transform;
-  pointer-events: none;
-}
-
-.intro__heading,
-.intro__text {
-  position: relative;
-  z-index: 2;
-  text-align: center;
-  max-width: var(--content-max);
-  color: #a8ccd8;
-}
-
-.intro__heading {
-  font-size: clamp(2rem, 4.1vw, 3.1rem);
-  letter-spacing: 2px;
-  filter: blur(10px);  /* initial — overridden by JS on scroll */
-  margin-bottom: 0.5em;
-}
-
-.intro__text {
-  color: #c8dfe8;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .intro__bg {
-    top: 0;
-    height: 100%;
-  }
-}
-
-/* Intro with dark overlay — used for Writing & Talks panel */
-.intro--overlay::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  background: rgba(15, 12, 20, 0.62);
-  pointer-events: none;
-}
-
-.intro--overlay .intro__content {
-  position: relative;
-  z-index: 2;
-  max-width: var(--content-max);
-  width: 100%;
-  color: #fff;
-}
-
-.intro--overlay .intro__content .eyebrow {
-  color: rgba(255, 255, 255, 0.6);
-}
-
-.intro--overlay .intro__content .body-lg,
-.intro--overlay .intro__content .cta-line,
-.intro--overlay .intro__content .featured li {
-  color: #fff;
-}
-
-.intro--overlay .intro__content a {
-  color: #fff;
-  text-decoration-color: rgba(255, 255, 255, 0.45);
-}
-
-.intro--overlay .intro__content a:hover {
-  color: #fff;
-  text-decoration-color: #fff;
-}
-
-/* --------------------------------------------------------------------------
-   Bio float — centered card over video
-   -------------------------------------------------------------------------- */
-
-.bio-float {
-  background: var(--paper);
-  color: var(--terra);
-}
-
-.bio-float .body-lg {
-  max-width: 100%;
-  margin-bottom: 2.5em;
-}
-
-/* --------------------------------------------------------------------------
-   Craft section — transparent, floats over video
-   -------------------------------------------------------------------------- */
-
-.craft-section {
-  background: transparent;
-  margin: 40px;
-  max-width: calc(100% - 80px);
-}
-
-
-/* --------------------------------------------------------------------------
-   Craft
-   -------------------------------------------------------------------------- */
-
-.craft {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1.25em;
-}
-
-.craft__item {
-  aspect-ratio: 4 / 5;
-  perspective: 1200px;
-}
-
-.craft__inner {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  transform-style: preserve-3d;
-  transition: transform 0.65s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-@media (hover: hover) {
-  .craft__item:hover .craft__inner {
-    transform: rotateY(180deg);
-  }
-}
-
-.craft__front,
-.craft__back {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  padding: clamp(1.25em, 2.5vw, 2em);
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
-}
-
-.craft__front {
-  background: var(--bone);
-  background-size: cover;
-  background-position: center;
-}
-
-.craft__front .h2 {
-  margin: 0;
-}
-
-/* Craft card photo backgrounds */
-.bio-float .craft__item:nth-child(1) .craft__front {
-  background-image: linear-gradient(rgba(244,236,221,0.35), rgba(244,236,221,0.35)), url('/images/craft-spheres-row.jpg');
-}
-
-.bio-float .craft__item:nth-child(2) .craft__front {
-  background-image: linear-gradient(rgba(244,236,221,0.35), rgba(244,236,221,0.35)), url('/images/craft-marbles.jpg');
-}
-
-.bio-float .craft__item:nth-child(3) .craft__front {
-  background-image: linear-gradient(rgba(244,236,221,0.35), rgba(244,236,221,0.35)), url('/images/craft-spheres-tower.jpg');
-}
-
-.craft__back {
-  background: var(--terra);
-  transform: rotateY(180deg);
-}
-
-.craft__back p {
-  margin: 0;
-  color: #fff;
-  font-size: var(--body);
-  line-height: 1.65;
-}
-
-.craft__back a {
-  color: rgba(255, 255, 255, 0.75);
-  text-decoration-color: rgba(255, 255, 255, 0.4);
-}
-
-.craft__back a:hover {
-  color: #fff;
-  text-decoration-color: #fff;
-}
-
-@media (max-width: 640px) {
-  .craft {
-    grid-template-columns: 1fr;
-  }
-}
-
-/* --------------------------------------------------------------------------
-   Let's Talk section
-   -------------------------------------------------------------------------- */
-
-.lets-talk {
-  background: var(--paper);
-  margin-bottom: 40px;
-}
-
-/* --------------------------------------------------------------------------
-   Ventures section — paper panel outside .content, mirrors bio-float
-   -------------------------------------------------------------------------- */
-
-.ventures-section {
-  background: var(--paper);
-}
-
-.ventures {
-  margin-top: 2em;
-}
-
-/* Venture card photo backgrounds */
-.ventures .craft__item:nth-child(1) .craft__front {
-  background-image: linear-gradient(rgba(244,236,221,0.25), rgba(244,236,221,0.25)), url('/images/venture-public-domain.jpg');
-  background-size: cover;
-  background-position: center top;
-}
-
-.ventures .craft__item:nth-child(2) .craft__front {
-  background-image: linear-gradient(rgba(244,236,221,0.25), rgba(244,236,221,0.25)), url('/images/venture-sauna.jpg');
-  background-size: cover;
-  background-position: center;
-}
-
-.ventures .craft__item:nth-child(3) .craft__front {
-  background-image: linear-gradient(rgba(244,236,221,0.25), rgba(244,236,221,0.25)), url('/images/venture-marceaux.jpg');
-  background-size: cover;
-  background-position: center top;
-}
-
-/* --------------------------------------------------------------------------
-   Selected Work
-   -------------------------------------------------------------------------- */
-
-.work {
-  border-top: 1px solid var(--travertine);
-  margin-top: 1em;
-}
-
-.work__item {
-  border-bottom: 1px solid var(--travertine);
-  padding: 1.75em 0;
-  display: grid;
-  gap: 0.5em;
-}
-
-@media (min-width: 700px) {
-  .work__item {
-    grid-template-columns: minmax(180px, 1fr) 2fr;
-    gap: 2em;
-    align-items: baseline;
-  }
-}
-
-.work__client {
-  font-family: var(--font-display);
+  bottom: clamp(0px, 2.8vw, 36px);
+  transform: translate(-50%, 0);
+  font-family: var(--font-body);
   font-weight: 400;
-  font-size: clamp(1.5rem, 3vw, 2rem);
-  line-height: 1.05;
-  letter-spacing: -0.01em;
-  color: var(--terra);
-  margin: 0;
+  font-size: clamp(11px, 1.05vw, 16px);
+  letter-spacing: 0.18em;
+  text-transform: lowercase;
+  color: var(--ink);
+  text-decoration: none;
+  opacity: 0.78;
+  animation: heroScrollBob 1.8s ease-in-out 0s 3 both;
 }
 
-.work__blurb {
-  margin: 0;
-  color: var(--clay);
+.hero__scroll:hover { opacity: 1; }
+
+@keyframes heroScrollBob {
+  0%, 100% { transform: translate(-50%, 0); }
+  50%      { transform: translate(-50%, -10px); }
 }
 
-/* --------------------------------------------------------------------------
-   Calls to action / inline links
-   -------------------------------------------------------------------------- */
-
-.cta-line {
-  margin-top: 1.5em;
-  font-size: var(--body-lg);
+@media (prefers-reduced-motion: reduce) {
+  .hero__scroll { animation: none; }
 }
+
+/* ── PANELS — card-stack container ────────────────────────────────────── */
+
+.panels {
+  position: relative;
+  z-index: 2;   /* above the hero (which stays pinned behind) */
+}
+
+.panel {
+  display: grid;
+  grid-template-columns: 46.5% 1fr;
+  border-top: 1px solid var(--ink);
+  min-height: 100vh;
+  /* Card stack: panels stick to top and overlay previous */
+  position: sticky;
+  top: 0;
+}
+
+.panel__left {
+  padding: clamp(20px, 2.98vw, 56px) var(--pad-l) 2px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-col);
+}
+
+.panel__right {
+  display: flex;
+  flex-direction: column;
+}
+
+.panel__right--info {
+  background: var(--info);
+  border-left: 1px solid var(--ink);
+  padding: clamp(20px, 2.98vw, 56px) var(--pad-l) 2px;
+  gap: var(--gap-col);
+}
+
+.entry {
+  background: var(--info);
+  border-left: 1px solid var(--ink);
+  padding: clamp(16px, 2.27vw, 40px) var(--pad-r) 2px;
+  flex: 1 1 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-entry);
+}
+
+.entry--dashed { border-top: 1px dashed var(--ink); }
+
+/* Panel backgrounds — must be opaque for card-stack overlay to work */
+.panel--craft    { background: var(--olive); }
+.panel--craft    .panel__left { background: var(--rust); }
+.panel--ventures { background: var(--olive); }
+.panel--ventures .panel__left { background: var(--rust-2); }
+.panel--writing  { background: var(--olive); }
+.panel--writing  .panel__left { background: var(--peach); }
+
+/* ── Typography ────────────────────────────────────────────────────────── */
+
+.h-section {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(16px, 2.1vw, 36px);
+  line-height: 1.33;
+  color: var(--ink);
+  white-space: nowrap;
+}
+
+.h-sub {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(14px, 1.575vw, 26px);
+  line-height: 1.55;
+  color: var(--ink);
+  white-space: nowrap;
+}
+
+.label {
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-size: clamp(12px, 1.225vw, 18px);
+  line-height: 1.4;
+  color: var(--ink);
+}
+
+.panel__body {
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-size: clamp(13px, 1.225vw, 18px);
+  line-height: 1.62;
+  color: var(--ink);
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+}
+
+.entry p {
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-size: clamp(13px, 1.225vw, 18px);
+  line-height: 1.42;
+  color: var(--ink);
+  max-width: 65ch;
+}
+
+/* ── CTA button ────────────────────────────────────────────────────────── */
+
+.cta-wrap { margin: 0; }
 
 .cta {
+  display: inline-block;
+  padding: clamp(10px, 1.225vw, 18px) clamp(18px, 2.27vw, 36px);
+  border: 2px solid var(--ink);
+  background: transparent;
+  color: var(--ink);
   font-family: var(--font-body);
-  font-weight: 500;
-  letter-spacing: 0.01em;
+  font-weight: 400;
+  font-size: clamp(13px, 1.4vw, 22px);
+  line-height: 1.5;
+  text-decoration: none;
+  transition: background 150ms, color 150ms;
 }
 
-/* --------------------------------------------------------------------------
-   Featured / contact lists
-   -------------------------------------------------------------------------- */
+.cta:hover {
+  background: var(--ink);
+  color: var(--peach);
+  opacity: 1;
+}
 
-.featured {
+/* ── Featured list ─────────────────────────────────────────────────────── */
+
+.featured-block {
   display: flex;
   flex-direction: column;
-  gap: 0.5em;
-  color: var(--clay);
+  gap: var(--gap-entry);
+}
+
+.featured {
+  border-left: 2px solid var(--ink);
+  padding-left: clamp(12px, 1.575vw, 26px);
+  display: flex;
+  flex-direction: column;
+  gap: clamp(4px, 0.7vw, 12px);
 }
 
 .featured li {
-  padding: 0.25em 0;
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-size: clamp(11px, 1.05vw, 16px);
+  line-height: 1.4;
 }
+
+.featured a { text-decoration: none; }
+.featured a:hover { text-decoration: underline; opacity: 1; }
+
+/* ── Contact list ──────────────────────────────────────────────────────── */
 
 .contact {
   display: flex;
   flex-direction: column;
-  gap: 0.75em;
-  margin-top: 1.5em;
-  font-size: var(--body-lg);
+  gap: clamp(8px, 1.05vw, 16px);
 }
 
-.contact li {
-  display: flex;
-  flex-wrap: wrap;
+.contact__row {
+  display: grid;
+  grid-template-columns: clamp(80px, 8.4vw, 140px) 1fr;
+  gap: 0;
   align-items: baseline;
-  gap: 0.5em;
 }
 
-.contact__icon {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 1.25em;
-  flex-shrink: 0;
+.contact__row .label,
+.contact__row dd {
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-size: clamp(12px, 1.225vw, 18px);
+  line-height: 1.4;
 }
 
-.contact__icon svg {
-  display: block;
-  color: var(--clay);
-}
-
-.contact__label {
-  font-weight: 500;
-  color: var(--terra);
+.contact__row dd a {
+  text-decoration: underline;
+  text-underline-offset: 0.18em;
 }
 
 .reveal-email {
-  background: none;
-  border: none;
-  padding: 0;
   font-family: var(--font-body);
-  font-size: inherit;
-  line-height: inherit;
-  color: var(--terra);
+  font-weight: 700;
+  font-size: clamp(13px, 1.4vw, 22px);
+  line-height: 1.5;
   text-decoration: underline;
-  text-decoration-color: var(--travertine);
-  text-decoration-thickness: 1px;
-  text-underline-offset: 0.2em;
-  cursor: pointer;
-  transition: color 200ms ease-out, text-decoration-color 200ms ease-out;
+  text-underline-offset: 0.18em;
+  color: var(--ink);
+  padding: 0;
 }
 
-.reveal-email:hover,
-.reveal-email:focus-visible {
-  color: var(--ember);
-  text-decoration-color: var(--ember);
-}
-
-.reveal-email:focus-visible {
-  outline: 2px solid var(--ember);
-  outline-offset: 4px;
-  border-radius: 2px;
-}
-
-/* --------------------------------------------------------------------------
-   Credits
-   -------------------------------------------------------------------------- */
-
-.credits {
-  padding-top: 2em;
-  padding-bottom: 2em;
-}
-
-.credits .caption {
-  margin-bottom: 0.25em;
-}
-
-.credits .caption:last-child {
-  margin-bottom: 0;
-}
-
-/* --------------------------------------------------------------------------
-   Footer
-   -------------------------------------------------------------------------- */
+/* ── Footer ────────────────────────────────────────────────────────────── */
 
 .footer {
-  position: relative;
-  z-index: 1;
-  background: var(--paper);
-  text-align: center;
-  padding: clamp(64px, 8vw, 120px) var(--gutter);
-  font-size: var(--caption);
-  color: var(--clay);
-  border-top: 1px solid var(--travertine);
-  width: 100%;
-}
-
-.footer p {
-  margin: 0;
-  font-style: italic;
-  letter-spacing: 0.04em;
-}
-
-/* --------------------------------------------------------------------------
-   Scroll reveal (paired with main.js)
-   -------------------------------------------------------------------------- */
-
-/* Section-level — hero entrance only */
-[data-reveal] {
-  opacity: 0;
-  transform: translateY(16px);
-  transition: opacity 600ms ease-out, transform 400ms ease-out;
-  will-change: opacity, transform;
-}
-
-[data-reveal].is-revealed {
-  opacity: 1;
-  transform: none;
-}
-
-/* Element-level — individual items below the hero */
-.reveal-item {
-  opacity: 0;
-  transform: translateY(20px);
-  transition:
-    opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1),
-    transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-  transition-delay: var(--reveal-delay, 0ms);
-  will-change: opacity, transform;
-}
-
-.reveal-item.is-visible {
-  opacity: 1;
-  transform: none;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
-  }
-
-  [data-reveal] {
-    opacity: 1;
-    transform: none;
-    transition: none;
-  }
-
-  .reveal-item {
-    opacity: 1;
-    transform: none;
-    transition: none;
-  }
-
-  *,
-  *::before,
-  *::after {
-    transition-duration: 0ms !important;
-    animation-duration: 0ms !important;
-  }
-}
-
-/* --------------------------------------------------------------------------
-   Selection
-   -------------------------------------------------------------------------- */
-
-::selection {
-  background: var(--bone);
-  color: var(--terra);
-}
-
-/* --------------------------------------------------------------------------
-   Preloader — fades when the hero video is ready to play through
-   -------------------------------------------------------------------------- */
-
-.preloader {
-  position: fixed;
-  inset: 0;
-  z-index: 9999;
+  min-height: clamp(40px, 4.2vw, 72px);
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--paper);
-  transition: opacity 600ms ease-out, visibility 0s linear 600ms;
+  background: var(--cream);
+  border-top: 2px solid var(--ink);
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(11px, 1.05vw, 16px);
+  line-height: 1.4;
+  padding: clamp(12px, 1.4vw, 24px) var(--gutter);
 }
 
-.preloader.is-hidden {
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
+/* ── Selection ─────────────────────────────────────────────────────────── */
+
+::selection {
+  background: var(--ink);
+  color: var(--info);
 }
 
-.preloader__anim {
-  width: clamp(96px, 14vw, 160px);
-  height: clamp(96px, 14vw, 160px);
-}
+/* ── Responsive ────────────────────────────────────────────────────────── */
 
-.preloader__anim svg {
-  display: block;
-  width: 100%;
-  height: 100%;
-}
+@media (max-width: 720px) {
+  .panel { grid-template-columns: 1fr; }
+  .hero__name { font-size: clamp(14px, 4vw, 20px); }
+  .hero__ring--inner text  { font-size: 10px; }
+  .hero__ring--middle text { font-size: 13px; }
+  .hero__ring--outer text  { font-size: 20px; }
 
-/* Lock scroll + pause hero defog/undulate while preloader is up. */
-body.is-loading {
-  overflow: hidden;
-}
-
-body.is-loading .hero__text .display--xl {
-  animation-play-state: paused;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .preloader__anim {
-    width: auto;
-    height: auto;
+  .panel__right--info,
+  .entry {
+    border-left: 0;
+    border-top: 1px solid var(--ink);
   }
-
-  .preloader__anim::before {
-    content: "Loading";
-    font-family: var(--font-body);
-    font-size: var(--caption);
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--clay);
-  }
+  .entry--dashed { border-top: 1px dashed var(--ink); }
+  .h-section, .h-sub { white-space: normal; }
 }
 
+@media (max-width: 420px) {
+  .contact__row { grid-template-columns: clamp(76px, 24vw, 100px) 1fr; }
+}
