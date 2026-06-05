@@ -1,95 +1,108 @@
 /**
- * Lens Barrel Distortion Effect
- * Creates a pronounced convex bulge effect using CSS transforms and filters
+ * Lens distortion effect — edge chromatic aberration + vignette
+ *
+ * Draws onto a 2D canvas overlay that sits ABOVE the hero.
+ * Never touches the rings' transform — that belongs to GSAP alone.
+ * setDistortion(0…1) is called by the ScrollTrigger onUpdate.
  */
 
 export function initLensDistortion(hero) {
   if (!hero) return null;
 
-  const rings = hero.querySelector('.hero__rings');
-  if (!rings) return null;
+  const canvas = document.createElement("canvas");
+  canvas.style.cssText = [
+    "position:absolute",
+    "inset:0",
+    "width:100%",
+    "height:100%",
+    "pointer-events:none",
+    "z-index:3",
+  ].join(";");
+  hero.appendChild(canvas);
 
-  // Create chromatic aberration layers for color split
-  const redGlow = document.createElement('div');
-  redGlow.style.position = 'absolute';
-  redGlow.style.top = '0';
-  redGlow.style.left = '0';
-  redGlow.style.width = '100%';
-  redGlow.style.height = '100%';
-  redGlow.style.pointerEvents = 'none';
-  redGlow.style.zIndex = '2';
-  redGlow.style.opacity = '0';
-  hero.appendChild(redGlow);
+  let W = 0, H = 0;
+  let currentAmount = 0;
+  let rafId = null;
 
-  const blueGlow = document.createElement('div');
-  blueGlow.style.position = 'absolute';
-  blueGlow.style.top = '0';
-  blueGlow.style.left = '0';
-  blueGlow.style.width = '100%';
-  blueGlow.style.height = '100%';
-  blueGlow.style.pointerEvents = 'none';
-  blueGlow.style.zIndex = '2';
-  blueGlow.style.opacity = '0';
-  hero.appendChild(blueGlow);
-
-  const state = {
-    distortionAmount: 0,
-    redGlow,
-    blueGlow,
+  // Fit canvas to hero on load and resize
+  const resize = () => {
+    W = canvas.width  = hero.offsetWidth;
+    H = canvas.height = hero.offsetHeight;
+    draw(currentAmount);
   };
 
+  const ro = new ResizeObserver(resize);
+  ro.observe(hero);
+  resize();
+
+  function draw(t) {
+    if (!W || !H) return;
+    const ctx = canvas.getContext("2d");
+    ctx.clearRect(0, 0, W, H);
+    if (t <= 0) return;
+
+    const cx = W / 2, cy = H / 2;
+    const r  = Math.hypot(cx, cy); // corner-to-centre distance
+
+    // ── Vignette ───────────────────────────────────────────────────────
+    // Dark ring that tightens as distortion grows
+    const vigInner = 0.45 - t * 0.20;  // inner transparent zone shrinks
+    const vigOuter = 0.80 - t * 0.15;
+    const vigAlpha = t * 0.65;
+
+    const vig = ctx.createRadialGradient(cx, cy, vigInner * r, cx, cy, vigOuter * r);
+    vig.addColorStop(0, "rgba(0,0,0,0)");
+    vig.addColorStop(1, `rgba(0,0,0,${vigAlpha})`);
+    ctx.fillStyle = vig;
+    ctx.fillRect(0, 0, W, H);
+
+    // ── Chromatic aberration ────────────────────────────────────────────
+    // Red fringe: upper-right arc
+    // Blue fringe: lower-left arc
+    // Both start fully transparent in the centre and glow at the edge.
+    const ca = t * 0.75;  // max opacity of the colour fringe
+    const spread = 0.30 + t * 0.20; // fraction of radius where fringe lives
+
+    // Red — upper-right quadrant
+    const redGrad = ctx.createRadialGradient(
+      cx + W * 0.25 * t, cy - H * 0.25 * t, 0,
+      cx, cy, r
+    );
+    redGrad.addColorStop(Math.max(0, 1 - spread), "rgba(255,0,80,0)");
+    redGrad.addColorStop(1, `rgba(255,0,80,${ca})`);
+    ctx.globalCompositeOperation = "screen";
+    ctx.fillStyle = redGrad;
+    ctx.fillRect(0, 0, W, H);
+
+    // Blue — lower-left quadrant
+    const blueGrad = ctx.createRadialGradient(
+      cx - W * 0.25 * t, cy + H * 0.25 * t, 0,
+      cx, cy, r
+    );
+    blueGrad.addColorStop(Math.max(0, 1 - spread), "rgba(0,80,255,0)");
+    blueGrad.addColorStop(1, `rgba(0,80,255,${ca})`);
+    ctx.fillStyle = blueGrad;
+    ctx.fillRect(0, 0, W, H);
+
+    // Restore composite
+    ctx.globalCompositeOperation = "source-over";
+  }
+
   return {
-    setDistortion: (amount) => {
-      amount = Math.max(0, Math.min(1, amount));
-      state.distortionAmount = amount;
-
-      // Barrel bulge effect: scale center more, create convex lens appearance
-      const bulgeFactor = 1 + amount * 0.4; // Up to 40% scale increase
-      const blurAmount = amount * 3;
-
-      // Primary distortion: scale and blur to create glass lens effect
-      rings.style.transform = `scale(${bulgeFactor})`;
-      rings.style.filter = `blur(${blurAmount}px)`;
-
-      // Create prominent red chromatic aberration on edges (right/top)
-      const redOpacity = amount * 0.6;
-      const redShift = amount * 30;
-      redGlow.style.opacity = redOpacity.toString();
-      redGlow.style.background = `
-        radial-gradient(
-          circle at calc(50% + ${redShift * 0.3}%) calc(50% - ${redShift * 0.3}%),
-          rgba(255, 50, 80, ${amount * 0.8}) 0%,
-          rgba(255, 100, 120, ${amount * 0.5}) 15%,
-          rgba(255, 150, 150, ${amount * 0.2}) 30%,
-          transparent 60%
-        )
-      `;
-      redGlow.style.boxShadow = `
-        0 0 ${amount * 80}px rgba(255, 60, 100, ${amount * 0.5}),
-        inset 0 0 ${amount * 50}px rgba(255, 80, 120, ${amount * 0.3})
-      `;
-
-      // Create prominent blue chromatic aberration on opposite edges (left/bottom)
-      const blueOpacity = amount * 0.6;
-      const blueShift = amount * 30;
-      blueGlow.style.opacity = blueOpacity.toString();
-      blueGlow.style.background = `
-        radial-gradient(
-          circle at calc(50% - ${blueShift * 0.3}%) calc(50% + ${blueShift * 0.3}%),
-          rgba(80, 120, 255, ${amount * 0.8}) 0%,
-          rgba(120, 150, 255, ${amount * 0.5}) 15%,
-          rgba(150, 180, 255, ${amount * 0.2}) 30%,
-          transparent 60%
-        )
-      `;
-      blueGlow.style.boxShadow = `
-        0 0 ${amount * 80}px rgba(80, 120, 255, ${amount * 0.5}),
-        inset 0 0 ${amount * 50}px rgba(100, 150, 255, ${amount * 0.3})
-      `;
+    setDistortion(amount) {
+      const t = Math.max(0, Math.min(1, amount));
+      if (t === currentAmount) return;
+      currentAmount = t;
+      if (rafId) cancelAnimationFrame(rafId);
+      rafId = requestAnimationFrame(() => {
+        rafId = null;
+        draw(t);
+      });
     },
-    dispose: () => {
-      redGlow.remove();
-      blueGlow.remove();
+    dispose() {
+      ro.disconnect();
+      if (rafId) cancelAnimationFrame(rafId);
+      canvas.remove();
     },
   };
 }
