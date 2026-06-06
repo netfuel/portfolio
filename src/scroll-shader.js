@@ -34,8 +34,8 @@ export function initScrollShader() {
   // Turbulence generates the noise map (static — no time animation)
   const turb = document.createElementNS(NS, "feTurbulence");
   turb.setAttribute("type",          "turbulence");
-  turb.setAttribute("baseFrequency", "0.008 0.025");  // low X freq → wave columns; higher Y → ripple rows
-  turb.setAttribute("numOctaves",    "2");
+  turb.setAttribute("baseFrequency", "0.002 0.006");  // very low freq → large, broad waves
+  turb.setAttribute("numOctaves",    "1");             // single octave = smooth, no fine detail
   turb.setAttribute("seed",          "5");
   turb.setAttribute("result",        "noise");
 
@@ -62,7 +62,7 @@ export function initScrollShader() {
 
   function applyVelocity(velocity) {
     // Map raw px/s velocity to displacement pixels (clamped, absolute value)
-    const target = Math.min(Math.abs(velocity) * 0.018, 28);
+    const target = Math.min(Math.abs(velocity) * 0.055, 85);
 
     gsap.to(proxy, {
       scale:    target,
