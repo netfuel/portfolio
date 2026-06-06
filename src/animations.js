@@ -119,7 +119,7 @@ function initTunnelScroll(idleRotations = []) {
       onUpdate(self) {
         if (vignette) {
           // Bell-curve: 0 at start and end, peaks at mid-scroll
-          gsap.set(vignette, { opacity: Math.sin(self.progress * Math.PI) * 0.85 });
+          gsap.set(vignette, { opacity: Math.sin(self.progress * Math.PI) * 0.65 });
         }
       },
     },
