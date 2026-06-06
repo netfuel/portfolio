@@ -1,7 +1,6 @@
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { SplitText } from "gsap/SplitText";
-import { initLensDistortion } from "./lens-distortion.js";
 
 gsap.registerPlugin(ScrollTrigger, SplitText);
 
@@ -90,7 +89,6 @@ function initTunnelScroll(idleRotations = []) {
   const scrollCue = document.querySelector(".hero__scroll");
   if (!hero || !ringInner) return;
 
-  const lens = initLensDistortion(hero);
   let resumeTimer;
 
   const pauseIdle = () => {
@@ -117,12 +115,6 @@ function initTunnelScroll(idleRotations = []) {
       onEnterBack: pauseIdle,
       onLeave:     resumeIdle,
       onLeaveBack: resumeIdle,
-      onUpdate(self) {
-        if (!lens) return;
-        // Bell-curve peaks at ~50% scroll then fades — matches rings passing camera
-        const p = self.progress;
-        lens.setDistortion(Math.sin(p * Math.PI));
-      },
     },
   });
 
