@@ -26,10 +26,10 @@ export function initScrollShader() {
   const defs   = document.createElementNS(NS, "defs");
   const filter = document.createElementNS(NS, "filter");
   filter.setAttribute("id",     "scrollWave");
-  filter.setAttribute("x",      "-20%");
-  filter.setAttribute("y",      "-20%");
-  filter.setAttribute("width",  "140%");
-  filter.setAttribute("height", "140%");
+  filter.setAttribute("x",      "-50%");
+  filter.setAttribute("y",      "-50%");
+  filter.setAttribute("width",  "200%");
+  filter.setAttribute("height", "200%");
 
   // Turbulence generates the noise map (static — no time animation)
   const turb = document.createElementNS(NS, "feTurbulence");
