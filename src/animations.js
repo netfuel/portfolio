@@ -1,7 +1,6 @@
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { SplitText } from "gsap/SplitText";
-import { initScrollShader } from "./scroll-shader.js";
 
 gsap.registerPlugin(ScrollTrigger, SplitText);
 
@@ -185,7 +184,6 @@ function initHovers() {
 
 // ──────────────────────────────────────────────────────────────────────────
 export function initAnimations() {
-  initScrollShader();
   const { idleRotations } = initHeroIntro();
   initTunnelScroll(idleRotations);
   initCardStack();
