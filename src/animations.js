@@ -81,6 +81,7 @@ function initTunnelScroll(idleRotations = []) {
   if (reduced) return;
 
   const hero      = document.querySelector(".hero");
+  const vignette  = document.querySelector(".hero__vignette");
   const ringInner = document.querySelector(".hero__ring--inner");
   const ringMiddle= document.querySelector(".hero__ring--middle");
   const ringOuter = document.querySelector(".hero__ring--outer");
@@ -115,11 +116,18 @@ function initTunnelScroll(idleRotations = []) {
       onEnterBack: pauseIdle,
       onLeave:     resumeIdle,
       onLeaveBack: resumeIdle,
+      onUpdate(self) {
+        if (vignette) {
+          // Bell-curve: 0 at start and end, peaks at mid-scroll
+          gsap.set(vignette, { opacity: Math.sin(self.progress * Math.PI) * 0.85 });
+        }
+      },
     },
   });
 
   // Scroll cue out
   tl.to(scrollCue, { opacity: 0, duration: 0.05 }, 0);
+
 
   // All three rings rush toward camera together
   const ringConfig = [

@@ -167,6 +167,20 @@ button {
 .hero__ring--middle { transform-origin: 50% 50%; }
 .hero__ring--outer  { transform-origin: 50% 50%; }
 
+/* Vignette overlay — fades in during scroll tunnel */
+.hero__vignette {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  opacity: 0;
+  background: radial-gradient(
+    ellipse at 50% 50%,
+    transparent 35%,
+    rgba(0, 0, 0, 0.75) 100%
+  );
+}
+
 /* Scroll cue */
 .hero__scroll {
   position: absolute;
