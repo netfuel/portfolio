@@ -153,7 +153,7 @@ export async function initWordCloud() {
   // Two passes around the sphere so it reads as full from every angle
   const entries = [...WORDS, ...WORDS];
   const n = entries.length;
-  const texPx = Math.round(64 * dpr);     // texture font size in device px
+  const texPx = Math.round(64 * 0.8 * dpr);     // texture font size in device px
   const pxPerUnit = 150 * dpr;            // texture px → world units
   const sprites = [];
 
