@@ -38,7 +38,23 @@ const initClock = () => {
   setInterval(update, 1000);
 };
 
+const initCursor = () => {
+  if (window.matchMedia("(pointer: coarse)").matches) return;
+  const dot = document.createElement("div");
+  const ring = document.createElement("div");
+  dot.className = "cursor-dot";
+  ring.className = "cursor-ring";
+  document.body.append(dot, ring);
+
+  window.addEventListener("mousemove", (e) => {
+    const t = `translate(${e.clientX}px,${e.clientY}px)`;
+    dot.style.transform = t;
+    ring.style.transform = t;
+  });
+};
+
 const init = () => {
+  initCursor();
   initRevealEmail();
   initClock();
   // Three.js loads as an async chunk so the typography never waits on it

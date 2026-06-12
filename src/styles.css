@@ -12,6 +12,33 @@
   font-display: swap;
 }
 
+/* ── Custom cursor ─────────────────────────────────────────────────────── */
+
+.js * { cursor: none !important; }
+
+.cursor-dot,
+.cursor-ring {
+  position: fixed;
+  top: 0; left: 0;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9999;
+  will-change: transform;
+}
+
+.cursor-dot {
+  width: 7px; height: 7px;
+  background: var(--accent);
+  margin: -3.5px 0 0 -3.5px;
+}
+
+.cursor-ring {
+  width: 27px; height: 27px;
+  border: 1.5px solid var(--accent);
+  margin: -13.5px 0 0 -13.5px;
+  opacity: 0.75;
+}
+
 /* ── Tokens ────────────────────────────────────────────────────────────── */
 
 :root {
@@ -541,8 +568,8 @@ a.row__link:hover .row__arrow,
 
 .contact__row {
   display: grid;
-  grid-template-columns: clamp(120px, 14vw, 220px) 1fr;
-  align-items: baseline;
+  grid-template-columns: 40px 1fr;
+  align-items: center;
   border-top: 1px solid var(--hairline);
   padding: clamp(14px, 2vh, 24px) 0;
 }
@@ -556,7 +583,9 @@ a.row__link:hover .row__arrow,
   font-size: clamp(10px, 0.85vw, 13px);
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--bone-ghost);
+  color: var(--accent);
+  display: flex;
+  align-items: center;
 }
 
 .contact__val {
