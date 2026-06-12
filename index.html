@@ -3,170 +3,230 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#e8e4d0" />
+    <meta name="theme-color" content="#08080A" />
     <meta name="author" content="Matt Ladner" />
-    <meta name="description" content="Senior Experience Designer at Adobe, based in Memphis. Three decades shaping products used by millions, now designing for a world where interfaces are malleable." />
-    <meta name="keywords" content="Senior Experience Designer, Memphis, Adobe, Agentic UX, Malleable Interfaces, Developer Experience, Design Systems, Extensibility, Emerging Tech, Generative Design, Brand Design, Creative Ventures" />
+    <meta name="description" content="Senior Experience Designer based in Memphis. Three decades shaping products used by millions, now exploring what it means to design for a world where interfaces are malleable." />
+    <meta name="keywords" content="Senior Experience Designer, Memphis, Agentic UX, Malleable Interfaces, Developer Experience, Design Systems, Extensibility, Emerging Tech, Generative Design, Brand Design" />
 
     <!-- Open Graph -->
     <meta property="og:title" content="Matt Ladner — Senior Experience Designer" />
-    <meta property="og:description" content="Senior Experience Designer at Adobe, based in Memphis. Three decades shaping products used by millions — Adobe Express, Hilton, Target, U.S. Air Force, St. Jude — now exploring what it means to design for a world where interfaces are malleable." />
+    <meta property="og:description" content="Senior Experience Designer based in Memphis. Three decades shaping elegant, scalable experiences across product design, emerging tech, and creative ventures." />
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="en_US" />
     <meta property="og:site_name" content="Matt Ladner" />
+    <meta property="og:image" content="/images/og.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:type" content="image/jpeg" />
 
     <!-- Twitter card -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="Matt Ladner — Senior Experience Designer" />
-    <meta name="twitter:description" content="Senior Experience Designer at Adobe, based in Memphis. Three decades shaping products used by millions — now designing for a world where interfaces are malleable." />
+    <meta name="twitter:description" content="Senior Experience Designer based in Memphis. Three decades shaping elegant, scalable experiences." />
+    <meta name="twitter:image" content="/images/og.jpg" />
+
+    <!-- Icons -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="preload" as="font" type="font/otf" href="/fonts/Proto-Mono-Medium.otf" crossorigin />
+    <link rel="apple-touch-icon" href="/images/apple-touch-icon-180.png" />
+
+    <!-- Typography -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="/src/styles.css" />
-    <title>Matthew_Ladner — Senior Experience Designer</title>
+    <title>Matthew Ladner — Senior Experience Designer</title>
+    <script>
+      /* Gate pre-animation hidden states behind .js so content is never lost */
+      try {
+        if (!matchMedia("(prefers-reduced-motion: reduce)").matches) {
+          document.documentElement.classList.add("js");
+        }
+      } catch (e) {}
+    </script>
   </head>
   <body>
-    <!-- ────────────────────────────── HERO ────────────────────────────── -->
-    <section class="hero">
-      <h1 class="hero__name">
-        <span class="word-l">Matthew</span>
-        <span class="word-r">Ladner</span>
-      </h1>
+    <!-- Preloader — only displayed when .js is set; no-JS and reduced-motion skip it -->
+    <div class="loader" id="loader" aria-hidden="true">
+      <div class="loader__head">
+        <span class="loader__label">Matthew_Ladner</span>
+        <span class="loader__label">[Portfolio]</span>
+      </div>
+      <span class="loader__rule"></span>
+      <div class="loader__count"><span data-count>0</span><span class="loader__pct">%</span></div>
+    </div>
 
-      <!-- Concentric keyword rings — SVG textPath on circles -->
-      <svg class="hero__rings" viewBox="0 0 1200 1200" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-        <defs>
-          <path id="ring-inner"  d="M 600 380 A 220 220 0 1 1 599.999 380" fill="none" />
-          <path id="ring-middle" d="M 600 235 A 365 365 0 1 1 599.999 235" fill="none" />
-          <path id="ring-outer"  d="M 600  80 A 520 520 0 1 1 599.999  80" fill="none" />
-        </defs>
+    <!-- Atmosphere canvas injected here by atmosphere.js -->
 
-        <g class="hero__ring hero__ring--inner">
-          <text>
-            <textPath href="#ring-inner" startOffset="0%">
-              Malleable Interfaces &middot; Developer Experience &middot; Design Systems &middot; Agentic UX &middot; Brand Design &middot; Experience Design &middot; Emerging Tech &middot; Extensibility &middot; Generative Design &middot; Malleable Interfaces &middot; Developer Experience &middot; Design Systems &middot; Agentic UX &middot; Brand Design &middot;
-            </textPath>
-          </text>
-        </g>
+    <div id="smooth-wrapper">
+    <div id="smooth-content" class="page">
+      <!-- ────────────────────────────── HERO ────────────────────────────── -->
+      <section class="hero" id="top">
+        <!-- Three.js keyword sphere mounts here, behind the name -->
+        <div class="hero__cloud" aria-hidden="true"></div>
 
-        <g class="hero__ring hero__ring--middle">
-          <text>
-            <textPath href="#ring-middle" startOffset="0%">
-              Developer Experience &middot; Design Systems &middot; Agentic UX &middot; Brand Design &middot; Emerging Tech &middot; Extensibility &middot; Generative Design &middot; Malleable Interfaces &middot; Experience Design &middot; Developer Experience &middot; Design Systems &middot; Agentic UX &middot; Brand Design &middot; Emerging Tech &middot; Extensibility &middot;
-            </textPath>
-          </text>
-        </g>
+<h1 class="hero__name">
+          <span class="hero__line"><span class="hero__word">Matthew</span></span>
+          <span class="hero__line hero__line--shift"><span class="hero__word hero__word--italic">Ladner</span></span>
+        </h1>
 
-        <g class="hero__ring hero__ring--outer">
-          <text>
-            <textPath href="#ring-outer" startOffset="0%">
-              Malleable Interfaces &middot; Developer Experience &middot; Design Systems &middot; Agentic UX &middot; Brand Design &middot; Experience Design &middot; Emerging Tech &middot; Extensibility &middot; Generative Design &middot;
-            </textPath>
-          </text>
-        </g>
-      </svg>
-
-      <a class="hero__scroll" href="#craft" aria-label="Scroll to content">scroll</a>
-      <div class="hero__vignette" aria-hidden="true"></div>
-    </section>
-
-    <!-- ────────────────────────────── PANELS (card stack) ────────────────────────────── -->
-    <div class="panels">
-      <section class="panel panel--craft" id="craft">
-        <div class="panel__left">
-          <h2 class="h-section">[Craft]</h2>
-          <div class="panel__body">
-            <p>I&rsquo;m a Senior UX designer at Adobe, where I spend my days bridging creativity and technology, designing intuitive, scalable experiences with a focus on developer tools and extensibility.</p>
-            <p>I&rsquo;ve been doing this for nearly three decades, shaping products used by millions: from Adobe Express to platforms for Hilton Hotels, Target, the U.S. Air Force, and St. Jude Children&rsquo;s Research Hospital.</p>
-            <p>Lately, most of my time has been spent at the front edge of agentic user experiences. I&rsquo;m figuring out what it means to design for a world where interfaces are malleable.</p>
-          </div>
+        <div class="hero__meta">
+          <span class="hero__rule" aria-hidden="true"></span>
+          <p class="hero__tagline">Senior Experience Designer</p>
         </div>
-        <div class="panel__right">
-          <article class="entry entry--solid">
-            <h3 class="h-sub">[Product_UX_&amp;_Strategy]</h3>
-            <p>I architect user experiences for industry-leading platforms, translating complex workflows into simple, intuitive, and effective interactions for millions of users.</p>
-          </article>
-          <article class="entry entry--dashed">
-            <h3 class="h-sub">[Emerging_Tech]</h3>
-            <p>Focused on the future of UX &mdash; AI, generative design, and the new interfaces reshaping how we work.</p>
-          </article>
-          <article class="entry entry--dashed">
-            <h3 class="h-sub">[Graphic_&amp;_Brand_Design]</h3>
-            <p>My love for visual storytelling extends beyond product into branding and graphic design, where I craft visual identities for brands I believe in. Follow it on <a href="https://www.instagram.com/mattladner.design" target="_blank" rel="noreferrer noopener">Instagram</a>.</p>
-          </article>
-        </div>
+
+        <a class="hero__scroll" href="#craft" aria-label="Scroll to content">
+          <span class="hero__scroll-label">scroll</span>
+          <span class="hero__scroll-line" aria-hidden="true"></span>
+        </a>
       </section>
 
-      <section class="panel panel--ventures">
-        <div class="panel__left">
-          <h2 class="h-section">[Creative_Ventures]</h2>
-          <div class="panel__body">
-            <p>I channel my design philosophy into tangible creative ventures &mdash; exploring form, function, and culture through original clothing, music, and a rotating cast of side projects.</p>
-          </div>
-        </div>
-        <div class="panel__right">
-          <article class="entry entry--solid">
-            <h3 class="h-sub">[Public-Domain]</h3>
-            <p>Original clothing and objects. <a href="https://public-domain.co/" target="_blank" rel="noreferrer noopener">public-domain.co</a></p>
-          </article>
-          <article class="entry entry--dashed">
-            <h3 class="h-sub">[SAUNA]</h3>
-            <p>Coming soon.</p>
-          </article>
-          <article class="entry entry--dashed">
-            <h3 class="h-sub">[MarceauxMarceaux]</h3>
-            <p>Coming soon.</p>
-          </article>
-        </div>
-      </section>
+      <main id="main">
+        <!-- ────────────────────────────── 01 · CRAFT ────────────────────────────── -->
+        <section class="section" id="craft">
+          <header class="section__head">
+            <span class="section__index">(01)</span>
+            <h2 class="section__label">[Craft]</h2>
+          </header>
 
-      <section class="panel panel--writing">
-        <div class="panel__left">
-          <h2 class="h-section">[Writing_&amp;_Talks]</h2>
-          <p class="panel__body">I write about design, emerging tech, and the quiet shifts happening in how we make things. You can find it all on Medium.</p>
-          <p class="cta-wrap">
-            <a class="cta" href="https://mattladner.medium.com/" target="_blank" rel="noreferrer noopener">mattladner.medium.com</a>
-          </p>
-          <div class="featured-block">
-            <p class="label">[Featured]</p>
-            <ul class="featured">
-              <li><a href="https://mattladner.medium.com/how-technology-is-changing-my-journey-with-dyslexia-4658e4d63743" target="_blank" rel="noreferrer noopener">&rarr; How technology is changing my journey with dyslexia</a></li>
-              <li><a href="https://mattladner.medium.com/ai-for-inclusive-design-20f3aaa62567" target="_blank" rel="noreferrer noopener">&rarr; AI for Inclusive Design</a></li>
-              <li><a href="https://mattladner.medium.com/ai-and-extensibility-the-new-creative-pipeline-9c37ce81fc64" target="_blank" rel="noreferrer noopener">&rarr; AI and Extensibility: The New Creative Conduit</a></li>
-            </ul>
+          <div class="section__grid">
+            <p class="lead">I&rsquo;m a Senior UX designer at Adobe, where I spend my days bridging <em>creativity</em> and <em>technology,</em> designing intuitive, scalable experiences with a focus on developer tools and extensibility.</p>
+            <div class="body-col">
+              <p>I&rsquo;ve been doing this for nearly three decades, shaping products used by millions: from Adobe Express to platforms for Hilton Hotels, Target, the U.S. Air Force, and St. Jude Children&rsquo;s Research Hospital.</p>
+              <p>Lately, most of my time has been spent at the front edge of agentic user experiences. I&rsquo;m figuring out what it means to design for a world where interfaces are <em class="accent">malleable</em>.</p>
+            </div>
           </div>
-        </div>
-        <div class="panel__right panel__right--info">
-          <h2 class="h-section">[Let&rsquo;s_Talk]</h2>
-          <p class="panel__body">Working on something interesting? Want to trade notes on agentic UX, design systems, or where all of this is headed? I&rsquo;d love to hear from you.</p>
+
+          <ul class="entries">
+            <li class="entry">
+              <span class="entry__index">a.</span>
+              <h3 class="entry__title">[Product_UX_&amp;_Strategy]</h3>
+              <p class="entry__body">I architect user experiences for industry-leading platforms, translating complex workflows into simple, intuitive, and effective interactions for millions of users.</p>
+            </li>
+            <li class="entry">
+              <span class="entry__index">b.</span>
+              <h3 class="entry__title">[Emerging_Tech]</h3>
+              <p class="entry__body">Focused on the future of UX&nbsp;&mdash; AI, generative design, and the new interfaces reshaping how we work.</p>
+            </li>
+            <li class="entry">
+              <span class="entry__index">c.</span>
+              <h3 class="entry__title">[Graphic_&amp;_Brand_Design]</h3>
+              <p class="entry__body">My love for visual storytelling extends beyond product into branding and graphic design, where I craft visual identities for brands I believe in. Follow it on <a href="https://www.instagram.com/mattladner.design" target="_blank" rel="noreferrer noopener">Instagram</a>.</p>
+            </li>
+          </ul>
+        </section>
+
+        <!-- ────────────────────────────── 02 · CREATIVE VENTURES ────────────────────────────── -->
+        <section class="section" id="ventures">
+          <header class="section__head">
+            <span class="section__index">(02)</span>
+            <h2 class="section__label">[Creative_Ventures]</h2>
+          </header>
+
+          <div class="section__grid">
+            <p class="lead">I channel my design philosophy into tangible creative ventures&nbsp;&mdash; exploring <em>form,</em> <em>function,</em> and <em>culture</em> through original clothing, music, and a rotating cast of side projects.</p>
+          </div>
+
+          <ul class="rows">
+            <li class="row">
+              <a class="row__link" href="https://public-domain.co/" target="_blank" rel="noreferrer noopener">
+                <span class="row__name">Public&#8209;Domain</span>
+                <span class="row__desc">Original clothing and objects.</span>
+                <span class="row__meta">public-domain.co&nbsp;<span class="row__arrow">&#8599;</span></span>
+              </a>
+            </li>
+            <li class="row">
+              <a class="row__link" href="http://www.saunamemphis.com" target="_blank" rel="noreferrer noopener">
+                <span class="row__name">SAUNA</span>
+                <span class="row__desc"></span>
+                <span class="row__meta">saunamemphis.com&nbsp;<span class="row__arrow">&#8599;</span></span>
+              </a>
+            </li>
+            <li class="row">
+              <a class="row__link" href="https://soundcloud.com/marceauxmarceaux" target="_blank" rel="noreferrer noopener">
+                <span class="row__name">MarceauxMarceaux</span>
+                <span class="row__desc"></span>
+                <span class="row__meta">soundcloud.com/marceauxmarceaux&nbsp;<span class="row__arrow">&#8599;</span></span>
+              </a>
+            </li>
+          </ul>
+        </section>
+
+        <!-- ────────────────────────────── 03 · WRITING & TALKS ────────────────────────────── -->
+        <section class="section" id="writing">
+          <header class="section__head">
+            <span class="section__index">(03)</span>
+            <h2 class="section__label">[Writing_&amp;_Talks]</h2>
+          </header>
+
+          <div class="section__grid">
+            <p class="lead">I write about design, emerging tech, and the <em>quiet shifts</em> happening in how we make things. You can find it all on Medium.</p>
+            <div class="body-col body-col--center">
+              <a class="cta" href="https://mattladner.medium.com/" target="_blank" rel="noreferrer noopener">mattladner.medium.com&nbsp;<span class="row__arrow">&#8599;</span></a>
+            </div>
+          </div>
+
+          <p class="sub-label">[Featured]</p>
+          <ul class="rows rows--articles">
+            <li class="row">
+              <a class="row__link" href="https://mattladner.medium.com/how-technology-is-changing-my-journey-with-dyslexia-4658e4d63743" target="_blank" rel="noreferrer noopener">
+                <span class="row__arrow-lead" aria-hidden="true">&rarr;</span>
+                <span class="row__title">How technology is changing my journey with dyslexia</span>
+              </a>
+            </li>
+            <li class="row">
+              <a class="row__link" href="https://mattladner.medium.com/ai-for-inclusive-design-20f3aaa62567" target="_blank" rel="noreferrer noopener">
+                <span class="row__arrow-lead" aria-hidden="true">&rarr;</span>
+                <span class="row__title">AI for Inclusive Design</span>
+              </a>
+            </li>
+            <li class="row">
+              <a class="row__link" href="https://mattladner.medium.com/ai-and-extensibility-the-new-creative-pipeline-9c37ce81fc64" target="_blank" rel="noreferrer noopener">
+                <span class="row__arrow-lead" aria-hidden="true">&rarr;</span>
+                <span class="row__title">AI and Extensibility: The New Creative Conduit</span>
+              </a>
+            </li>
+          </ul>
+        </section>
+
+        <!-- ────────────────────────────── 04 · LET'S TALK ────────────────────────────── -->
+        <section class="section section--contact" id="contact">
+          <header class="section__head">
+            <span class="section__index">(04)</span>
+            <h2 class="section__label">[Let&rsquo;s_Talk]</h2>
+          </header>
+
+          <div class="section__grid">
+            <p class="lead lead--large">Working on something <em>interesting?</em> Want to trade notes on agentic UX, design systems, or where all of this is headed? I&rsquo;d love to hear from you.</p>
+          </div>
+
           <dl class="contact">
             <div class="contact__row">
-              <dt class="label">[email]</dt>
-              <dd><button class="reveal-email" data-u="m" data-d="ttladner.co" aria-label="Reveal email address">click_to_reveal</button></dd>
+              <dt class="contact__key">[email]</dt>
+              <dd class="contact__val"><button class="reveal-email" data-u="m" data-d="ttladner.co" aria-label="Reveal email address">click_to_reveal</button></dd>
             </div>
             <div class="contact__row">
-              <dt class="label">[linkedin]</dt>
-              <dd><a href="https://www.linkedin.com/in/mattladner/" target="_blank" rel="noreferrer noopener">linkedin.com/in/mattladner</a></dd>
+              <dt class="contact__key">[linkedin]</dt>
+              <dd class="contact__val"><a href="https://www.linkedin.com/in/mattladner/" target="_blank" rel="noreferrer noopener">linkedin.com/in/mattladner</a></dd>
             </div>
             <div class="contact__row">
-              <dt class="label">[instagram]</dt>
-              <dd><a href="https://www.instagram.com/mattladner.design" target="_blank" rel="noreferrer noopener">@mattladner.design</a></dd>
+              <dt class="contact__key">[instagram]</dt>
+              <dd class="contact__val"><a href="https://www.instagram.com/mattladner.design" target="_blank" rel="noreferrer noopener">@mattladner.design</a></dd>
             </div>
             <div class="contact__row">
-              <dt class="label">[medium]</dt>
-              <dd><a href="https://mattladner.medium.com/" target="_blank" rel="noreferrer noopener">mattladner.medium.com</a></dd>
+              <dt class="contact__key">[medium]</dt>
+              <dd class="contact__val"><a href="https://mattladner.medium.com/" target="_blank" rel="noreferrer noopener">mattladner.medium.com</a></dd>
             </div>
             <div class="contact__row">
-              <dt class="label">[store]</dt>
-              <dd><a href="https://public-domain.co/" target="_blank" rel="noreferrer noopener">public-domain.co</a></dd>
+              <dt class="contact__key">[store]</dt>
+              <dd class="contact__val"><a href="https://public-domain.co/" target="_blank" rel="noreferrer noopener">public-domain.co</a></dd>
             </div>
           </dl>
-        </div>
-      </section>
+        </section>
+      </main>
 
-      <footer class="footer">Made_in_Memphis.</footer>
+      <footer class="footer">
+        <span class="footer__mark">Made_in_Memphis.</span>
+      </footer>
+    </div>
     </div>
 
     <script type="module" src="/src/main.js"></script>
