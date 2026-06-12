@@ -88,13 +88,43 @@ const DUST_FRAG = /* glsl */ `
   }
 `;
 
+// Splash ripple post-pass — bends the rendered cloud like the surface of water.
+// Same wave math as the atmosphere shader so the two layers ripple in lockstep.
+const RIPPLE_VERT = /* glsl */ `
+  varying vec2 vUv;
+  void main() {
+    vUv = uv;
+    gl_Position = vec4(position.xy, 0.0, 1.0);
+  }
+`;
+
+const RIPPLE_FRAG = /* glsl */ `
+  precision mediump float;
+  uniform sampler2D tDiffuse;
+  uniform vec2  uCenter;
+  uniform float uT;
+  uniform float uAspect;
+  varying vec2  vUv;
+
+  void main() {
+    vec2  uvA  = vec2(vUv.x * uAspect, vUv.y);
+    vec2  cA   = vec2(uCenter.x * uAspect, uCenter.y);
+    float d    = length(uvA - cA);
+    float band = d - uT * 0.55;
+    float wave = sin(band * 50.0) * exp(-band * band * 28.0) * exp(-uT * 1.4);
+    vec2  dir  = (uvA - cA) / max(d, 1e-4);
+    vec2  uv   = vUv + dir * wave * 0.04 * vec2(1.0 / uAspect, 1.0);
+    gl_FragColor = texture2D(tDiffuse, uv);
+  }
+`;
+
 // Words rendered to canvas textures — drawn oversized for retina crispness
 function makeWordTexture(text, fontPx) {
   const pad = Math.round(fontPx * 0.4);
   const c = document.createElement("canvas");
   const ctx = c.getContext("2d");
 
-  const font = `italic 400 ${fontPx}px "Instrument Serif", Georgia, serif`;
+  const font = `400 ${fontPx}px "Space Mono", monospace`;
   ctx.font = font;
   const metrics = ctx.measureText(text);
 
@@ -153,7 +183,7 @@ export async function initWordCloud() {
   // Two passes around the sphere so it reads as full from every angle
   const entries = [...WORDS, ...WORDS];
   const n = entries.length;
-  const texPx = Math.round(64 * 0.8 * dpr);     // texture font size in device px
+  const texPx = Math.round(64 * 0.512 * dpr);   // texture font size in device px
   const pxPerUnit = 150 * dpr;            // texture px → world units
   const sprites = [];
 
@@ -270,6 +300,38 @@ export async function initWordCloud() {
   let fade = reduced ? 1 : 0;
   let elapsed = 0;
 
+  // ── Splash ripple post-pass — only pays the extra pass while a ripple is live ──
+  const rt = new THREE.WebGLRenderTarget(Math.round(w * dpr), Math.round(h * dpr));
+  const postCam = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
+  const postScene = new THREE.Scene();
+  const postMat = new THREE.ShaderMaterial({
+    vertexShader: RIPPLE_VERT,
+    fragmentShader: RIPPLE_FRAG,
+    uniforms: {
+      tDiffuse: { value: rt.texture },
+      uCenter: { value: new THREE.Vector2(0.5, 0.5) },
+      uT: { value: 0 },
+      uAspect: { value: w / h },
+    },
+    transparent: true,
+    blending: THREE.NoBlending, // straight copy — keeps the canvas's alpha intact
+    depthTest: false,
+    depthWrite: false,
+  });
+  postScene.add(new THREE.Mesh(new THREE.PlaneGeometry(2, 2), postMat));
+
+  let splashAt = -1;
+  if (!reduced) {
+    window.addEventListener("hero:splash", (e) => {
+      const r = host.getBoundingClientRect();
+      postMat.uniforms.uCenter.value.set(
+        (e.detail.cx - r.left) / r.width,
+        1 - (e.detail.cy - r.top) / r.height
+      );
+      splashAt = elapsed;
+    });
+  }
+
   const renderFrame = (dt) => {
     if (fade < 1) fade = Math.min(1, fade + dt * 0.45);
     elapsed += dt;
@@ -304,7 +366,16 @@ export async function initWordCloud() {
       s.material.opacity = (0.06 + Math.pow(t, 1.2) * 0.42) * s.userData.tier * clearing * fade * lit;
     });
 
-    renderer.render(scene, camera);
+    const rippleT = splashAt >= 0 ? elapsed - splashAt : -1;
+    if (rippleT >= 0 && rippleT < 4) {
+      postMat.uniforms.uT.value = rippleT;
+      renderer.setRenderTarget(rt);
+      renderer.render(scene, camera);
+      renderer.setRenderTarget(null);
+      renderer.render(postScene, postCam);
+    } else {
+      renderer.render(scene, camera);
+    }
   };
 
   // Dev-only: lets tooling pump frames when rAF is throttled (stripped from prod)
@@ -316,6 +387,8 @@ export async function initWordCloud() {
     renderer.setSize(w, h);
     camera.aspect = w / h;
     camera.updateProjectionMatrix();
+    rt.setSize(Math.round(w * dpr), Math.round(h * dpr));
+    postMat.uniforms.uAspect.value = w / h;
     radius = computeRadius();
     applyLayout();
   };
@@ -375,6 +448,8 @@ export async function initWordCloud() {
     });
     dustGeo.dispose();
     dustMat.dispose();
+    rt.dispose();
+    postMat.dispose();
     glowTex.dispose();
     glowWide.material.dispose();
     glowCore.material.dispose();

@@ -13,6 +13,8 @@ const FRAG = /* glsl */ `
   uniform vec2  uResolution;
   uniform vec2  uMouse;
   uniform float uScroll;
+  uniform vec2  uRippleC;   // splash center, uv space
+  uniform float uRippleT;   // seconds since splash, negative = inactive
   varying vec2  vUv;
 
   float hash(vec2 p) {
@@ -48,6 +50,17 @@ const FRAG = /* glsl */ `
     vec2  uvA    = vec2(vUv.x * aspect, vUv.y);
     float t      = uTime * 0.035;
 
+    // Splash ripple — an expanding, damped ring that bends the fog like water
+    float wave = 0.0;
+    if (uRippleT >= 0.0) {
+      vec2  cA   = vec2(uRippleC.x * aspect, uRippleC.y);
+      float d    = length(uvA - cA);
+      float band = d - uRippleT * 0.55;
+      wave = sin(band * 50.0) * exp(-band * band * 28.0) * exp(-uRippleT * 1.4);
+      vec2 dir = (uvA - cA) / max(d, 1e-4);
+      uvA += dir * wave * 0.045;
+    }
+
     // Slow drifting fog — scroll gently advances the field
     vec2  drift = vec2(t * 0.6, -t * 0.35) + vec2(0.0, uScroll * 1.4);
     float fog   = fbm(uvA * 1.7 + drift);
@@ -64,6 +77,9 @@ const FRAG = /* glsl */ `
     float d    = length(uvA - mA);
     float glow = exp(-d * 2.6) * (0.5 + 0.5 * fog);
     color += vec3(0.10, 0.094, 0.082) * glow * 0.55;
+
+    // Ripple crest catches light; the trough falls into shadow
+    color += vec3(0.16, 0.17, 0.12) * wave * 1.4;
 
     // Vignette — settles the edges
     vec2  c   = vUv - 0.5;
@@ -109,6 +125,8 @@ export function initAtmosphere() {
     uResolution: { value: new THREE.Vector2(w, h) },
     uMouse:      { value: new THREE.Vector2(0.5, 0.62) },
     uScroll:     { value: 0 },
+    uRippleC:    { value: new THREE.Vector2(0.5, 0.5) },
+    uRippleT:    { value: -1 },
   };
 
   scene.add(
@@ -138,11 +156,23 @@ export function initAtmosphere() {
 
   const clock = new THREE.Clock();
   let raf = null;
+  let splashAt = -1;
+
+  // The loader's circle lands here — the fog ripples out from the impact point
+  if (!reduced) {
+    window.addEventListener("hero:splash", (e) => {
+      const { cx, cy } = e.detail;
+      uniforms.uRippleC.value.set(cx / window.innerWidth, 1 - cy / window.innerHeight);
+      splashAt = clock.getElapsedTime();
+    });
+  }
 
   const renderFrame = () => {
-    uniforms.uTime.value = clock.getElapsedTime();
+    const elapsed = clock.getElapsedTime();
+    uniforms.uTime.value = elapsed;
     uniforms.uMouse.value.lerp(mouseTarget, 0.045);
     uniforms.uScroll.value += (getScrollProgress() - uniforms.uScroll.value) * 0.06;
+    uniforms.uRippleT.value = splashAt >= 0 && elapsed - splashAt < 4 ? elapsed - splashAt : -1;
     renderer.render(scene, camera);
   };
 
