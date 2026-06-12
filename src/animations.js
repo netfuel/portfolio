@@ -71,23 +71,36 @@ function initHeroIntro() {
 }
 
 // ──────────────────────────────────────────────────────────────────────────
-// Hero parallax — name drifts up and dissolves as the page takes over
+// Hero exit — MATTHEW slides off left, LADNER off right, while the word
+// cloud (listening to hero:scroll) flies forward past the camera
 // ──────────────────────────────────────────────────────────────────────────
 function initHeroParallax() {
   const hero = document.querySelector(".hero");
   if (!hero) return;
 
+  const lines = gsap.utils.toArray(".hero__line");
+  // Far enough that the word fully clears the viewport edge at any size
+  const offscreen = (line, dir) => () =>
+    dir * (window.innerWidth / 2 + line.offsetWidth / 2 + 60);
+
   gsap.timeline({
     scrollTrigger: {
       trigger: hero,
       start: "top top",
-      end: "bottom top",
+      end: "+=85%",      // exit pace; adds no scroll length since pinSpacing is off
       scrub: true,
+      pin: true,
+      pinSpacing: false, // content slides up over the hero as the words exit
+      anticipatePin: 1,
+      invalidateOnRefresh: true,
+      onUpdate(self) {
+        window.dispatchEvent(new CustomEvent("hero:scroll", { detail: { p: self.progress } }));
+      },
     },
   })
-    .to(".hero__name", { yPercent: -24, opacity: 0.12, ease: "none" }, 0)
+    .to(lines[0], { x: offscreen(lines[0], -1), ease: "power1.in" }, 0)
+    .to(lines[1], { x: offscreen(lines[1], 1), ease: "power1.in" }, 0)
     .to(".hero__meta", { yPercent: -90, opacity: 0, ease: "none" }, 0)
-    .to(".hero__cloud", { yPercent: -10, opacity: 0, ease: "none" }, 0)
     .to(".hero__scroll", { opacity: 0, ease: "none" }, 0);
 }
 

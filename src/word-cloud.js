@@ -295,6 +295,13 @@ export async function initWordCloud() {
     });
   }
 
+  // Scroll flies the cloud forward past the camera — progress comes from the
+  // hero's ScrollTrigger in animations.js
+  let scrollTarget = 0;
+  let scrollP = 0;
+  let cloudIdle = false;
+  window.addEventListener("hero:scroll", (e) => { scrollTarget = e.detail.p; });
+
   const worldPos = new THREE.Vector3();
   const ndc = new THREE.Vector3();
   let fade = reduced ? 1 : 0;
@@ -336,6 +343,18 @@ export async function initWordCloud() {
     if (fade < 1) fade = Math.min(1, fade + dt * 0.45);
     elapsed += dt;
 
+    // Scroll pushes the whole cloud toward (and past) the camera, fading as it goes
+    scrollP += (scrollTarget - scrollP) * 0.12;
+    group.position.z = scrollP * (camera.position.z + radius);
+    const scrollFade = 1 - THREE.MathUtils.smoothstep(scrollP, 0.25, 0.6);
+
+    // Fully faded — clear once and skip all per-sprite work and GPU passes
+    if (scrollFade <= 0.002) {
+      if (!cloudIdle) { renderer.clear(); cloudIdle = true; }
+      return;
+    }
+    cloudIdle = false;
+
     group.rotation.y += dt * 0.05;
     group.rotation.x += (rotTarget.x - group.rotation.x) * 0.03;
     group.rotation.z += (rotTarget.y * 0.25 - group.rotation.z) * 0.03;
@@ -344,11 +363,11 @@ export async function initWordCloud() {
     lightPos.lerp(lightTarget, 0.045);
     glowWide.position.copy(lightPos);
     glowCore.position.copy(lightPos);
-    glowWide.material.opacity = 0.05 * fade;
-    glowCore.material.opacity = 0.08 * fade;
+    glowWide.material.opacity = 0.05 * fade * scrollFade;
+    glowCore.material.opacity = 0.08 * fade * scrollFade;
 
     dustMat.uniforms.uTime.value = elapsed;
-    dustMat.uniforms.uFade.value = fade;
+    dustMat.uniforms.uFade.value = fade * scrollFade;
     dustMat.uniforms.uLight.value.copy(lightPos);
 
     // Depth cue: words dim and recede as they orbit behind.
@@ -363,7 +382,9 @@ export async function initWordCloud() {
       const clearing = 0.18 + 0.82 * THREE.MathUtils.smoothstep(e, 0.3, 1.1);
       const dl = worldPos.distanceTo(lightPos);
       const lit = 1 + Math.exp(-dl * dl * 0.03) * 0.5;
-      s.material.opacity = (0.06 + Math.pow(t, 1.2) * 0.42) * s.userData.tier * clearing * fade * lit;
+      s.material.opacity = Math.min(1,
+        (0.06 + Math.pow(Math.min(t, 1.6), 1.2) * 0.42) * s.userData.tier * clearing * fade * lit * scrollFade
+      );
     });
 
     const rippleT = splashAt >= 0 ? elapsed - splashAt : -1;

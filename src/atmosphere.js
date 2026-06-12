@@ -114,7 +114,9 @@ export function initAtmosphere() {
     return;
   }
 
-  renderer.setPixelRatio(mobile ? 1 : Math.min(devicePixelRatio, 1.5));
+  // Soft fog doesn't need resolution — capping dpr cuts the heaviest fragment
+  // workload on the page (~8 fbm octaves/pixel) by up to 30%
+  renderer.setPixelRatio(mobile ? 1 : Math.min(devicePixelRatio, 1.25));
   renderer.setSize(w, h);
 
   const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
