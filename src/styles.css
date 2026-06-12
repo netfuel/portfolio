@@ -167,10 +167,6 @@ em {
   will-change: transform;
 }
 
-.hero__line--shift {
-  margin-left: clamp(40px, 14vw, 260px);
-}
-
 .hero__word--italic {
   font-style: italic;
   letter-spacing: 0;
