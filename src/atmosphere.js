@@ -144,16 +144,20 @@ export function initAtmosphere() {
     mouseTarget.set(e.clientX / window.innerWidth, 1.0 - e.clientY / window.innerHeight);
   });
 
-  const getScrollProgress = () => {
-    const max = document.documentElement.scrollHeight - window.innerHeight;
-    return max > 0 ? window.scrollY / max : 0;
+  // scrollHeight forces layout — cache it instead of reading every frame
+  let maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+  const refreshMaxScroll = () => {
+    maxScroll = document.documentElement.scrollHeight - window.innerHeight;
   };
+  window.addEventListener("load", refreshMaxScroll);
+  const getScrollProgress = () => (maxScroll > 0 ? window.scrollY / maxScroll : 0);
 
   window.addEventListener("resize", () => {
     w = window.innerWidth;
     h = window.innerHeight;
     renderer.setSize(w, h);
     uniforms.uResolution.value.set(w, h);
+    refreshMaxScroll();
   });
 
   const clock = new THREE.Clock();

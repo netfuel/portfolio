@@ -45,7 +45,11 @@ const init = () => {
   const atmosphere = import("./atmosphere.js").then((m) => m.initAtmosphere());
   const cloud = import("./word-cloud.js").then((m) => m.initWordCloud());
   // The loader tracks real milestones, then hands off into the hero intro
-  runLoader([document.fonts.ready, atmosphere, cloud]).then(() => initAnimations());
+  runLoader([document.fonts.ready, atmosphere, cloud]).then(() => {
+    initAnimations();
+    // Below the fold — loads after the loader so it never delays first paint
+    import("./ventures-papers.js").then((m) => m.initVenturePapers());
+  });
 };
 
 if (document.readyState === "loading") {

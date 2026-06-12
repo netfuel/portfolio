@@ -14,7 +14,7 @@ function initSmoother() {
   return ScrollSmoother.create({
     wrapper: "#smooth-wrapper",
     content: "#smooth-content",
-    smooth: 1.1,
+    smooth: 1.6,
     smoothTouch: false,
   });
 }
@@ -137,7 +137,7 @@ function initSectionReveals() {
     });
   });
 
-  gsap.utils.toArray(".body-col").forEach((col) => {
+  gsap.utils.toArray(".body-col, .cta-row").forEach((col) => {
     gsap.from(col.children, {
       y: 28,
       opacity: 0,
