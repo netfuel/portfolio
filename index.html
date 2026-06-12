@@ -35,6 +35,10 @@
     <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" />
     <title>Matthew Ladner — Senior Experience Designer</title>
     <script>
+      /* Always open at the top — must run before GSAP loads, since
+         ScrollTrigger captures and re-applies this value on refresh */
+      history.scrollRestoration = "manual";
+      window.scrollTo(0, 0);
       /* Gate pre-animation hidden states behind .js so content is never lost */
       try {
         if (!matchMedia("(prefers-reduced-motion: reduce)").matches) {
