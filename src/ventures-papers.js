@@ -59,15 +59,16 @@ const FRAG = /* glsl */ `
 
 export function initVenturePapers() {
   const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const mobile = window.matchMedia("(max-width: 720px)").matches;
   const section = document.getElementById("ventures");
   const head = section && section.querySelector(".section__head");
   const writing = document.getElementById("writing");
-  if (reduced || !section || !head) return;
+  // Desktop-only — mobile skips the cascade (and its textures) entirely
+  if (reduced || mobile || !section || !head) return;
 
-  const mobile = window.matchMedia("(max-width: 720px)").matches;
   // Fewer sheets than flyers — meshes pick the next flyer from the pool on
   // every respawn, so all of them still cycle through
-  const COUNT = mobile ? 4 : 6;
+  const COUNT = 6;
 
   const canvas = document.createElement("canvas");
   canvas.id = "venture-papers";
@@ -120,14 +121,7 @@ export function initVenturePapers() {
       uniforms: {
         uMap:  { value: null },
         uTime: { value: 0 },
-        // Curl displaces in absolute world units — scale it with the sheet
-      // size so small (mobile) sheets curl proportionally, not crumple
-      uCurl: { value: new THREE.Vector4(
-        rand(0.03, 0.05) * (mobile ? 0.3 : 1),
-        rand(0.7, 1.3),
-        rand(0.02, 0.032) * (mobile ? 0.3 : 1),
-        rand(0, Math.PI * 2)
-      ) },
+        uCurl: { value: new THREE.Vector4(rand(0.03, 0.05), rand(0.7, 1.3), rand(0.02, 0.032), rand(0, Math.PI * 2)) },
       },
       vertexShader: VERT,
       fragmentShader: FRAG,
@@ -137,7 +131,7 @@ export function initVenturePapers() {
     const mesh = new THREE.Mesh(geometry, mat);
     const paper = {
       mesh, mat, z, distF,
-      height: worldH() * rand(0.26, 0.36) * (mobile ? 0.3 : 1),
+      height: worldH() * rand(0.26, 0.36),
       baseX: 0, speed: 0, swayAmp: 0, swayW: 0, phase: rand(0, Math.PI * 2),
       vx: 0, vy: 0, // carries throw inertia after a drag releases
       rotW: rand(0.3, 0.6),
@@ -154,9 +148,7 @@ export function initVenturePapers() {
   // Desktop: bias right-of-center so the lead copy stays readable.
   const placeAtLine = (paper, i) => {
     const W = worldW() * paper.distF;
-    const xMin = mobile ? -W * 0.3 : -W * 0.05;
-    const xMax = mobile ?  W * 0.3 :  W * 0.42;
-    paper.baseX = rand(xMin, xMax);
+    paper.baseX = rand(-W * 0.05, W * 0.42);
     // Far sheets fall and sway slower — parallax sells the depth
     const pace = THREE.MathUtils.lerp(1.1, 0.7, (paper.distF - 1) / 0.5);
     paper.speed = rand(0.07, 0.12) * pace;
@@ -208,43 +200,40 @@ export function initVenturePapers() {
   const inBand = (e) =>
     started && band.y2 > band.y1 && e.clientY > band.y1 && e.clientY < band.y2;
 
-  // Touch devices don't get drag-and-drop — it fights with scrolling
-  if (!mobile) {
-    window.addEventListener("pointermove", (e) => {
-      ndc.set((e.clientX / w) * 2 - 1, -(e.clientY / h) * 2 + 1);
-      if (held) return;
-      const over = inBand(e) && !overInteractive(e) && pick();
-      document.body.style.cursor = over ? "grab" : "";
-    });
+  window.addEventListener("pointermove", (e) => {
+    ndc.set((e.clientX / w) * 2 - 1, -(e.clientY / h) * 2 + 1);
+    if (held) return;
+    const over = inBand(e) && !overInteractive(e) && pick();
+    document.body.style.cursor = over ? "grab" : "";
+  });
 
-    window.addEventListener("pointerdown", (e) => {
-      if (!inBand(e) || overInteractive(e)) return;
-      ndc.set((e.clientX / w) * 2 - 1, -(e.clientY / h) * 2 + 1);
-      const paper = pick();
-      if (!paper) return;
-      held = paper;
-      paper.grabbed = true;
-      paper.grabOffset.copy(paper.mesh.position).sub(pointerAt(paper.z, pointerWorld));
-      paper.grabOffset.z = 0;
-      document.body.style.cursor = "grabbing";
-      e.preventDefault();
-    });
+  window.addEventListener("pointerdown", (e) => {
+    if (!inBand(e) || overInteractive(e)) return;
+    ndc.set((e.clientX / w) * 2 - 1, -(e.clientY / h) * 2 + 1);
+    const paper = pick();
+    if (!paper) return;
+    held = paper;
+    paper.grabbed = true;
+    paper.grabOffset.copy(paper.mesh.position).sub(pointerAt(paper.z, pointerWorld));
+    paper.grabOffset.z = 0;
+    document.body.style.cursor = "grabbing";
+    e.preventDefault();
+  });
 
-    const release = () => {
-      if (!held) return;
-      held.grabbed = false;
-      held.baseX = held.mesh.position.x; // resume the fall from where it was let go
-      held.phase = -performance.now() / 1000 * held.swayW; // re-zero the sway
-      // Cap the throw so a violent flick can't launch a sheet into orbit
-      const v = Math.hypot(held.vx, held.vy);
-      const MAX = 1.4;
-      if (v > MAX) { held.vx *= MAX / v; held.vy *= MAX / v; }
-      held = null;
-      document.body.style.cursor = "grab";
-    };
-    window.addEventListener("pointerup", release);
-    window.addEventListener("pointercancel", release);
-  }
+  const release = () => {
+    if (!held) return;
+    held.grabbed = false;
+    held.baseX = held.mesh.position.x; // resume the fall from where it was let go
+    held.phase = -performance.now() / 1000 * held.swayW; // re-zero the sway
+    // Cap the throw so a violent flick can't launch a sheet into orbit
+    const v = Math.hypot(held.vx, held.vy);
+    const MAX = 1.4;
+    if (v > MAX) { held.vx *= MAX / v; held.vy *= MAX / v; }
+    held = null;
+    document.body.style.cursor = "grab";
+  };
+  window.addEventListener("pointerup", release);
+  window.addEventListener("pointercancel", release);
 
   window.addEventListener("resize", () => {
     w = window.innerWidth;

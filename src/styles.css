@@ -653,7 +653,8 @@ a.row__link:hover .row__arrow,
 /* ── Responsive ───────────────────────────────────────────────────────── */
 
 @media (max-width: 880px) {
-  .section__grid {
+  .section__grid,
+  #writing .section__grid {
     grid-template-columns: 1fr;
     gap: clamp(28px, 5vh, 48px);
   }
@@ -703,6 +704,13 @@ a.row__link:hover .row__arrow,
   }
 
   .hero__corner { padding: 16px; font-size: 9px; }
+
+  .headshot {
+    width: clamp(180px, 52vw, 230px);
+    height: clamp(180px, 52vw, 230px);
+  }
+
+  .cta-row { margin-top: clamp(36px, 5vh, 56px); }
 }
 
 /* ── PRELOADER ────────────────────────────────────────────────────────── */
