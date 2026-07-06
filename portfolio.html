@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#08080A" />
+    <meta name="author" content="Matt Ladner" />
+    <meta name="description" content="Selected work by Matt Ladner — a timeline of product, experience, and emerging-tech design from Adobe and St. Jude back through two decades of client work." />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="Work — Matt Ladner" />
+    <meta property="og:description" content="A timeline of selected work, present to past — Adobe, St. Jude, and two decades of design." />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:site_name" content="Matt Ladner" />
+    <meta property="og:image" content="/images/og.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:type" content="image/jpeg" />
+
+    <!-- Icons -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/images/apple-touch-icon-180.png" />
+
+    <!-- Typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" />
+    <title>Work — Matthew Ladner</title>
+    <script>
+      /* Always open at the top — must run before GSAP loads, since
+         ScrollTrigger captures and re-applies this value on refresh */
+      history.scrollRestoration = "manual";
+      window.scrollTo(0, 0);
+      /* Gate pre-animation hidden states behind .js so content is never lost */
+      try {
+        if (!matchMedia("(prefers-reduced-motion: reduce)").matches) {
+          document.documentElement.classList.add("js");
+        }
+      } catch (e) {}
+    </script>
+    <style>
+      /* Critical base — keeps the page on-brand if the main stylesheet is
+         momentarily absent during a Vite dev restart (prevents a white flash) */
+      html, body { background: #08080A; }
+      body { margin: 0; color: #E8E3D6; font-family: "Space Mono", ui-monospace, monospace; }
+    </style>
+  </head>
+  <body>
+    <!-- Preloader — only displayed when .js is set; no-JS and reduced-motion skip it -->
+    <div class="loader" id="loader" aria-hidden="true">
+      <div class="loader__panel loader__panel--top"></div>
+      <div class="loader__panel loader__panel--bottom"></div>
+      <div class="loader__progress">
+        <span class="loader__line loader__line--left"></span>
+        <div class="loader__badge"><span data-count>0</span><span class="loader__pct">%</span></div>
+        <span class="loader__line loader__line--right"></span>
+      </div>
+    </div>
+
+    <!-- Atmosphere canvas injected here by atmosphere.js -->
+
+    <div id="smooth-wrapper">
+    <div id="smooth-content" class="page">
+      <!-- ────────────────────────────── WORK TIMELINE ────────────────────────────── -->
+      <section class="work" id="work" aria-label="Selected work, present to past">
+        <!-- Cross-page nav — inside the pinned section so it stays put -->
+        <nav class="work__nav">
+          <a class="work__back" href="/">&larr;&nbsp;Matthew&nbsp;Ladner</a>
+          <span class="work__navlabel">[ Selected_Work ]</span>
+        </nav>
+
+        <!-- Perspective deck — cards are built by portfolio.js from the content data -->
+        <div class="deck" id="deck" aria-hidden="false"></div>
+
+        <!-- Timeline bar — built by portfolio.js from the content data -->
+        <div class="timeline" id="timeline" aria-hidden="true"></div>
+      </section>
+    </div>
+    </div>
+
+    <noscript>
+      <style>
+        .loader { display: none; }
+        .noscript-note { padding: 12vh 8vw; font-family: monospace; color: #E8E3D6; }
+      </style>
+      <p class="noscript-note">
+        This timeline needs JavaScript. View the
+        <a href="/" style="color:#D3E74F">homepage</a> instead.
+      </p>
+    </noscript>
+
+    <script type="module" src="/src/portfolio.js"></script>
+  </body>
+</html>
