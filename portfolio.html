@@ -67,11 +67,31 @@
         <!-- Cross-page nav — inside the pinned section so it stays put -->
         <nav class="work__nav">
           <a class="work__back" href="/">&larr;&nbsp;Matthew&nbsp;Ladner</a>
-          <span class="work__navlabel">[ Selected_Work ]</span>
+          <div class="work__nav-right">
+            <span class="work__counter" id="counter" aria-hidden="true">01 / 08</span>
+            <button class="work__index-toggle" id="index-toggle" type="button" aria-pressed="false">[ Index ]</button>
+            <h1 class="work__navlabel">[ Selected_Work ]</h1>
+          </div>
         </nav>
+
+        <!-- Intro screen — orients first-time visitors; the first scroll,
+             swipe, or click dismisses it -->
+        <div class="work__intro" id="work-intro">
+          <p class="intro__eyebrow">[ 2000 — 2026 ]</p>
+          <p class="intro__title">Selected Work</p>
+          <p class="intro__body">
+            Eight case studies, present to past — from agentic AI at Adobe to
+            the first hotel apps on Android. Travel the timeline, and open any
+            card to read the full story.
+          </p>
+          <p class="intro__hint"><span class="hint-desktop">scroll to begin</span><span class="hint-mobile">swipe to begin</span></p>
+        </div>
 
         <!-- Perspective deck — cards are built by portfolio.js from the content data -->
         <div class="deck" id="deck" aria-hidden="false"></div>
+
+        <!-- Orientation hint — fades on first movement -->
+        <p class="work__hint" id="scroll-hint" aria-hidden="true"><span class="hint-desktop">scroll</span><span class="hint-mobile">swipe</span></p>
 
         <!-- Timeline bar — built by portfolio.js from the content data -->
         <div class="timeline" id="timeline" aria-hidden="true"></div>

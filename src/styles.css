@@ -785,15 +785,19 @@ a.row__link:hover .row__arrow,
 html.loading { overflow: hidden; }
 
 /* ==========================================================================
-   PORTFOLIO — second page: a present→past timeline of cards that fly past
-   the camera. Reuses the homepage tokens, fonts, and section-label treatment.
+   PORTFOLIO — second page: a present→past deck of cards stacked into the
+   fog. Covers are teasers; each expands into a full case study. Reuses the
+   homepage tokens, fonts, and section-label treatment.
    ========================================================================== */
 
 .work {
   position: relative;
   height: 100vh;
   height: 100dvh;
-  overflow: hidden;
+  /* clip, not hidden — hidden still lets focus() scroll this box, which
+     silently shifted the whole deck (a fixed container can't be unscrolled
+     by the user) */
+  overflow: clip;
 }
 
 /* Cross-page nav — pinned inside the section so it stays through the flythrough */
@@ -818,19 +822,147 @@ html.loading { overflow: hidden; }
   transition: color 200ms ease;
 }
 .work__back:hover { color: var(--accent); }
-.work__navlabel {
-  font-weight: 700;
-  letter-spacing: 0.18em;
+
+.work__nav-right {
+  display: flex;
+  align-items: center;
+  gap: clamp(16px, 2.4vw, 34px);
+}
+
+.work__counter {
+  font-variant-numeric: tabular-nums;
+  color: var(--bone-faint);
+  letter-spacing: 0.12em;
+}
+
+.work__index-toggle {
+  font-family: var(--mono);
+  font-size: inherit;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
+  color: var(--bone-dim);
+  transition: color 200ms ease;
+}
+.work__index-toggle:hover,
+.work__index-toggle[aria-pressed="true"] { color: var(--accent); }
+
+/* The page's h1 — kept for document structure and SEO, but hidden from view;
+   the nav's context is carried by the counter and Index toggle */
+.work__navlabel {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Scroll hint — mobile-only orientation cue; the desktop card bar teaches
+   scroll on its own. Fades out on first movement. */
+.work__hint {
+  display: none;
+  position: absolute;
+  left: 50%;
+  bottom: clamp(100px, 15vh, 150px);
+  transform: translateX(-50%);
+  z-index: 15;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--bone-faint);
+  pointer-events: none;
+}
+.work__hint::after {
+  content: "↓";
+  display: inline-block;
+  margin-left: 8px;
+  animation: hint-bob 1.8s ease-in-out infinite;
+}
+.work__hint .hint-mobile { display: none; }
+@keyframes hint-bob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(4px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .work__hint::after { animation: none; }
+}
+
+/* ── Intro screen — orients first-time visitors, dismissed by movement ──── */
+.work__intro {
+  position: absolute;
+  inset: 0;
+  z-index: 16; /* above the deck and timeline, below the nav */
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  text-align: center;
+  gap: clamp(16px, 3vh, 28px);
+  padding: 0 var(--gutter);
+  /* Solid, not translucent — semi-transparent veils let composited text
+     layers bleed through on some devices */
+  background: var(--bg);
+  cursor: pointer;
+}
+
+.intro__eyebrow {
+  font-family: var(--mono);
+  font-size: clamp(10px, 0.85vw, 13px);
+  letter-spacing: 0.2em;
   color: var(--accent);
 }
 
-/* The perspective scene — cards live here, centered and stacked in depth */
+.intro__title {
+  font-family: var(--serif);
+  font-size: clamp(44px, 7vw, 104px);
+  line-height: 1;
+  letter-spacing: -0.01em;
+  color: var(--bone);
+}
+
+.intro__body {
+  font-family: var(--mono);
+  font-size: clamp(12px, 1vw, 15px);
+  line-height: 1.9;
+  color: var(--bone-dim);
+  max-width: 46ch;
+}
+
+.intro__hint {
+  margin-top: clamp(10px, 3vh, 30px);
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--bone-faint);
+}
+.intro__hint::after {
+  content: "↓";
+  display: inline-block;
+  margin-left: 8px;
+  animation: hint-bob 1.8s ease-in-out infinite;
+}
+.intro__hint .hint-mobile { display: none; }
+@media (prefers-reduced-motion: reduce) {
+  .intro__hint::after { animation: none; }
+}
+
+/* The perspective scene — cards live on a tiltable stage, stacked in depth */
 .deck {
   position: absolute;
   inset: 0;
   perspective: 1500px;
+}
+
+.deck__stage {
+  position: absolute;
+  inset: 0;
   transform-style: preserve-3d;
+  will-change: transform;
 }
 
 .work-card {
@@ -841,29 +973,18 @@ html.loading { overflow: hidden; }
   height: min(72vh, 640px);
   display: flex;
   flex-direction: column;
-  overflow: hidden;
+  overflow: clip; /* clip, not hidden — closed cards must never focus-scroll */
   background: var(--bone);
   color: var(--bg);
-  transform-style: preserve-3d;
   backface-visibility: hidden;
   will-change: transform, opacity;
   box-shadow: 0 40px 120px rgba(0, 0, 0, 0.5);
 }
 
-/* Horizontal carousel track of panels */
-.card__track {
+/* ── Cover — the teaser face ───────────────────────────────────────────── */
+.card__cover {
   flex: 1 1 auto;
   min-height: 0;
-  display: flex;
-  width: 100%;
-  will-change: transform;
-}
-
-.card__panel {
-  flex: 0 0 100%;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
   padding: clamp(28px, 3.4vw, 60px);
   display: grid;
   grid-template-columns: 1.1fr 1fr;
@@ -873,11 +994,8 @@ html.loading { overflow: hidden; }
 }
 
 .card__cover-head { grid-column: 1; grid-row: 1; }
-.card__panel > .card__desc { grid-column: 2; grid-row: 1; align-self: start; }
+.card__hook { grid-column: 2; grid-row: 1; align-self: start; }
 .card__media { grid-column: 1 / -1; grid-row: 2; }
-
-/* Text-only beat panels read better vertically centered */
-.card__panel--beat:not(:has(.card__media)) { align-content: center; }
 
 .card__title {
   margin: 0;
@@ -889,14 +1007,6 @@ html.loading { overflow: hidden; }
   color: var(--bg);
 }
 
-.card__beat-label {
-  margin: 0;
-  font-family: var(--serif);
-  font-size: clamp(24px, 3vw, 48px);
-  line-height: 1.05;
-  color: var(--bg);
-}
-
 .card__meta {
   margin: 0.7em 0 0;
   font-family: var(--mono);
@@ -905,74 +1015,335 @@ html.loading { overflow: hidden; }
   color: rgba(8, 8, 10, 0.66);
 }
 
-.card__desc {
-  margin: 0;
+/* The role lives in the study — closed covers show the year alone */
+.card__meta-role { display: none; }
+.work-card.is-open .card__meta-role,
+.work.is-static .card__meta-role { display: inline; }
+
+/* Highlight chip — the project's one-line proof; part of the study header,
+   hidden while the cover is a teaser */
+.card__pull {
+  display: none;
+  margin: 1.1em 0 0;
+  padding: 7px 12px;
+  border: 1px solid rgba(8, 8, 10, 0.3);
   font-family: var(--mono);
-  font-size: clamp(13px, 1.05vw, 16px);
-  line-height: 1.7;
-  color: rgba(8, 8, 10, 0.82);
+  font-size: clamp(10px, 0.8vw, 12px);
+  letter-spacing: 0.06em;
+  color: rgba(8, 8, 10, 0.78);
 }
-.card__desc--todo {
-  color: rgba(8, 8, 10, 0.4);
-  font-style: italic;
+.card__pull::before {
+  content: "";
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #9caf2e;
+  margin-right: 9px;
+  vertical-align: 1px;
+}
+.work-card.is-open .card__pull,
+.work.is-static .card__pull { display: inline-block; }
+
+/* The hook gets the display treatment it deserves */
+.card__hook {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: clamp(19px, 1.9vw, 32px);
+  line-height: 1.28;
+  color: rgba(8, 8, 10, 0.92);
 }
 
-/* Accent-tinted imagery placeholder */
+/* Imagery — real project shot when available, generative contour placeholder
+   otherwise */
 .card__media {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
   min-height: 0;
   border-radius: 2px;
   background: #c2cf72;
+  overflow: hidden;
 }
-.card__media-label {
+.card__media img,
+.card__media svg.ph {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  display: block;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+.card__media--ph { background: #0b0b0e; }
+.card__media--ph .ph__drift {
+  transform-origin: 50% 50%;
+  animation: ph-drift 26s ease-in-out infinite alternate;
+}
+@keyframes ph-drift {
+  from { transform: rotate(-2.5deg) translateX(-8px); }
+  to { transform: rotate(2.5deg) translateX(8px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .card__media--ph .ph__drift { animation: none; }
+}
+.card__media-note {
+  position: absolute;
+  left: 16px;
+  bottom: 12px;
   font-family: var(--mono);
-  font-size: clamp(10px, 0.85vw, 13px);
-  letter-spacing: 0.06em;
-  color: rgba(8, 8, 10, 0.5);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  color: var(--bone-faint);
 }
 
-/* Carousel controls — a quiet strip beneath the panels */
-.card__nav {
+/* ── Bottom bar — the explicit way into the case study ─────────────────── */
+.card__bar {
   flex: 0 0 auto;
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: clamp(14px, 2vw, 26px);
-  padding: clamp(12px, 1.6vh, 18px);
+  justify-content: space-between;
+  padding: clamp(12px, 1.6vh, 18px) clamp(28px, 3.4vw, 60px);
   border-top: 1px solid rgba(8, 8, 10, 0.12);
 }
 
-.card__arrow {
-  appearance: none;
-  border: 1px solid rgba(8, 8, 10, 0.3);
-  background: transparent;
-  color: var(--bg);
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
+/* The CTA is the loudest thing on the card — ink plate, accent type */
+.card__open {
   font-family: var(--mono);
-  font-size: 13px;
-  cursor: pointer;
-  transition: background 180ms ease, color 180ms ease, opacity 180ms ease;
+  font-size: clamp(11px, 0.9vw, 13px);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent);
+  background: var(--bg);
+  padding: 12px 20px;
+  border: 1px solid var(--bg);
+  transition: background 180ms ease, color 180ms ease;
 }
-.card__arrow:hover:not(:disabled) { background: var(--bg); color: var(--bone); }
-.card__arrow:disabled { opacity: 0.25; cursor: default; }
+.card__open:hover {
+  background: var(--accent);
+  color: var(--bg);
+}
 
-.card__dots { display: flex; gap: 8px; }
-.card__dot {
-  appearance: none;
-  border: none;
-  padding: 0;
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: rgba(8, 8, 10, 0.22);
-  cursor: pointer;
-  transition: background 180ms ease, transform 180ms ease;
+.card__bar-hint {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(8, 8, 10, 0.4);
 }
-.card__dot.is-active { background: var(--bg); transform: scale(1.25); }
+.card__bar-hint .hint-mobile { display: none; }
+
+/* ── Close control — sticky so it survives the study's internal scroll ─── */
+.card__closebar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  height: 0;
+  display: none;
+  justify-content: flex-end;
+  pointer-events: none;
+}
+.card__close {
+  pointer-events: auto;
+  margin: 16px 18px 0 0;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1px solid rgba(8, 8, 10, 0.35);
+  background: var(--bone);
+  color: var(--bg);
+  font-family: var(--mono);
+  font-size: 20px;
+  line-height: 1;
+  display: grid;
+  place-items: center;
+  transition: background 180ms ease, color 180ms ease;
+}
+.card__close:hover { background: var(--bg); color: var(--accent); }
+
+/* ── Open state — the card becomes a full-screen scrolling article ─────── */
+.work-card.is-open {
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  touch-action: pan-y;
+  scrollbar-width: thin;
+  box-shadow: none;
+  /* An expanded card is a document, not a deck layer — keeping the
+     will-change compositing hint here leaves stale GPU textures behind
+     after the size tween */
+  will-change: auto;
+}
+/* The page chrome belongs to the deck — it yields while a study is open */
+.work__nav,
+.timeline { transition: opacity 300ms ease; }
+.work.has-open .work__nav,
+.work.has-open .timeline {
+  opacity: 0;
+  pointer-events: none;
+}
+.work-card.is-open .card__closebar { display: flex; }
+.work-card.is-open .card__cover {
+  flex: 0 0 auto;
+  min-height: calc(100dvh - 140px);
+}
+.work-card.is-open .card__bar { display: none; }
+.work-card.is-open .card__study { display: block; }
+.work.has-open .deck { touch-action: pan-y; }
+
+/* ── The study — an editorial article inside the card ──────────────────── */
+.card__study {
+  display: none;
+  padding: 0 clamp(28px, 3.4vw, 60px) 0;
+  max-width: 1080px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.study__beat {
+  display: grid;
+  grid-template-columns: minmax(150px, 240px) 1fr;
+  gap: clamp(20px, 3vw, 60px);
+  padding: clamp(36px, 7vh, 70px) 0;
+  border-top: 1px solid rgba(8, 8, 10, 0.14);
+}
+
+.study__label {
+  font-family: var(--mono);
+  font-size: clamp(10px, 0.85vw, 12px);
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(8, 8, 10, 0.55);
+}
+
+.study__body {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(22px, 3.5vh, 36px);
+  min-width: 0;
+}
+
+.study__text {
+  font-family: var(--mono);
+  font-size: clamp(14px, 1.1vw, 17px);
+  line-height: 1.75;
+  color: rgba(8, 8, 10, 0.85);
+  max-width: 62ch;
+}
+
+/* Outcome stat — the proof, at display scale on a dark plate */
+.study__stat {
+  align-self: flex-start;
+  font-family: var(--serif);
+  font-size: clamp(26px, 3vw, 48px);
+  line-height: 1.1;
+  color: var(--accent);
+  background: var(--bg);
+  padding: clamp(18px, 2.4vw, 34px) clamp(22px, 3vw, 44px);
+}
+
+/* Media inside the study */
+.study__media {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+/* Ghost frame — an honest, designed slot for artifacts still to come */
+.study__slot {
+  border: 1px dashed rgba(8, 8, 10, 0.28);
+  padding: clamp(20px, 3vh, 30px);
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  color: rgba(8, 8, 10, 0.4);
+}
+
+.study__foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: clamp(36px, 7vh, 70px) 0 clamp(60px, 10vh, 110px);
+  border-top: 1px solid rgba(8, 8, 10, 0.14);
+}
+.study__foot-meta {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  color: rgba(8, 8, 10, 0.45);
+}
+.study__next {
+  font-family: var(--mono);
+  font-size: clamp(12px, 1vw, 14px);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--accent);
+  background: var(--bg);
+  padding: 14px 20px;
+  border: 1px solid var(--bg);
+  text-align: right;
+  transition: background 180ms ease, color 180ms ease;
+}
+.study__next:hover { background: var(--accent); color: var(--bg); }
+
+/* ── Outro — the deck ends with a door, not a wall ─────────────────────── */
+.work-card--outro {
+  background: var(--bg);
+  color: var(--bone);
+  border: 1px solid var(--hairline);
+  box-shadow: 0 40px 120px rgba(0, 0, 0, 0.6);
+}
+.card__cover--outro {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: clamp(16px, 3vh, 28px);
+}
+.card__meta--outro { color: var(--bone-faint); margin: 0; }
+.card__title--outro { color: var(--bone); }
+.outro__note {
+  font-family: var(--mono);
+  font-size: clamp(12px, 1vw, 15px);
+  color: var(--bone-dim);
+  max-width: 44ch;
+}
+.outro__links {
+  display: flex;
+  align-items: center;
+  gap: clamp(20px, 3vw, 40px);
+  font-family: var(--mono);
+  font-size: clamp(11px, 0.9vw, 13px);
+  letter-spacing: 0.06em;
+}
+.outro__links a { color: var(--bone); }
+.outro__restart {
+  font-family: var(--mono);
+  font-size: inherit;
+  letter-spacing: inherit;
+  color: var(--accent);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-decoration-color: var(--bone-faint);
+  text-underline-offset: 0.22em;
+}
+.outro__restart:hover { text-decoration-color: var(--accent); }
+
+/* ── Overview — the camera pulls back, the deck fans into a grid ───────── */
+.work.is-overview .work-card { cursor: pointer; }
+.work.is-overview .work-card:hover {
+  filter: brightness(1.05) !important;
+  box-shadow: 0 20px 70px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(211, 231, 79, 0.6);
+}
+.work.is-overview .work__hint { display: none; }
 
 /* ── Timeline bar ──────────────────────────────────────────────────────── */
 .timeline {
@@ -991,18 +1362,18 @@ html.loading { overflow: hidden; }
   height: 1px;
   background: var(--hairline-2);
 }
-.timeline__caps {
+/* Vertical serifs bookend the bar, marking its start and finish */
+.timeline__end {
   position: absolute;
-  top: 10px;
-  left: 0;
-  right: 0;
-  display: flex;
-  justify-content: space-between;
-  font-family: var(--mono);
-  font-size: clamp(10px, 0.85vw, 13px);
-  letter-spacing: 0.08em;
-  color: var(--bone-faint);
+  top: 18px;
+  width: 1px;
+  height: 12px;
+  margin-top: -6px;
+  background: #7c7a6e;
 }
+.timeline__end--start { left: 0; }
+.timeline__end--finish { right: 0; }
+
 .timeline__ticks { position: absolute; inset: 0; }
 .timeline__tick {
   position: absolute;
@@ -1016,7 +1387,7 @@ html.loading { overflow: hidden; }
   width: 5px;
   height: 5px;
   border-radius: 50%;
-  background: var(--bone-ghost);
+  background: #5a584f; /* solid, not translucent — reads as a crisp dot */
   transform: translateY(-2px);
   transition: background 220ms ease, transform 220ms ease;
 }
@@ -1026,8 +1397,36 @@ html.loading { overflow: hidden; }
   font-size: clamp(9px, 0.75vw, 11px);
   letter-spacing: 0.06em;
   color: var(--bone-ghost);
-  transition: color 220ms ease;
+  /* True year positions cluster in dense eras — only the active (or
+     hovered) tick shows its label so the bar stays quiet */
+  opacity: 0;
+  transition: color 220ms ease, opacity 220ms ease;
 }
+
+/* Hover preview — a tick tells you WHAT is there, not just when */
+.timeline__tick-title {
+  position: absolute;
+  bottom: 26px;
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  color: var(--bone);
+  background: rgba(8, 8, 10, 0.88);
+  border: 1px solid var(--hairline);
+  padding: 5px 10px;
+  opacity: 0;
+  transition: opacity 200ms ease;
+  pointer-events: none;
+}
+.timeline__tick:first-child .timeline__tick-title { transform: translateX(-12%); }
+.timeline__tick:last-child .timeline__tick-title { transform: translateX(-88%); }
+.timeline__tick:hover .timeline__tick-title { opacity: 1; }
+
+.timeline__tick:hover .timeline__tick-year { opacity: 1; }
+.timeline__tick.is-active .timeline__tick-year { opacity: 1; }
 .timeline__tick.is-active .timeline__tick-dot {
   background: var(--accent);
   transform: translateY(-2px) scale(1.5);
@@ -1040,7 +1439,7 @@ html.loading { overflow: hidden; }
   width: 34px;
   height: 34px;
   margin: -17px 0 0 -17px;
-  border: 1px solid var(--bone-faint);
+  border: 1px solid #7c7a6e; /* solid ring */
   border-radius: 50%;
   display: grid;
   place-items: center;
@@ -1057,17 +1456,17 @@ html.loading { overflow: hidden; }
 /* ── Pre-animation hidden state (only with .js, parity with homepage) ───── */
 .js .work { visibility: hidden; }
 
-/* ── Static fallback — reduced-motion + mobile: vertical stack, no 3D ───── */
+/* ── Static fallback — reduced motion: vertical stack, studies inline ───── */
 .work.is-static {
   height: auto;
   overflow: visible;
   visibility: visible;
   padding-bottom: clamp(60px, 10vh, 120px);
 }
-.work.is-static .deck {
+.work.is-static .deck { position: relative; inset: auto; perspective: none; }
+.work.is-static .deck__stage {
   position: relative;
   inset: auto;
-  perspective: none;
   transform-style: flat;
   display: flex;
   flex-direction: column;
@@ -1085,18 +1484,23 @@ html.loading { overflow: hidden; }
   height: auto;
   box-shadow: 0 24px 70px rgba(0, 0, 0, 0.45);
 }
-.work.is-static .card__track {
-  overflow-x: auto;
-  scroll-snap-type: x mandatory;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
+/* Static mode reads the intro as a plain header section */
+.work.is-static .work__intro {
+  position: relative;
+  inset: auto;
+  min-height: 0;
+  padding: clamp(90px, 14vh, 150px) var(--gutter) 0;
+  background: none;
+  cursor: default;
 }
-.work.is-static .card__track::-webkit-scrollbar { display: none; }
-.work.is-static .card__panel {
-  scroll-snap-align: start;
-  height: auto;
-  min-height: clamp(420px, 64vh, 560px);
-}
+.work.is-static .intro__hint { display: none; }
+.work.is-static .card__cover { min-height: clamp(420px, 60vh, 560px); }
+.work.is-static .card__bar,
+.work.is-static .card__closebar,
+.work.is-static .work__hint,
+.work.is-static .work__counter,
+.work.is-static .work__index-toggle { display: none; }
+.work.is-static .card__study { display: block; }
 .work.is-static .timeline {
   position: relative;
   left: auto;
@@ -1107,12 +1511,74 @@ html.loading { overflow: hidden; }
 .work.is-static .timeline__node { display: none; }
 
 @media (max-width: 720px) {
-  .card__panel {
+  .card__cover {
     grid-template-columns: 1fr;
     grid-template-rows: auto auto minmax(0, 1fr);
     gap: clamp(12px, 3vw, 20px);
   }
-  .card__panel > .card__desc { grid-column: 1; grid-row: 2; }
+  .card__hook { grid-column: 1; grid-row: 2; }
   .card__media { grid-column: 1; grid-row: 3; }
-  .work.is-static .card__panel { padding: clamp(22px, 6vw, 34px); }
+  .work.is-static .card__cover { padding: clamp(22px, 6vw, 34px); }
+
+  .card__bar-hint .hint-desktop { display: none; }
+  .card__bar-hint .hint-mobile { display: inline; }
+
+  .study__beat { grid-template-columns: 1fr; gap: 14px; }
+  .card__study { padding: 0 clamp(20px, 6vw, 30px); }
+  .work-card.is-open .card__cover { min-height: calc(100dvh - 90px); }
+
+  .work__counter { display: none; }
+  .work__hint { display: block; bottom: calc(86px + env(safe-area-inset-bottom)); }
+  .work__hint .hint-desktop { display: none; }
+  .work__hint .hint-mobile { display: inline; }
+  .work__hint::after { content: "↑"; }
+  .card__open { white-space: nowrap; padding: 8px 12px; }
+  .card__bar-hint { text-align: right; font-size: 9px; line-height: 1.6; }
+
+  /* ── Story mode — full-screen swipeable deck ─────────────────────────── */
+  html.story,
+  html.story body {
+    overflow: hidden;
+    height: 100%;
+    overscroll-behavior: none;
+  }
+
+  .work.is-story {
+    position: fixed;
+    inset: 0;
+    height: 100dvh;
+    overflow: clip;
+  }
+
+  .work.is-story .deck {
+    touch-action: none;       /* the gesture engine owns all touch input */
+    perspective: 1200px;
+  }
+  .work.is-story.has-open .deck { touch-action: pan-y; }
+  .work.is-story .work__intro { touch-action: none; }
+  .intro__hint .hint-desktop { display: none; }
+  .intro__hint .hint-mobile { display: inline; }
+  .intro__hint::after { content: "↑"; }
+
+  .work.is-story .work-card {
+    width: 92vw;
+    height: min(72dvh, 700px);
+    box-shadow: 0 24px 80px rgba(0, 0, 0, 0.55);
+  }
+
+  .work.is-story .card__cover { padding: clamp(20px, 6vw, 30px); }
+  .work.is-story .card__bar { padding: 10px clamp(20px, 6vw, 30px); }
+
+  /* Slim scrubber pinned above the home bar; only the active year shows */
+  .work.is-story .timeline {
+    left: 18px;
+    right: 18px;
+    bottom: calc(14px + env(safe-area-inset-bottom));
+    height: 48px;
+  }
+  .work.is-story .timeline__tick { top: 14px; }
+  .work.is-story .timeline__line { top: 14px; }
+  .work.is-story .timeline__end { top: 14px; }
+  .work.is-story .timeline__node { top: 14px; width: 26px; height: 26px; margin: -13px 0 0 -13px; }
+  .work.is-story .timeline__tick-title { display: none; }
 }
