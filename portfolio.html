@@ -25,7 +25,11 @@
     <!-- Typography -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" />
+    <!-- Display serif — preloaded so headlines don't wait on CSS discovery -->
+    <link rel="preload" href="/fonts/pavilion-regular.woff2" as="font" type="font/woff2" crossorigin />
+    <!-- Non-blocking — the preloader already gates reveal on fonts.ready -->
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" /></noscript>
     <title>Work — Matthew Ladner</title>
     <script>
       /* Always open at the top — must run before GSAP loads, since

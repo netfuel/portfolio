@@ -32,7 +32,11 @@
     <!-- Typography -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" />
+    <!-- Display serif — preloaded so headlines don't wait on CSS discovery -->
+    <link rel="preload" href="/fonts/pavilion-regular.woff2" as="font" type="font/woff2" crossorigin />
+    <!-- Non-blocking — the preloader already gates reveal on fonts.ready -->
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" /></noscript>
     <title>Matthew Ladner — Senior Experience Designer</title>
     <script>
       /* Always open at the top — must run before GSAP loads, since
@@ -178,7 +182,7 @@
 
           <div class="section__grid">
             <div class="body-col body-col--center">
-              <img class="headshot" src="/images/headshot.jpg" alt="Matthew Ladner" width="300" height="300" loading="lazy" />
+              <img class="headshot" src="/images/headshot.webp" alt="Matthew Ladner" width="300" height="300" loading="lazy" />
             </div>
             <p class="lead">I write about design, emerging tech, and the <em>monumental shifts</em> happening in how we make things. You can find it all on Medium.</p>
           </div>

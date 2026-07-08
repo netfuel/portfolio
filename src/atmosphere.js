@@ -1,14 +1,18 @@
-import * as THREE from "three";
+// Fog atmosphere — one fullscreen triangle, one shader, raw WebGL.
+// (This was previously Three.js; a 475KB dependency for a single quad.)
 
 const VERT = /* glsl */ `
+  attribute vec2 aPosition;
   varying vec2 vUv;
   void main() {
-    vUv = uv;
-    gl_Position = vec4(position.xy, 0.0, 1.0);
+    vUv = aPosition * 0.5 + 0.5;
+    gl_Position = vec4(aPosition, 0.0, 1.0);
   }
 `;
 
 const FRAG = /* glsl */ `
+  precision highp float;
+
   uniform float uTime;
   uniform vec2  uResolution;
   uniform vec2  uMouse;
@@ -94,6 +98,18 @@ const FRAG = /* glsl */ `
   }
 `;
 
+const compile = (gl, type, source) => {
+  const shader = gl.createShader(type);
+  gl.shaderSource(shader, source);
+  gl.compileShader(shader);
+  if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+    const log = gl.getShaderInfoLog(shader);
+    gl.deleteShader(shader);
+    throw new Error("atmosphere shader: " + log);
+  }
+  return shader;
+};
+
 export function initAtmosphere() {
   const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const mobile  = window.matchMedia("(max-width: 720px)").matches;
@@ -103,45 +119,67 @@ export function initAtmosphere() {
   canvas.setAttribute("aria-hidden", "true");
   document.body.prepend(canvas);
 
-  let w = window.innerWidth;
-  let h = window.innerHeight;
-
-  let renderer;
-  try {
-    renderer = new THREE.WebGLRenderer({ canvas, antialias: false, powerPreference: "low-power" });
-  } catch {
+  const gl = canvas.getContext("webgl", {
+    antialias: false,
+    depth: false,
+    stencil: false,
+    powerPreference: "low-power",
+  });
+  if (!gl) {
     canvas.remove(); // no WebGL — the solid background carries the design
     return;
   }
 
+  let program;
+  try {
+    program = gl.createProgram();
+    gl.attachShader(program, compile(gl, gl.VERTEX_SHADER, VERT));
+    gl.attachShader(program, compile(gl, gl.FRAGMENT_SHADER, FRAG));
+    gl.linkProgram(program);
+    if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+      throw new Error("atmosphere link: " + gl.getProgramInfoLog(program));
+    }
+  } catch {
+    canvas.remove();
+    return;
+  }
+  gl.useProgram(program);
+
+  // One triangle covers the whole screen — no index buffer, no quad seam
+  gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
+  const aPosition = gl.getAttribLocation(program, "aPosition");
+  gl.enableVertexAttribArray(aPosition);
+  gl.vertexAttribPointer(aPosition, 2, gl.FLOAT, false, 0, 0);
+
+  const U = {};
+  for (const name of ["uTime", "uResolution", "uMouse", "uScroll", "uRippleC", "uRippleT"]) {
+    U[name] = gl.getUniformLocation(program, name);
+  }
+
   // Soft fog doesn't need resolution — capping dpr cuts the heaviest fragment
   // workload on the page (~8 fbm octaves/pixel) by up to 30%
-  renderer.setPixelRatio(mobile ? 1 : Math.min(devicePixelRatio, 1.25));
-  renderer.setSize(w, h);
+  const dpr = mobile ? 1 : Math.min(devicePixelRatio, 1.25);
+  let w = window.innerWidth;
+  let h = window.innerHeight;
 
-  const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
-  const scene  = new THREE.Scene();
-
-  const uniforms = {
-    uTime:       { value: 0 },
-    uResolution: { value: new THREE.Vector2(w, h) },
-    uMouse:      { value: new THREE.Vector2(0.5, 0.62) },
-    uScroll:     { value: 0 },
-    uRippleC:    { value: new THREE.Vector2(0.5, 0.5) },
-    uRippleT:    { value: -1 },
+  const setSize = () => {
+    w = window.innerWidth;
+    h = window.innerHeight;
+    canvas.width = Math.round(w * dpr);
+    canvas.height = Math.round(h * dpr);
+    gl.viewport(0, 0, canvas.width, canvas.height);
+    // The shader was tuned against CSS-pixel resolution — keep that contract
+    gl.uniform2f(U.uResolution, w, h);
   };
-
-  scene.add(
-    new THREE.Mesh(
-      new THREE.PlaneGeometry(2, 2),
-      new THREE.ShaderMaterial({ uniforms, vertexShader: VERT, fragmentShader: FRAG })
-    )
-  );
+  setSize();
 
   // Mouse eases toward the pointer — the glow trails like a lantern
-  const mouseTarget = new THREE.Vector2(0.5, 0.62);
+  const mouse = { x: 0.5, y: 0.62 };
+  const mouseTarget = { x: 0.5, y: 0.62 };
   window.addEventListener("mousemove", (e) => {
-    mouseTarget.set(e.clientX / window.innerWidth, 1.0 - e.clientY / window.innerHeight);
+    mouseTarget.x = e.clientX / window.innerWidth;
+    mouseTarget.y = 1.0 - e.clientY / window.innerHeight;
   });
 
   // scrollHeight forces layout — cache it instead of reading every frame
@@ -152,46 +190,45 @@ export function initAtmosphere() {
   window.addEventListener("load", refreshMaxScroll);
   const getScrollProgress = () => (maxScroll > 0 ? window.scrollY / maxScroll : 0);
 
-  window.addEventListener("resize", () => {
-    w = window.innerWidth;
-    h = window.innerHeight;
-    renderer.setSize(w, h);
-    uniforms.uResolution.value.set(w, h);
-    refreshMaxScroll();
-  });
-
-  const clock = new THREE.Clock();
+  const t0 = performance.now();
   let raf = null;
   let splashAt = -1;
+  let scroll = 0;
 
   // The loader's circle lands here — the fog ripples out from the impact point
   if (!reduced) {
     window.addEventListener("hero:splash", (e) => {
       const { cx, cy } = e.detail;
-      uniforms.uRippleC.value.set(cx / window.innerWidth, 1 - cy / window.innerHeight);
-      splashAt = clock.getElapsedTime();
+      gl.uniform2f(U.uRippleC, cx / window.innerWidth, 1 - cy / window.innerHeight);
+      splashAt = (performance.now() - t0) / 1000;
     });
   }
 
   const renderFrame = () => {
-    const elapsed = clock.getElapsedTime();
-    uniforms.uTime.value = elapsed;
-    uniforms.uMouse.value.lerp(mouseTarget, 0.045);
-    uniforms.uScroll.value += (getScrollProgress() - uniforms.uScroll.value) * 0.06;
-    uniforms.uRippleT.value = splashAt >= 0 && elapsed - splashAt < 4 ? elapsed - splashAt : -1;
-    renderer.render(scene, camera);
+    const elapsed = (performance.now() - t0) / 1000;
+    mouse.x += (mouseTarget.x - mouse.x) * 0.045;
+    mouse.y += (mouseTarget.y - mouse.y) * 0.045;
+    scroll += (getScrollProgress() - scroll) * 0.06;
+    gl.uniform1f(U.uTime, elapsed);
+    gl.uniform2f(U.uMouse, mouse.x, mouse.y);
+    gl.uniform1f(U.uScroll, scroll);
+    gl.uniform1f(U.uRippleT, splashAt >= 0 && elapsed - splashAt < 4 ? elapsed - splashAt : -1);
+    gl.drawArrays(gl.TRIANGLES, 0, 3);
   };
 
+  window.addEventListener("resize", () => {
+    setSize();
+    refreshMaxScroll();
+    if (reduced) renderFrame(); // static frame — re-render so it stays crisp
+  });
+
   if (reduced) {
-    // Static frame only — re-render on resize so it stays crisp
     renderFrame();
-    window.addEventListener("resize", () => renderFrame());
     return;
   }
 
   const start = () => {
     if (raf !== null) return;
-    clock.getDelta();
     const tick = () => {
       raf = requestAnimationFrame(tick);
       renderFrame();
@@ -213,6 +250,6 @@ export function initAtmosphere() {
 
   return () => {
     stop();
-    renderer.dispose();
+    gl.getExtension("WEBGL_lose_context")?.loseContext();
   };
 }

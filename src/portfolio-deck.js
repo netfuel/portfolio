@@ -58,7 +58,6 @@ const positionCard = (card, o) => {
 
 export function initPortfolioDeck() {
   const work = document.getElementById("work");
-  const deck = document.getElementById("deck");
   const stage = document.getElementById("deck-stage");
   const cards = gsap.utils.toArray(".work-card");
   const timeline = document.getElementById("timeline");

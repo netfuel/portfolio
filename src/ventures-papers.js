@@ -7,15 +7,15 @@ import * as THREE from "three";
 // from the line and vanish at the next section — no fades needed.
 // Add new flyers here (portrait images read best):
 const FLYERS = [
-  "/images/flyers/flyer-01.jpg",
-  "/images/flyers/flyer-02.jpg",
-  "/images/flyers/flyer-03.jpg",
-  "/images/flyers/flyer-04.jpg",
-  "/images/flyers/flyer-05.jpg",
-  "/images/flyers/flyer-06.jpg",
-  "/images/flyers/flyer-07.jpg",
-  "/images/flyers/flyer-08.jpg",
-  "/images/flyers/flyer-09.jpg",
+  "/images/flyers/flyer-01.webp",
+  "/images/flyers/flyer-02.webp",
+  "/images/flyers/flyer-03.webp",
+  "/images/flyers/flyer-04.webp",
+  "/images/flyers/flyer-05.webp",
+  "/images/flyers/flyer-06.webp",
+  "/images/flyers/flyer-07.webp",
+  "/images/flyers/flyer-08.webp",
+  "/images/flyers/flyer-09.webp",
 ];
 
 // Depth range of the stack. Each sheet owns an exclusive z lane spaced wider

@@ -7,6 +7,9 @@ export default defineConfig({
     strictPort: false,
   },
   build: {
+    // The design already requires a modern browser (WebGL, dvh, :has()) —
+    // shipping es2022 keeps async/await and class fields untranspiled
+    target: "es2022",
     rollupOptions: {
       input: {
         main: resolve(__dirname, "index.html"),
