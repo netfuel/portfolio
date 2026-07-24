@@ -2,147 +2,315 @@ import "./styles.css";
 import { runLoader } from "./loader.js";
 
 // ──────────────────────────────────────────────────────────────────────────
-// Content — the timeline reads present → past, strictly descending.
-// `year` is the display range, `tick` the label under the timeline node,
-// `ty` the fractional year that sets the tick's true position on the
-// 2026→2000 bar. `img` is the card imagery (null = generative placeholder).
-// `slug` is the deep-link hash; `pull` the cover's stat/highlight chip.
+// Content — a scroll of pinned panels, present to past. Each panel is one of:
+//   intro      · the cover statement
+//   study      · a full case study (Context / Approach / The work / Outcome)
+//   condensed  · a single-body card
+//   index      · an "also shipped" list
+//   outro      · closing statement + contact
+// `year` is the big readout the left rail shows while a panel is active;
+// `tick` is the short label on that panel's rail node. `img` = null draws a
+// generative placeholder. Copy uses no em dashes, per the content brief.
 // ──────────────────────────────────────────────────────────────────────────
-const WORK = [
+const PANELS = [
   {
-    title: "Developer Experiences at Adobe",
-    role: "Senior UX Designer",
-    year: "2026",
-    tick: "2026",
-    ty: 2026.0,
+    kind: "intro",
+    slug: "top",
+    tick: "now",
+    year: "2000 – 2026",
+    era: "",
+    title: "Selected work, present to past.",
+    hook: "Senior Experience Designer building the places where humans and AI systems meet: developer platforms, agentic extensibility, and generative tools at Adobe.",
+    body: "Twenty-five years of shipped work. Scroll to travel it, or jump from the timeline on the left.",
+  },
+
+  // ── Adobe · Extensibility · 2023 – Present ──────────────────────────────
+  {
+    kind: "study",
+    slug: "playground",
+    chapter: "Adobe",
+    tick: "2025",
+    year: "2024 – 2025",
+    title: "In-App Add-on Playground",
+    meta: "Adobe Express · Design lead · 4 shipped phases",
+    chip: "zero-setup coding, inside the tool",
+    hook: "What if trying a platform's APIs took zero setup? A full code playground, living inside the design tool itself.",
+    context:
+      "Developers exploring Adobe Express add-ons faced a heavy first step: install Node and a CLI, scaffold a project, and wire up a local dev server, all before writing a single line of add-on code. That setup wall filtered out exactly the developers Adobe most wanted: the curious, the evaluating, the not-yet-committed.",
+    approach:
+      "I anchored the work in a persona-driven journey around Daksh, a solo indie developer evaluating Express, then phased delivery so engineering could ship value continuously. Phase 1 was an in-app editor with HTML, CSS, iframe JS, and Document JS panes running against the live canvas. Later phases added Spectrum alignment, session persistence, cloud sessions with shareable links and moderation, and finally export to a CLI-compatible add-on. Throughout, I designed the safety rails that make an in-app IDE trustworthy: destructive-action confirmations, autosave disclosures, and session recovery.",
+    work:
+      "A full narrative journey map told through the Daksh persona, a 29-board deck, detailed designs for every playground state, and dev-spec handoffs to WXP engineering, with user testing in the Phase 2 cycle.",
+    outcome:
+      "The playground became the centerpiece of Express's developer surface, the experiment-with-the-SDK front door, and the foundation later extended to connectors and the AI code assistant. It turns the platform's steepest dropout point, environment setup, into a five-minute first win.",
+    note: "Artifacts on file: Playground Journey (29 boards), Phase 2, Cloud Storage brief, Design Brief.",
     img: null,
-    slug: "adobe-dx",
-    pull: "metric: time-to-first-build",
-    hook: "The first successful build is a design problem. I treat DX like a product.",
-    context: "Every platform lives or dies on its developers. Adobe's extensibility surface is vast — SDKs, APIs, docs, samples — and the first hour decides whether a developer stays or walks.",
-    approach: "Time-to-first-build is the metric that matters. I design onboarding that answers the next question before it's asked, and “hello world” moments that arrive in minutes instead of afternoons.",
-    work: "End-to-end onboarding design for Adobe's developer platform — from first landing to first successful build.",
-    outcome: "A developer journey with fewer dead ends and a faster path to a working build — developer experience treated with product-grade care.",
   },
   {
-    title: "Next-Gen Adobe Extensions",
-    role: "Senior UX Designer",
-    year: "2024–Present",
+    kind: "study",
+    slug: "quickstart",
+    chapter: "Adobe",
     tick: "2024",
-    ty: 2024.5,
+    year: "2024",
+    title: "Project QuickStart",
+    meta: "Adobe Express · Design lead · shipped as BETA",
+    chip: "an AI pair-programmer for add-ons",
+    hook: "An AI pair-programmer for add-on development, designed to earn trust, not just generate code.",
+    context:
+      "Developers building Express add-ons have to learn many facets of the Document API at once. Adobe had a CodeGen model that could help, but a model is not a product. The team needed a low-stakes, friendly way for real developers to exercise the model, get value from it, and feed accuracy signals back to the model team.",
+    approach:
+      "I framed Phase 1 tightly: test the model's accuracy on real tasks and harvest structured feedback, with playground integration deferred. I designed the assistant as a chat-with-scaffolding experience, with suggested starter prompts that teach the model's range while lowering the blank-page barrier. Honesty was built into the surface: a persistent disclosure that AI output may be inaccurate, visible processing states, and inline feedback on every generation.",
+    work:
+      "An end-to-end BETA prototype covering the full loop, prompt to generation to code applied against the live document to feedback, with updated designs (with Steph Corrales), a design brief, and DACI alignment with the CodeGen engineering team.",
+    outcome:
+      "A working BETA that let Adobe evaluate its code-generation model with actual add-on developers, and an early, concrete instance of the pattern I now work on daily: AI assistance embedded in a creative tool, with trust, feedback, and human control designed in from the start.",
+    note: "Artifacts on file: QuickStart Design Brief, QuickStart Designs (62 pages).",
     img: null,
-    slug: "adobe-extensions",
-    pull: "agentic extensibility patterns",
-    hook: "What happens when an extension stops waiting for clicks and starts acting?",
-    context: "Creative Cloud runs on an ecosystem of add-ons built for a world where software waits for input. Agentic AI breaks that assumption — extensions can now reason, plan, and act across tools. Someone has to design what that shift feels like for the person in the loop.",
-    approach: "I map where an agent should act and where it must ask. Connector architecture, handoff moments, confirmation and permission patterns — the interaction grammar that keeps a human in command of software that moves on its own.",
-    work: "Agent flow maps, trust and confirmation UX, and live connector prototypes that carry work across Adobe tools — while showing exactly what the agent did, and why.",
-    outcome: "Working patterns for agentic extensibility — prototypes that are shaping how add-ons graduate from passive panels to active collaborators.",
   },
   {
-    title: "Adobe Firefly Services",
-    role: "Senior UX Designer",
-    year: "2023–Present",
-    tick: "2023",
-    ty: 2023.6,
+    kind: "study",
+    slug: "connectors",
+    chapter: "Adobe",
+    tick: "2025",
+    year: "2024 – 2025",
+    title: "Service Connectors & the Developer Panel",
+    meta: "Adobe Express · Design lead · Enterprise Alpha to GA",
+    chip: "extensibility beyond add-ons",
+    hook: "Extensibility beyond add-ons: designing how enterprises plug their own AI services directly into Express.",
+    context:
+      "As web extensibility grew past add-ons, Express introduced connectors: service-level integrations that let enterprise developers wire internal translation, rewriting, or custom-LLM services directly into the tool. The goal was to accelerate enterprise onboarding and grow a scalable ecosystem. The design problem was to make building one clear, self-serve, and low-friction.",
+    approach:
+      "Manifest-driven and API-first: the manifest defines the connector's architecture, so the UI anchors to it with a WYSIWYG editor rather than inventing a parallel mental model. I leaned on workflows enterprise developers already know, OAuth, API contracts, versioning, and private and public listings, and built for scale with reusable schema conventions and validation. I mapped the full journey from Learn to Submit and phased it Alpha to Beta to GA. I also designed the companion Developer L1 panel: a unified launchpad consolidating docs, developer tools, add-on testing, connector building, and Express MCP integrations, with progressive disclosure and an extensible card pattern.",
+    work:
+      "Design briefs, journey maps, and detailed designs for the unified surface: mixed add-on and connector listings, playground sessions typed by integration, connector settings, publish, private-link and insights views, and the deletion and lifecycle flows that closed a long-standing gap.",
+    outcome:
+      "A single, coherent developer surface where add-ons, connectors, and MCP integrations live side by side: the interaction backbone for Express's move from plugins that wait for clicks to service- and agent-level extensibility.",
+    note: "Artifacts on file: Connectors DevEx Design Brief, Detailed Designs.",
     img: null,
-    slug: "firefly-services",
-    pull: "steerable generation at scale",
-    hook: "Generative power means nothing if people can't steer it. I designed the controls.",
-    context: "Firefly Services puts Adobe's generative models behind APIs so teams can produce content at industrial scale. But raw capability isn't a product — someone has to design how creative intent becomes usable output.",
-    approach: "I design the control surfaces: prompt-to-output flows, parameters that read like creative decisions rather than machine settings, and guardrails that keep brands on-brand at ten thousand assets a batch.",
-    work: "Control UI and flow design across the Firefly Services surface — the difference between an unsteerable model and a tool a creative team can direct with confidence.",
-    outcome: "Interfaces that shorten the distance between intent and result — making generation something teams direct, not something they gamble on.",
   },
   {
-    title: "St. Jude Donor Loyalty",
-    role: "Sr. UX Architect · ALSAC/St. Jude",
-    year: "2022–2023",
-    tick: "2022",
-    ty: 2022.3,
-    img: "/images/work/loyalty.webp",
+    kind: "study",
+    slug: "personas",
+    chapter: "Adobe",
+    tick: "2025",
+    year: "2025",
+    title: "Persona Definitions for the AI Era",
+    meta: "Adobe Developer Experience · Research & design lead",
+    chip: "a sixth archetype: the Next-Gen Developer",
+    hook: "AI did not just change the tools developers use. It changed who developers are. The persona system had to catch up.",
+    context:
+      "Adobe's foundational developer archetypes predated the AI shift. None of them mentioned AI workflows, now a primary driver of how people build. Low-code and no-code platforms had blurred the lines between archetypes, and modern deployment needs like CI/CD, containers, and security scanning were missing entirely. Outdated personas meant misaligned tools, resources, and support.",
+    approach:
+      "I ran a research program combining an internal Adobe research review, external benchmarks, expert and stakeholder interviews, and third-party developer interviews. I analyzed the AI-driven shift per archetype: how it transformed motivation, needs, and pain points. Then I defined a new sixth archetype, the Next-Gen Developer: an early-career coder who treats AI as core to how they learn and build, and who needs AI-native learning pathways, trustworthy explanations of generated code, and beginner-friendly debugging.",
+    work:
+      "A design brief, a deep-dive analysis deck, and a shareable one-pager mapping all six archetypes across description, motivation, needs, pain points, and technical skill. Each persona is written in first person and annotated with its AI-era additions.",
+    outcome:
+      "A persona framework the extensibility org could actually plan against. Tooling and roadmap decisions, playground, code assistant, connectors, and MCP, now trace to explicit AI-era developer needs. The work names its thesis: a universal shift toward AI-augmented development.",
+    note: "Artifacts on file: Persona Definitions Update, Deep Dive, One-pager.",
+    img: null,
+  },
+  {
+    kind: "study",
+    slug: "first-mile",
+    chapter: "Adobe",
+    tick: "2025",
+    year: "2025",
+    title: "First Mile: The Developer's First Hour",
+    meta: "Adobe Express · Design lead",
+    chip: "metric: time-to-first-build",
+    hook: "The first successful build is a design problem. Time-to-first-build is the metric that matters.",
+    context:
+      "Many new developers stalled at the very start: activating Dev Mode, accepting Developer Terms of Use, creating a first add-on listing, and testing it were each small hurdles. Together they slowed the learning curve enough to lose people. First Mile targeted exactly that stretch of the journey.",
+    approach:
+      "I scoped Phase 1 to the three highest-friction moments: Dev Mode activation and terms acceptance, first listing creation, and add-on testing. Every decision was grounded in the Adobe Quality Framework of Useful, Usable, Modern, with the goal of answering the developer's next question before it is asked. I coordinated across product, DevRel, and design, aligning the in-app experience with the CLI flow and developer console so the first local run feels continuous with the in-app surface.",
+    work:
+      "A design brief and detailed designs covering the sign-in-to-first-test path across Express, developer.adobe.com, and the CLI touchpoints.",
+    outcome:
+      "A first-mile journey with fewer dead ends and a faster path to a working build: the concrete, current expression of a simple thesis, that developer experience deserves product-grade care.",
+    note: "Artifacts on file: First Mile Dev Journey, Design Brief, Designs.",
+    img: null,
+  },
+  {
+    kind: "study",
+    slug: "heuristic-review",
+    chapter: "Adobe",
+    tick: "2024",
+    year: "2024",
+    title: "Heuristic Review of the Add-on DX",
+    meta: "Adobe Express · Co-lead · 49-page evaluation",
+    chip: "measure before you redesign",
+    hook: "Before redesigning anything, measure it. A systematic usability audit of an entire developer platform.",
+    context:
+      "Adobe needed an honest read on the usability and effectiveness of the end-to-end add-on developer experience, and a prioritized, actionable list of what to fix.",
+    approach:
+      "I evaluated six areas, from existing add-ons through environment setup, documentation, submission, and support, against six heuristics, scored on a 0 to 4 severity scale to force prioritization. Co-authored with design manager Shannon McCready, with raw notes and scoring published internally alongside the deck.",
+    work:
+      "Scored findings per area, highlights and lowlights, and concrete recommendations: standardized support templates, add-on deletion, submission-status notifications, a searchable code-snippet repository, error-scenario docs, and formalized documentation processes with DevRel.",
+    outcome:
+      "The verdict, that the add-on developer experience is strong, with specific gaps, became the evidence base for the roadmap that followed: First Mile, playground investment, and support and documentation changes. Several recommendations shipped in later cycles.",
+    note: "Artifacts on file: Heuristic Review of Adobe Express Add-On DX (49 pages).",
+    img: null,
+  },
+  {
+    kind: "index",
+    slug: "adobe-more",
+    chapter: "Adobe",
+    tick: "2024",
+    year: "2024 – 2025",
+    title: "Also shipped at Adobe",
+    meta: "Adobe Developer Experience",
+    items: [
+      {
+        title: "Vision Sprint 2025",
+        note: "Vision lead, with Steph Corrales, for the org's sprint on the future of AI-powered developer experience: export-to-CLI, multi-session cloud storage, deep-linked playground, and the agentic threads connecting playground, assistant, connectors, and MCP.",
+      },
+      {
+        title: "Docs IA & Landing Revamp",
+        note: "Restructured developer.adobe.com's information architecture and landing experience with DevRel, with tailored paths for beginner and advanced developers.",
+      },
+      {
+        title: "Add-on UX Guidelines Framework",
+        note: "A scalable framework for developer-facing UX guidelines, migrated from Adobe XD to developer.adobe.com, with a competitive audit of Miro, Slack, Canva, and Apple.",
+      },
+      {
+        title: "Firefly + Creative Cloud APIs Microsite",
+        note: "A Phase-1 marketing and landing experience for the bundled APIs: definitions, business value, use-case buckets, code samples, and lead-gen, shipped for the Summit moment.",
+      },
+      {
+        title: "Project Dragonfly",
+        note: "A live demo of Firefly APIs for Adobe Summit decision-makers: localize campaigns, personalize assets, accelerate merchandising. Generative AI made tangible for a C-suite audience.",
+      },
+      {
+        title: "Horizon Portal",
+        note: "A framework for information-rich views in Adobe's internal engineering platform: customizable widgets, standardized tables and detail views, and real-time state for deployments and incidents.",
+      },
+    ],
+    img: null,
+  },
+
+  // ── ALSAC / St. Jude · 2012 – 2023 ──────────────────────────────────────
+  {
+    kind: "study",
     slug: "donor-loyalty",
-    pull: "+22% repeat giving · +5% avg gift",
-    hook: "Repeat donors were slipping away. We designed a reason to stay.",
-    context: "St. Jude raises $2.2 billion a year, but repeat digital donations were declining. Acquiring donors was working — keeping them wasn't. The mission needed loyalty, not just reach.",
-    approach: "A loyalty layer that runs quietly behind a donor's profile, surfacing the tangible impact of every gift with personalized stories and incentives. Prototyped in XD, tested with a 30,000-donor segment over a full year, then shipped on the tools we already had.",
-    work: "Onboarding, dashboard, impact reporting, and education flows — a complete product designed, tested, and delivered inside a nonprofit's existing stack.",
-    outcome: "Repeat donations rose 22% and the average gift grew 5%. Donors said they felt more valued and more connected to the mission they were funding.",
+    chapter: "St. Jude",
+    tick: "2022",
+    year: "2022 – 2023",
+    title: "St. Jude Donor Loyalty",
+    meta: "ALSAC / St. Jude · Lead design",
+    chip: "+22% repeat giving · +5% average gift",
+    hook: "Repeat donors were quietly slipping away from a $2.2B mission. The fix was not louder asks. It was a product.",
+    context:
+      "St. Jude recognized a decline in repeat donor numbers over the years. Despite a large initial donor pool, retaining contributors and encouraging consistent gifts was proving a challenge. With growing demand for services, the mission needed loyalty, not just reach.",
+    approach:
+      "The hypothesis: engaging one-time digital donors at points within a loyalty journey would produce a positive experience and prolonged engagement. The solution was a product that runs quietly behind a donor's profile, surfacing the tangible impact of every gift through personalized stories and offering incentives as they participate. Prototype discipline over platform ambition: experiences tested as XD prototypes with real users, then built in the simplest form on Adobe Experience Manager using tools the organization already had. Tested over a full year with 30,000-plus donors, with automatic opt-out for those who did not engage or reached a preset goal.",
+    work:
+      "Onboarding, dashboard, impact reporting, and education flows: a complete product designed, tested, and delivered inside a nonprofit's existing stack.",
+    outcome:
+      "Repeat donations rose 22% and the average gift grew 5%. Donors reported feeling more valued, more connected to the mission, and more aware of the impact of their gifts. The program underscored that philanthropy is a relationship business, and that relationships can be designed.",
+    img: "/images/work/loyalty.webp",
   },
   {
-    title: "Sequin Forest",
-    role: "Sr. UX Architect · ALSAC/St. Jude",
-    year: "2021–2022",
-    tick: "2021",
-    ty: 2021.3,
-    img: "/images/work/sequin-forest.webp",
+    kind: "study",
     slug: "sequin-forest",
-    pull: "a surge in 18–35 donors",
-    hook: "Micro-donations for a generation that trusts the chain more than the checkout.",
-    context: "St. Jude wanted younger donors, transparent giving, and lower transaction overhead. Blockchain rails offered all three — if the experience could be made to feel human instead of financial.",
-    approach: "Gamified micro-giving: small donations with near-zero fees, every transaction transparent and immutable, badges marking milestones along the way. Crypto mechanics, designed to feel like planting something that grows.",
-    work: "The full giving experience — from first visit to a growing sequin forest that visualizes collective impact, one donation at a time.",
-    outcome: "A surge in donations from 18–35 year-olds and drastically lower processing overhead — proof that emerging tech and philanthropy compound each other.",
+    chapter: "St. Jude",
+    tick: "2021",
+    year: "2021 – 2022",
+    title: "Sequin Forest",
+    meta: "ALSAC / St. Jude · Ideation, UX/UI",
+    chip: "a surge in donors aged 18 to 35",
+    hook: "Younger donors, transparent giving, lower overhead. Blockchain rails offered all three, if the experience could feel human instead of financial.",
+    context:
+      "St. Jude was seeking new ways to fundraise with a younger, tech-savvy generation. The challenges: ensure transparency in how donations are used, reduce transactional overhead, and simplify the process. Rising trust in blockchain made a micro-donation platform viable.",
+    approach:
+      "A micro-donation website powered by blockchain: small contributions with minimal fees, every donation recorded as a transparent, immutable transaction donors can track. Gamification made it engaging, with badges for milestones and a growing sequin forest that visualizes collective impact, one donation at a time. Crypto mechanics, designed to feel like planting something that grows.",
+    work: "The full giving experience, from first visit to a personal stake in the collective forest.",
+    outcome:
+      "A surge in donations from the 18 to 35 age group compared to traditional platforms, and drastically reduced administrative overhead. Proof that emerging tech and philanthropy compound each other.",
+    img: "/images/work/sequin-forest.webp",
   },
   {
-    title: "Hall of Heroes VR",
-    role: "Sr. Innovation Architect · ALSAC/St. Jude",
-    year: "2019–2021",
-    tick: "2020",
-    ty: 2020.0,
-    img: "/images/work/hall-of-heroes.webp",
-    slug: "hall-of-heroes",
-    pull: "featured at CES · built with Meta",
-    hook: "Walking the halls of St. Jude from anywhere on Earth.",
-    context: "Most people will never set foot on the St. Jude campus — yet presence is what turns sympathy into commitment. Virtual reality could close that distance.",
-    approach: "An immersive experience built in partnership with Meta: donors walk the hospital's halls, meet its heroes, and feel the scale of the mission in first person. Comfort-first VR interaction, narrative pacing over spectacle.",
-    work: "Ideation and UX design for the full experience — one thread of an innovation practice that spanned VR, AR, and IoT products for large-scale fundraising.",
-    outcome: "Featured at the Consumer Electronics Show and shipped as a public experience — immersive storytelling in service of a $2.2 billion mission.",
-  },
-  {
-    title: "The St. Jude Donation Experience",
-    role: "Sr. GUI Developer → UX Architect",
-    year: "2018–2023",
-    tick: "2018",
-    ty: 2018.0,
-    img: "/images/work/donation.webp",
+    kind: "condensed",
     slug: "donation-experience",
-    pull: "$2.2B mission · five years of iteration",
-    hook: "Five years refining the most important form in childhood cancer.",
-    context: "stjude.org/donate is where the mission gets funded — by people who are mobile-first, time-crunched, and one distraction away from not giving. Every point of friction has a cost measured in research.",
-    approach: "Continuous, test-driven redesign over five years: user testing, iteration, and a mobile-first rebuild of every step between impulse and impact.",
-    work: "The complete donation flow, plus the platform around it — from crypto giving to Amazon merch — turning new channels into fundraising surfaces for one of America's most trusted brands.",
-    outcome: "A modern giving experience with the friction removed from the moment generosity strikes — and a template for how a legacy nonprofit ships like a product team.",
+    chapter: "St. Jude",
+    tick: "2018",
+    year: "2018 – 2023",
+    title: "The St. Jude Donation Experience",
+    meta: "ALSAC / St. Jude · User testing, UX/UI, development",
+    chip: "$2.2B mission · five years of iteration",
+    hook: "The most important form in childhood cancer, refined for five years.",
+    body: "Five years of continuous, test-driven redesign of stjude.org/donate: user testing, iteration, and a mobile-first rebuild of every step between impulse and impact. New channels followed, from crypto giving to an Amazon merch storefront, each one turning a modern surface into a way to fund the mission.",
+    img: "/images/work/donation.webp",
   },
   {
-    title: "The Early Years",
-    role: "Lead Designer · Lokion Interactive → Hilton",
-    year: "2000–2009",
-    tick: "2000s",
-    ty: 2004.5,
+    kind: "condensed",
+    slug: "hall-of-heroes",
+    chapter: "St. Jude",
+    tick: "2020",
+    year: "2019 – 2021",
+    title: "Hall of Heroes VR",
+    meta: "ALSAC / St. Jude · Ideation, UX design",
+    chip: "featured at CES · built with Meta",
+    hook: "Walk the halls of St. Jude from anywhere on Earth.",
+    body: "An immersive VR campus experience built in conjunction with Meta: donors walk the hospital's halls and meet its heroes in first person. Comfort-first interaction, narrative pacing over spectacle. Featured at the Consumer Electronics Show.",
+    img: "/images/work/hall-of-heroes.webp",
+  },
+  {
+    kind: "index",
+    slug: "stjude-more",
+    chapter: "St. Jude",
+    tick: "2015",
+    year: "2012 – 2023",
+    title: "Also at St. Jude",
+    meta: "Innovation practice",
+    items: [
+      {
+        title: "St. Jude Virtual Tour",
+        note: "Ideation, UI and UX design, and user testing for a virtual walk through the campus most donors will never visit.",
+      },
+      {
+        title: "St. Jude Amazon Merch",
+        note: "Design, ideation, and implementation of a branded merchandise storefront: a low-cost way to develop Amazon as a fundraising platform.",
+      },
+      {
+        title: "This Shirt Saves Lives Vending Machine",
+        note: "Ideation, UX and UI design, and build for a physical vending machine that turns a t-shirt into a monthly donor commitment.",
+      },
+      {
+        title: "Immersive Storytelling initiative",
+        note: "Kicked off the innovation program that grew into the VR, AR, and IoT practice behind Hall of Heroes and the Virtual Tour.",
+      },
+    ],
     img: null,
+  },
+
+  // ── The agency years · 2000 – 2012 ──────────────────────────────────────
+  {
+    kind: "condensed",
     slug: "early-years",
-    pull: "nokia · fedex · hilton · viking · first tennessee",
-    hook: "A decade of firsts, before the patterns existed — the work that shaped how I design today.",
-    context: "My first decade was agency work at Lokion Interactive — Nokia, FedEx, Hilton, ServiceMaster — in the years before mobile-first was a strategy or design patterns existed to borrow. Every project was a first for somebody, usually including us.",
-    approach: "Translate trust. A luxury stove with knobs, a bank built on tellers, a hotel front desk — each had to become digital without losing what people already believed in. Strip to essentials, honor the constraint, and draw the map while walking it.",
-    work: "Lead design on Viking's digital range line, the redesign of First Tennessee's online banking, and Hilton's Android booking application — one of the era's first major hotel booking apps, designed for thumbs and small screens when every kilobyte and keystroke cost something.",
-    outcome: "Two decades later the lessons still hold: new interfaces win by honoring what people already trust, and constraint is where discipline comes from. Everything since — St. Jude, Adobe — is built on that decade.",
+    chapter: "Early",
+    tick: "2000",
+    year: "2000 – 2012",
+    title: "The Early Years",
+    meta: "Lokion, SimpleFocus, Hilton · Lead design",
+    chip: "new interfaces win by translating trust",
+    hook: "Agency work in the years before mobile-first was a strategy.",
+    body: "Design for Nokia, FedEx, Hilton, ServiceMaster, Viking, Cellular South, and First Tennessee. Lead design on Viking's line of digital ranges, on the redesign of First Tennessee's online banking, and on Hilton's Android booking application, one of the era's first major hotel booking apps, drawn for thumbs and small screens when every kilobyte and keystroke cost something. The through-line held: new interfaces win by translating the trust people already have.",
+    img: null,
+  },
+
+  {
+    kind: "outro",
+    slug: "end",
+    tick: "now",
+    year: "Today",
+    era: "Now",
+    title: "Users at the center.",
+    hook: "I believe that by putting users at the center of the design and development process, products become more effective, more efficient, and more delightful to use.",
+    email: "m@ttladner.co",
   },
 ];
 
-// Timeline geometry — ticks are spaced evenly across the bar
-const TICK_MIN = 6;   // % inset for the first tick
-const TICK_SPAN = 88; // % width the ticks are distributed across
-
-// The four case-study beats, rendered as sections of the expanded study.
-const BEATS = [
-  { key: "context", label: "Context", num: "01" },
-  { key: "approach", label: "Approach", num: "02" },
-  { key: "work", label: "The work", num: "03", media: true },
-  { key: "outcome", label: "Outcome", num: "04", stat: true },
-];
-
+// ── Small DOM helper ──────────────────────────────────────────────────────
 const el = (tag, cls, html) => {
   const n = document.createElement(tag);
   if (cls) n.className = cls;
@@ -150,9 +318,9 @@ const el = (tag, cls, html) => {
   return n;
 };
 
-// ── Generative placeholder — contour field in the site's language ─────────
-// Deterministic per project (seeded by slug) so the art is stable between
-// visits. Reads as art direction, not absence, until real imagery lands.
+// ── Generative placeholder — a seeded contour field, in the site language ──
+// Deterministic per slug so the art is stable between visits; reads as art
+// direction, not absence, until real imagery lands.
 const seededRandom = (slug) => {
   let h = 2166136261 >>> 0;
   for (const ch of slug) {
@@ -166,8 +334,8 @@ const seededRandom = (slug) => {
   };
 };
 
-const placeholderSVG = (item, index) => {
-  const rnd = seededRandom(item.slug);
+const placeholderSVG = (slug, label) => {
+  const rnd = seededRandom(slug);
   const cx = 430 + (rnd() * 160 - 80);
   const cy = 235 + (rnd() * 90 - 45);
   const rot = rnd() * 56 - 28;
@@ -190,175 +358,177 @@ const placeholderSVG = (item, index) => {
   return (
     `<svg class="ph" viewBox="0 0 800 480" preserveAspectRatio="xMidYMid slice" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">` +
     `<rect width="800" height="480" fill="#0B0B0E"/>` +
-    `<text x="48" y="432" font-family="Pavilion, Georgia, serif" font-size="230" fill="rgba(232,227,214,0.07)">0${index + 1}</text>` +
+    `<text x="46" y="430" font-family="Pavilion, Georgia, serif" font-size="220" fill="rgba(232,227,214,0.06)">${label}</text>` +
     `<g class="ph__drift">${rings}</g>${dust}</svg>`
   );
 };
 
-const buildMedia = (item, index) => {
-  const media = el("div", "card__media");
-  if (item.img) {
+// Media band, 16:9, interspersed in the reading flow. Slot "a" shows the real
+// image when there is one; other slots always draw a generative placeholder.
+const buildMedia = (panel, slot = "a") => {
+  const media = el("figure", "panel__media");
+  if (slot === "a" && panel.img) {
     const img = document.createElement("img");
-    img.src = item.img;
-    img.alt = `${item.title} — project imagery`;
+    img.src = panel.img;
+    img.alt = `${panel.title}, project imagery`;
     img.loading = "lazy";
+    img.decoding = "async";
     img.draggable = false;
     media.append(img);
   } else {
-    media.classList.add("card__media--ph");
-    media.innerHTML = placeholderSVG(item, index);
-    media.append(el("span", "card__media-note", "[ imagery in production ]"));
+    media.classList.add("panel__media--ph");
+    const seed = slot === "a" ? panel.slug : `${panel.slug}-${slot}`;
+    media.innerHTML = placeholderSVG(seed, panel.tick);
+    media.append(el("figcaption", "panel__media-note", "[ imagery in production ]"));
   }
   return media;
 };
 
-// ── One project card: cover teaser + expandable case study ────────────────
-const buildCard = (item, index) => {
-  const card = el("article", "work-card");
-  card.dataset.index = String(index);
-  card.dataset.slug = item.slug;
+// ── Beats of a case study ─────────────────────────────────────────────────
+const BEATS = [
+  ["context", "Context"],
+  ["approach", "Approach"],
+  ["work", "The work"],
+  ["outcome", "Outcome"],
+];
 
-  // Close control — sticky so it survives the study's internal scroll
-  const closeWrap = el("div", "card__closebar");
-  const close = el("button", "card__close");
-  close.type = "button";
-  close.setAttribute("aria-label", "Close case study");
-  close.textContent = "×";
-  closeWrap.append(close);
-  card.append(closeWrap);
-
-  // Cover — the teaser face: title + year + hook. The role and pull chip
-  // belong to the expanded study; closed covers stay quiet.
-  const cover = el("div", "card__cover");
-  const head = el("div", "card__cover-head");
-  head.append(
-    el("h2", "card__title", item.title),
-    el(
-      "p",
-      "card__meta",
-      `[ ${item.year}<span class="card__meta-role"> · ${item.role}</span> ]`
-    )
-  );
-  if (item.pull) head.append(el("p", "card__pull", item.pull));
-  cover.append(head, el("p", "card__hook", item.hook), buildMedia(item, index));
-  card.append(cover);
-
-  // Bottom bar — the explicit way in
-  const bar = el("div", "card__bar");
-  const open = el("button", "card__open");
-  open.type = "button";
-  open.setAttribute("aria-label", `Open case study: ${item.title}`);
-  open.innerHTML = "Open case study&nbsp;&nbsp;→";
-  bar.append(
-    open,
-    el("span", "card__bar-hint", `<span class="hint-desktop">scroll — next project</span><span class="hint-mobile">swipe ↑ next<br>tap to open</span>`)
-  );
-  card.append(bar);
-
-  // Study — a vertically scrolling editorial article, revealed on expand
-  const study = el("div", "card__study");
-  BEATS.forEach((beat) => {
-    const section = el("section", "study__beat");
-    section.append(el("p", "study__label", `${beat.num} — ${beat.label}`));
-    const body = el("div", "study__body");
-    body.append(el("p", "study__text", item[beat.key]));
-    if (beat.stat && item.pull) {
-      body.append(el("p", "study__stat", item.pull));
-    }
-    if (beat.media) {
-      const m = buildMedia(item, index);
-      m.classList.add("study__media");
-      body.append(m);
-    } else if (beat.key !== "outcome") {
-      body.append(
-        el("div", "study__slot", "[ artifact slot — process imagery to come ]")
-      );
-    }
-    section.append(body);
-    study.append(section);
-  });
-  const foot = el("footer", "study__foot");
-  const next = el("button", "study__next");
-  next.type = "button";
-  const after = WORK[index + 1];
-  next.innerHTML = after
-    ? `Next:&nbsp;${after.title}&nbsp;&nbsp;→`
-    : "To the end of the timeline&nbsp;&nbsp;→";
-  foot.append(el("span", "study__foot-meta", `[ ${item.year} ]`), next);
-  study.append(foot);
-  card.append(study);
-
-  return card;
+const buildHead = (panel) => {
+  const head = el("header", "panel__head");
+  if (panel.meta) head.append(el("p", "panel__eyebrow", panel.meta));
+  head.append(el("h2", "panel__title", panel.title));
+  if (panel.hook) head.append(el("p", "panel__hook", panel.hook));
+  return head;
 };
 
-// ── Outro — the journey ends with a door, not a wall ──────────────────────
-const buildOutro = () => {
-  const card = el("article", "work-card work-card--outro");
-  card.dataset.index = String(WORK.length);
-  const cover = el("div", "card__cover card__cover--outro");
-  cover.append(
-    el("p", "card__meta card__meta--outro", "[ 2000 — 2026 ]"),
-    el("h2", "card__title card__title--outro", "Twenty-six years, charted."),
-    el(
-      "p",
-      "outro__note",
-      "More work is being restored from the archive — this timeline grows."
-    ),
-    el(
-      "p",
-      "outro__links",
-      `<a href="/">← Back to the homepage</a><button type="button" class="outro__restart">Start over ↑</button>`
-    )
-  );
-  card.append(cover);
-  return card;
+const CHAPTER_LABEL = {
+  Adobe: "Adobe · Extensibility",
+  "St. Jude": "ALSAC / St. Jude",
+  Early: "Agency years",
 };
 
-// Build the timeline bar: labeled end caps + one evenly spaced tick per
-// project + the draggable node. The ticks read as a steady cadence rather
-// than clustering by true year — the year labels still carry the real dates.
-const evenPos = (i) => TICK_MIN + (i / (WORK.length - 1)) * TICK_SPAN;
+const buildPanel = (panel, index) => {
+  const section = el("section", `panel panel--${panel.kind}`);
+  section.dataset.index = String(index);
+  section.dataset.slug = panel.slug;
+  section.dataset.year = panel.year || "";
+  section.dataset.era = panel.era || CHAPTER_LABEL[panel.chapter] || "";
+  section.id = "p-" + panel.slug;
+  const inner = el("div", "panel__inner");
 
-const buildTimeline = (mount) => {
-  mount.append(el("span", "timeline__line", ""));
-  // Vertical serifs bookend the bar — a start and a finish
-  mount.append(
-    el("span", "timeline__end timeline__end--start", ""),
-    el("span", "timeline__end timeline__end--finish", "")
-  );
-
-  const ticks = el("div", "timeline__ticks");
-  WORK.forEach((item, i) => {
-    const pos = evenPos(i);
-    const t = el("div", "timeline__tick" + (i === 0 ? " is-active" : ""));
-    t.style.left = pos.toFixed(2) + "%";
-    t.dataset.index = String(i);
-    t.dataset.pos = pos.toFixed(3);
-    t.append(
-      el("span", "timeline__tick-title", item.title),
-      el("span", "timeline__tick-dot", ""),
-      el("span", "timeline__tick-year", item.tick)
+  if (panel.kind === "intro") {
+    inner.classList.add("panel__inner--center");
+    const head = el("header", "panel__head");
+    head.append(
+      el("h2", "panel__title panel__title--display", panel.title),
+      el("p", "panel__hook panel__hook--lead", panel.hook)
     );
-    ticks.append(t);
-  });
-  mount.append(ticks);
+    if (panel.body) head.append(el("p", "panel__body", panel.body));
+    inner.append(head);
+    section.append(inner);
+    return section;
+  }
 
-  const node = el("div", "timeline__node");
-  node.style.left = evenPos(0).toFixed(2) + "%";
-  mount.append(node);
+  if (panel.kind === "outro") {
+    inner.classList.add("panel__inner--center");
+    const head = el("header", "panel__head");
+    head.append(
+      el("h2", "panel__title panel__title--display", panel.title),
+      el("p", "panel__hook panel__hook--lead", panel.hook)
+    );
+    const contact = el("div", "outro__contact");
+    const mail = el("a", "outro__mail", panel.email);
+    mail.href = "mailto:" + panel.email;
+    contact.append(mail);
+    const links = el("nav", "outro__links");
+    links.innerHTML =
+      '<a href="/cv.html">Read the CV</a>' +
+      '<a href="https://www.linkedin.com/in/mattladner/" target="_blank" rel="noreferrer noopener">LinkedIn</a>' +
+      '<a href="https://mattladner.medium.com/" target="_blank" rel="noreferrer noopener">Writing</a>' +
+      '<a href="/">Home</a>';
+    contact.append(links);
+    head.append(contact);
+    inner.append(head);
+    section.append(inner);
+    return section;
+  }
+
+  // study / condensed / index are light cards; media is woven through the text
+  inner.classList.add("panel__card");
+  inner.append(buildHead(panel));
+
+  if (panel.kind === "study") {
+    const mkBeat = (key, label) => {
+      if (!panel[key]) return null;
+      const beat = el("div", "beat");
+      beat.append(
+        el("p", "beat__label", label),
+        el("p", "beat__text", panel[key])
+      );
+      return beat;
+    };
+    const context = mkBeat("context", "Context");
+    const approach = mkBeat("approach", "Approach");
+    const work = mkBeat("work", "The work");
+    const outcome = mkBeat("outcome", "Outcome");
+    if (context) inner.append(context);
+    inner.append(buildMedia(panel, "a"));
+    if (approach) inner.append(approach);
+    if (work) inner.append(work);
+    inner.append(buildMedia(panel, "b"));
+    if (outcome) inner.append(outcome);
+    if (panel.note) inner.append(el("p", "panel__note", panel.note));
+  } else if (panel.kind === "condensed") {
+    inner.append(el("p", "panel__lead", panel.body), buildMedia(panel, "a"));
+  } else if (panel.kind === "index") {
+    const ul = el("ul", "panel__index");
+    panel.items.forEach((it) => {
+      const li = el("li", "index-item");
+      li.append(
+        el("h3", "index-item__title", it.title),
+        el("p", "index-item__note", it.note)
+      );
+      ul.append(li);
+    });
+    inner.append(ul);
+  }
+
+  section.append(inner);
+  return section;
+};
+
+// ── Left timeline rail: readout + one node per panel + moving marker ───────
+const buildRail = (mount) => {
+  const readout = el("div", "rail__readout");
+  readout.append(el("span", "rail__era", PANELS[0].era || ""));
+
+  const line = el("div", "rail__line");
+  line.append(el("span", "rail__serif rail__serif--top"));
+  line.append(el("span", "rail__serif rail__serif--bottom"));
+  const marker = el("span", "rail__marker");
+  line.append(marker);
+
+  const nodes = el("div", "rail__nodes");
+  const n = PANELS.length;
+  PANELS.forEach((panel, i) => {
+    const node = el("button", "rail__node" + (i === 0 ? " is-active" : ""));
+    node.type = "button";
+    node.dataset.index = String(i);
+    node.style.top = ((i / (n - 1)) * 100).toFixed(3) + "%";
+    node.setAttribute("aria-label", panel.title);
+    node.append(el("span", "rail__dot"));
+    nodes.append(node);
+  });
+  line.append(nodes);
+
+  mount.append(readout, line);
 };
 
 const buildDOM = () => {
-  const deck = document.getElementById("deck");
-  const timeline = document.getElementById("timeline");
-  if (!deck || !timeline) return;
-  // Stage — the tiltable 3D plane all cards live on
-  const stage = el("div", "deck__stage");
-  stage.id = "deck-stage";
-  WORK.forEach((item, i) => stage.append(buildCard(item, i)));
-  stage.append(buildOutro());
-  deck.append(stage);
-  buildTimeline(timeline);
+  const panels = document.getElementById("panels");
+  const rail = document.getElementById("rail");
+  if (!panels || !rail) return;
+  PANELS.forEach((panel, i) => panels.append(buildPanel(panel, i)));
+  buildRail(rail);
 };
 
 const init = () => {
@@ -367,9 +537,9 @@ const init = () => {
   // Reuse the homepage's dust-and-light background (no word cloud / title)
   const atmosphere = import("./atmosphere.js").then((m) => m.initAtmosphere());
 
-  // Same preloader, tracking real milestones, then hand off into the deck
+  // Same preloader, tracking real milestones, then hand off into the scroll
   runLoader([document.fonts.ready, atmosphere]).then(() => {
-    import("./portfolio-deck.js").then((m) => m.initPortfolioDeck());
+    import("./portfolio-scroll.js").then((m) => m.initPortfolioScroll());
   });
 };
 
@@ -378,3 +548,5 @@ if (document.readyState === "loading") {
 } else {
   init();
 }
+
+export { PANELS };

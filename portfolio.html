@@ -5,11 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#08080A" />
     <meta name="author" content="Matt Ladner" />
-    <meta name="description" content="Selected work by Matt Ladner — a timeline of product, experience, and emerging-tech design from Adobe and St. Jude back through two decades of client work." />
+    <meta name="description" content="Selected work by Matt Ladner, Senior Experience Designer. AI and agentic UX, developer experience, and generative tools at Adobe, back through St. Jude and two decades of design." />
 
     <!-- Open Graph -->
-    <meta property="og:title" content="Work — Matt Ladner" />
-    <meta property="og:description" content="A timeline of selected work, present to past — Adobe, St. Jude, and two decades of design." />
+    <meta property="og:title" content="Work · Matt Ladner" />
+    <meta property="og:description" content="Selected work, present to past: agentic AI and developer experience at Adobe, St. Jude, and two decades of design." />
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="en_US" />
     <meta property="og:site_name" content="Matt Ladner" />
@@ -30,7 +30,7 @@
     <!-- Non-blocking — the preloader already gates reveal on fonts.ready -->
     <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
     <noscript><link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" /></noscript>
-    <title>Work — Matthew Ladner</title>
+    <title>Work · Matt Ladner · Senior Experience Designer</title>
     <script>
       /* Always open at the top — must run before GSAP loads, since
          ScrollTrigger captures and re-applies this value on refresh */
@@ -64,52 +64,32 @@
 
     <!-- Atmosphere canvas injected here by atmosphere.js -->
 
+    <!-- Top nav — fixed, outside the smooth scroller so it never scrolls away -->
+    <nav class="topnav" aria-label="Portfolio">
+      <a class="topnav__brand" href="/">&larr;&nbsp;Matthew&nbsp;Ladner</a>
+      <div class="topnav__tabs" role="tablist">
+        <span class="topnav__tab is-current" aria-current="page">Work</span>
+        <a class="topnav__tab" href="/cv.html">CV</a>
+      </div>
+    </nav>
+
+    <!-- Left timeline rail — fixed; built by portfolio.js -->
+    <aside class="rail" id="rail" aria-hidden="true"></aside>
+
     <div id="smooth-wrapper">
-    <div id="smooth-content" class="page">
-      <!-- ────────────────────────────── WORK TIMELINE ────────────────────────────── -->
-      <section class="work" id="work" aria-label="Selected work, present to past">
-        <!-- Cross-page nav — inside the pinned section so it stays put -->
-        <nav class="work__nav">
-          <a class="work__back" href="/">&larr;&nbsp;Matthew&nbsp;Ladner</a>
-          <div class="work__nav-right">
-            <span class="work__counter" id="counter" aria-hidden="true">01 / 08</span>
-            <button class="work__index-toggle" id="index-toggle" type="button" aria-pressed="false">[ Index ]</button>
-            <h1 class="work__navlabel">[ Selected_Work ]</h1>
-          </div>
-        </nav>
-
-        <!-- Intro screen — orients first-time visitors; the first scroll,
-             swipe, or click dismisses it -->
-        <div class="work__intro" id="work-intro">
-          <p class="intro__eyebrow">[ 2000 — 2026 ]</p>
-          <p class="intro__title">Selected Work</p>
-          <p class="intro__body">
-            Eight case studies, present to past — from agentic AI at Adobe to
-            the first hotel apps on Android. Travel the timeline, and open any
-            card to read the full story.
-          </p>
-          <p class="intro__hint"><span class="hint-desktop">scroll to begin</span><span class="hint-mobile">swipe to begin</span></p>
-        </div>
-
-        <!-- Perspective deck — cards are built by portfolio.js from the content data -->
-        <div class="deck" id="deck" aria-hidden="false"></div>
-
-        <!-- Orientation hint — fades on first movement -->
-        <p class="work__hint" id="scroll-hint" aria-hidden="true"><span class="hint-desktop">scroll</span><span class="hint-mobile">swipe</span></p>
-
-        <!-- Timeline bar — built by portfolio.js from the content data -->
-        <div class="timeline" id="timeline" aria-hidden="true"></div>
-      </section>
-    </div>
+      <div id="smooth-content" class="page">
+        <main class="panels" id="panels" aria-label="Selected work, present to past"></main>
+      </div>
     </div>
 
     <noscript>
       <style>
-        .loader { display: none; }
+        .loader, .rail { display: none; }
         .noscript-note { padding: 12vh 8vw; font-family: monospace; color: #E8E3D6; }
       </style>
       <p class="noscript-note">
-        This timeline needs JavaScript. View the
+        This portfolio uses motion and JavaScript. Read the
+        <a href="/cv.html" style="color:#D3E74F">CV</a> or visit the
         <a href="/" style="color:#D3E74F">homepage</a> instead.
       </p>
     </noscript>
