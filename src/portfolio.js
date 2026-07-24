@@ -36,13 +36,13 @@ const PANELS = [
     chip: "zero-setup coding, inside the tool",
     hook: "What if trying a platform's APIs took zero setup? A full code playground, living inside the design tool itself.",
     context:
-      "Developers exploring Adobe Express add-ons faced a heavy first step: install Node and a CLI, scaffold a project, and wire up a local dev server, all before writing a single line of add-on code. That setup wall filtered out exactly the developers Adobe most wanted: the curious, the evaluating, the not-yet-committed.",
+      "The first hour of add-on development was mostly setup. Install Node, learn a CLI, scaffold a project, wire up a local dev server, all before writing a single line of add-on code. That is a lot to ask of someone who is only curious. The wall did not filter out weak developers. It filtered out the ones who were still deciding, and those were exactly the people Adobe needed.",
     approach:
-      "I anchored the work in a persona-driven journey around Daksh, a solo indie developer evaluating Express, then phased delivery so engineering could ship value continuously. Phase 1 was an in-app editor with HTML, CSS, iframe JS, and Document JS panes running against the live canvas. Later phases added Spectrum alignment, session persistence, cloud sessions with shareable links and moderation, and finally export to a CLI-compatible add-on. Throughout, I designed the safety rails that make an in-app IDE trustworthy: destructive-action confirmations, autosave disclosures, and session recovery.",
+      "I designed the whole thing for one person. Daksh is a solo developer who has already shipped Figma and Canva plugins and is deciding whether Express is worth his weekend. If it worked for him, it would work. We shipped in phases so engineering always had something real in front of developers: first a plain editor with HTML, CSS, iframe JS, and Document JS panes running live against the canvas, then Spectrum alignment and saved sessions, then cloud sessions you could share with a link, then a clean exit to the CLI once you outgrow the playground. The part I care most about is the unglamorous part. Telling you before you overwrite your own work, being honest about what autosave is doing, and getting your session back when something goes wrong. An in-app IDE only earns trust if it never loses anything.",
     work:
-      "A full narrative journey map told through the Daksh persona, a 29-board deck, detailed designs for every playground state, and dev-spec handoffs to WXP engineering, with user testing in the Phase 2 cycle.",
+      "A 29-board journey told through Daksh, detailed designs for every state the playground can be in, and dev specs handed to WXP engineering. We put it in front of real developers during the Phase 2 cycle.",
     outcome:
-      "The playground became the centerpiece of Express's developer surface, the experiment-with-the-SDK front door, and the foundation later extended to connectors and the AI code assistant. It turns the platform's steepest dropout point, environment setup, into a five-minute first win.",
+      "The playground became the front door. It is where developers try the SDK before committing to anything, and it became the foundation we later extended to connectors and the AI code assistant. The steepest drop-off on the platform used to be environment setup. Now it is a five-minute first win.",
     note: "Artifacts on file: Playground Journey (29 boards), Phase 2, Cloud Storage brief, Design Brief.",
     img: null,
   },
@@ -57,13 +57,13 @@ const PANELS = [
     chip: "an AI pair-programmer for add-ons",
     hook: "An AI pair-programmer for add-on development, designed to earn trust, not just generate code.",
     context:
-      "Developers building Express add-ons have to learn many facets of the Document API at once. Adobe had a CodeGen model that could help, but a model is not a product. The team needed a low-stakes, friendly way for real developers to exercise the model, get value from it, and feed accuracy signals back to the model team.",
+      "Learning the Document API means holding a lot in your head at once. Adobe had a CodeGen model that could help with exactly that. But a model is not a product. We needed a low-stakes way for real developers to put it to work, get something useful out of it, and send accuracy signals back to the team training it.",
     approach:
-      "I framed Phase 1 tightly: test the model's accuracy on real tasks and harvest structured feedback, with playground integration deferred. I designed the assistant as a chat-with-scaffolding experience, with suggested starter prompts that teach the model's range while lowering the blank-page barrier. Honesty was built into the surface: a persistent disclosure that AI output may be inaccurate, visible processing states, and inline feedback on every generation.",
+      "I kept Phase 1 narrow on purpose: find out whether the model is accurate on real tasks, and collect structured feedback while we do it. Playground integration could wait. The assistant is a chat with scaffolding. Suggested starter prompts teach the model's range and spare you the blank page. Honesty is the part I insisted on. A persistent note that AI output may be inaccurate, visible processing states, and a way to rate every single generation. If you are going to ask people to trust generated code, you have to be plain with them about what it is.",
     work:
-      "An end-to-end BETA prototype covering the full loop, prompt to generation to code applied against the live document to feedback, with updated designs (with Steph Corrales), a design brief, and DACI alignment with the CodeGen engineering team.",
+      "An end-to-end BETA prototype covering the whole loop: prompt, generation, code applied against the live document, feedback. Updated designs with Steph Corrales, a design brief, and DACI alignment with the CodeGen engineering team.",
     outcome:
-      "A working BETA that let Adobe evaluate its code-generation model with actual add-on developers, and an early, concrete instance of the pattern I now work on daily: AI assistance embedded in a creative tool, with trust, feedback, and human control designed in from the start.",
+      "A working BETA that let Adobe evaluate its own code-generation model with actual add-on developers instead of internal guesses. It was also the first time I designed the thing I now work on every day: AI sitting inside a creative tool, with trust, feedback, and human control built in from the start rather than bolted on later.",
     note: "Artifacts on file: QuickStart Design Brief, QuickStart Designs (62 pages).",
     img: null,
   },
@@ -78,13 +78,13 @@ const PANELS = [
     chip: "extensibility beyond add-ons",
     hook: "Extensibility beyond add-ons: designing how enterprises plug their own AI services directly into Express.",
     context:
-      "As web extensibility grew past add-ons, Express introduced connectors: service-level integrations that let enterprise developers wire internal translation, rewriting, or custom-LLM services directly into the tool. The goal was to accelerate enterprise onboarding and grow a scalable ecosystem. The design problem was to make building one clear, self-serve, and low-friction.",
+      "Add-ons were never going to be the whole story. Enterprises wanted their own services running inside Express: internal translation, rewriting, a custom LLM. Connectors are how that happens, wiring a service straight into the tool. The business wanted faster enterprise onboarding and a real ecosystem. My job was to make building one clear enough that a team could do it without us in the room.",
     approach:
-      "Manifest-driven and API-first: the manifest defines the connector's architecture, so the UI anchors to it with a WYSIWYG editor rather than inventing a parallel mental model. I leaned on workflows enterprise developers already know, OAuth, API contracts, versioning, and private and public listings, and built for scale with reusable schema conventions and validation. I mapped the full journey from Learn to Submit and phased it Alpha to Beta to GA. I also designed the companion Developer L1 panel: a unified launchpad consolidating docs, developer tools, add-on testing, connector building, and Express MCP integrations, with progressive disclosure and an extensible card pattern.",
+      "The manifest already describes a connector's architecture, so I anchored the UI to it with a WYSIWYG editor instead of inventing a second mental model to keep in sync. Everything else leans on what enterprise developers already know: OAuth, API contracts, versioning, private and public listings. I built for the second hundred connectors rather than the first two, with reusable schema conventions and validation. Then I mapped the whole journey, Learn to Set Up to Build to Test to Validate to Submit, and phased it from Enterprise Alpha through Beta to GA. The companion piece is the Developer L1 panel: one launchpad in Express's primary navigation holding docs, developer tools, add-on testing, connector building, and Express MCP integrations, with progressive disclosure so a newcomer is not staring at all of it at once.",
     work:
-      "Design briefs, journey maps, and detailed designs for the unified surface: mixed add-on and connector listings, playground sessions typed by integration, connector settings, publish, private-link and insights views, and the deletion and lifecycle flows that closed a long-standing gap.",
+      "Design briefs, journey maps, and detailed designs for the unified surface: mixed add-on and connector listings, playground sessions typed by integration, connector settings, publish, private-link and insights views, and the deletion and lifecycle flows that closed a gap developers had lived with for years.",
     outcome:
-      "A single, coherent developer surface where add-ons, connectors, and MCP integrations live side by side: the interaction backbone for Express's move from plugins that wait for clicks to service- and agent-level extensibility.",
+      "One coherent surface where add-ons, connectors, and MCP integrations sit side by side. It is the interaction backbone for Express moving from plugins that wait for a click to services and agents that act on their own.",
     note: "Artifacts on file: Connectors DevEx Design Brief, Detailed Designs.",
     img: null,
   },
@@ -99,13 +99,13 @@ const PANELS = [
     chip: "a sixth archetype: the Next-Gen Developer",
     hook: "AI did not just change the tools developers use. It changed who developers are. The persona system had to catch up.",
     context:
-      "Adobe's foundational developer archetypes predated the AI shift. None of them mentioned AI workflows, now a primary driver of how people build. Low-code and no-code platforms had blurred the lines between archetypes, and modern deployment needs like CI/CD, containers, and security scanning were missing entirely. Outdated personas meant misaligned tools, resources, and support.",
+      "Adobe's developer archetypes were written before AI changed how people build. Not one of them mentioned an AI workflow, which by then was the main way many developers worked. Low-code and no-code tools had smudged the lines between the archetypes we did have, and modern realities like CI/CD, containers, and security scanning were missing altogether. Personas that are out of date are not harmless. They quietly aim your tools, your docs, and your support at people who no longer exist.",
     approach:
-      "I ran a research program combining an internal Adobe research review, external benchmarks, expert and stakeholder interviews, and third-party developer interviews. I analyzed the AI-driven shift per archetype: how it transformed motivation, needs, and pain points. Then I defined a new sixth archetype, the Next-Gen Developer: an early-career coder who treats AI as core to how they learn and build, and who needs AI-native learning pathways, trustworthy explanations of generated code, and beginner-friendly debugging.",
+      "I ran this as a research program, not a survey: a review of Adobe's internal research, external benchmarks, interviews with experts and stakeholders inside the company, and interviews with third-party developers. Then I went archetype by archetype and asked what AI had changed about motivation, needs, and pain points. The answer kept pointing at someone who was not on our list. So I added a sixth archetype, the Next-Gen Developer. Early in their career, treats AI as a normal part of learning and building, and needs AI-native learning paths, explanations of generated code they can actually trust, and debugging that does not assume ten years of experience.",
     work:
-      "A design brief, a deep-dive analysis deck, and a shareable one-pager mapping all six archetypes across description, motivation, needs, pain points, and technical skill. Each persona is written in first person and annotated with its AI-era additions.",
+      "A design brief, a deep-dive analysis deck, and a one-pager mapping all six archetypes across description, motivation, needs, pain points, and technical skill. Each persona is written in first person and annotated with what AI changed.",
     outcome:
-      "A persona framework the extensibility org could actually plan against. Tooling and roadmap decisions, playground, code assistant, connectors, and MCP, now trace to explicit AI-era developer needs. The work names its thesis: a universal shift toward AI-augmented development.",
+      "A persona framework the extensibility org could actually plan against. The playground, the code assistant, connectors, and MCP all trace back to a stated AI-era need rather than a hunch. The thesis it landed on is simple: every one of these archetypes is moving toward AI-augmented development.",
     note: "Artifacts on file: Persona Definitions Update, Deep Dive, One-pager.",
     img: null,
   },
@@ -120,13 +120,13 @@ const PANELS = [
     chip: "metric: time-to-first-build",
     hook: "The first successful build is a design problem. Time-to-first-build is the metric that matters.",
     context:
-      "Many new developers stalled at the very start: activating Dev Mode, accepting Developer Terms of Use, creating a first add-on listing, and testing it were each small hurdles. Together they slowed the learning curve enough to lose people. First Mile targeted exactly that stretch of the journey.",
+      "New developers were not failing at the hard part. They were stalling at the beginning. Activating Dev Mode, accepting the Developer Terms of Use, creating a first listing, testing an add-on. Each one small on its own, and all of them together enough to lose people before they ever built anything. That stretch is what First Mile went after.",
     approach:
-      "I scoped Phase 1 to the three highest-friction moments: Dev Mode activation and terms acceptance, first listing creation, and add-on testing. Every decision was grounded in the Adobe Quality Framework of Useful, Usable, Modern, with the goal of answering the developer's next question before it is asked. I coordinated across product, DevRel, and design, aligning the in-app experience with the CLI flow and developer console so the first local run feels continuous with the in-app surface.",
+      "I scoped Phase 1 to the three moments with the most friction: Dev Mode and terms, creating the first listing, and testing. I held every decision against Adobe's Quality Framework of Useful, Usable, Modern, plus one rule of my own: answer the developer's next question before they have to ask it. Then I worked across product, DevRel, and design so the in-app path, the CLI, and the developer console feel like one continuous thing instead of three products that happen to share a login.",
     work:
-      "A design brief and detailed designs covering the sign-in-to-first-test path across Express, developer.adobe.com, and the CLI touchpoints.",
+      "A design brief and detailed designs for the whole path from signing in to a first successful test, across Express, developer.adobe.com, and the CLI touchpoints.",
     outcome:
-      "A first-mile journey with fewer dead ends and a faster path to a working build: the concrete, current expression of a simple thesis, that developer experience deserves product-grade care.",
+      "Fewer dead ends and a shorter road to a build that works. It is the plainest version of the thing I keep arguing for: developer experience deserves the same product-grade care as anything with a marketing budget behind it.",
     note: "Artifacts on file: First Mile Dev Journey, Design Brief, Designs.",
     img: null,
   },
@@ -141,13 +141,13 @@ const PANELS = [
     chip: "measure before you redesign",
     hook: "Before redesigning anything, measure it. A systematic usability audit of an entire developer platform.",
     context:
-      "Adobe needed an honest read on the usability and effectiveness of the end-to-end add-on developer experience, and a prioritized, actionable list of what to fix.",
+      "Adobe wanted an honest read on the add-on developer experience, end to end, and a list of what to fix in the order it should be fixed. Not impressions. Evidence.",
     approach:
-      "I evaluated six areas, from existing add-ons through environment setup, documentation, submission, and support, against six heuristics, scored on a 0 to 4 severity scale to force prioritization. Co-authored with design manager Shannon McCready, with raw notes and scoring published internally alongside the deck.",
+      "I evaluated six areas, from the add-ons themselves through environment setup, documentation, submission, and support, against six heuristics, and scored each one on a 0 to 4 severity scale. The scale mattered more than it sounds. It forced us to say out loud which problems were worse than the others, which is the part teams usually avoid. Co-authored with design manager Shannon McCready, with the raw notes and scoring published internally next to the deck so anyone could check our work.",
     work:
-      "Scored findings per area, highlights and lowlights, and concrete recommendations: standardized support templates, add-on deletion, submission-status notifications, a searchable code-snippet repository, error-scenario docs, and formalized documentation processes with DevRel.",
+      "Scored findings for every area, the highlights and the lowlights, and recommendations specific enough to act on: standardized support templates, add-on deletion, submission-status notifications, a searchable snippet repository, documentation for error scenarios, and a real process with DevRel for keeping docs current.",
     outcome:
-      "The verdict, that the add-on developer experience is strong, with specific gaps, became the evidence base for the roadmap that followed: First Mile, playground investment, and support and documentation changes. Several recommendations shipped in later cycles.",
+      "The verdict was that the add-on developer experience is strong, with named gaps. That became the evidence base for everything that followed: First Mile, the investment in the playground, and the support and documentation changes. Several of the recommendations shipped in later cycles.",
     note: "Artifacts on file: Heuristic Review of Adobe Express Add-On DX (49 pages).",
     img: null,
   },
@@ -200,13 +200,13 @@ const PANELS = [
     chip: "+22% repeat giving · +5% average gift",
     hook: "Repeat donors were quietly slipping away from a $2.2B mission. The fix was not louder asks. It was a product.",
     context:
-      "St. Jude recognized a decline in repeat donor numbers over the years. Despite a large initial donor pool, retaining contributors and encouraging consistent gifts was proving a challenge. With growing demand for services, the mission needed loyalty, not just reach.",
+      "People gave once, then drifted. Not because they stopped caring, but because nothing ever told them what their gift actually did. St. Jude was very good at finding new donors and quietly losing them. With demand for services still growing, the mission did not need more reach. It needed a reason to come back.",
     approach:
-      "The hypothesis: engaging one-time digital donors at points within a loyalty journey would produce a positive experience and prolonged engagement. The solution was a product that runs quietly behind a donor's profile, surfacing the tangible impact of every gift through personalized stories and offering incentives as they participate. Prototype discipline over platform ambition: experiences tested as XD prototypes with real users, then built in the simplest form on Adobe Experience Manager using tools the organization already had. Tested over a full year with 30,000-plus donors, with automatic opt-out for those who did not engage or reached a preset goal.",
+      "The hypothesis was simple. If we meet one-time digital donors at a few points along a loyalty journey, they will stay for the next one. So we built a product that runs quietly behind a donor's profile, showing the tangible impact of every gift through personalized stories, with incentives along the way. I chose prototype discipline over platform ambition. We tested the experiences as XD prototypes with real people, then built the simplest possible version on Adobe Experience Manager using tools the organization already owned. It ran for a full year with more than 30,000 donors, and it opted people out automatically if they stopped engaging or reached the goal they had set.",
     work:
-      "Onboarding, dashboard, impact reporting, and education flows: a complete product designed, tested, and delivered inside a nonprofit's existing stack.",
+      "Onboarding, dashboard, impact reporting, and education flows. A complete product designed, tested, and delivered inside a nonprofit's existing stack.",
     outcome:
-      "Repeat donations rose 22% and the average gift grew 5%. Donors reported feeling more valued, more connected to the mission, and more aware of the impact of their gifts. The program underscored that philanthropy is a relationship business, and that relationships can be designed.",
+      "Repeat donations rose 22% and the average gift grew 5%. The part that stayed with me was the feedback. Donors said they felt more valued and more connected to the mission, because for the first time they could see what their money did. Philanthropy is a relationship business. Relationships can be designed.",
     img: "/images/work/loyalty.webp",
   },
   {
@@ -220,12 +220,12 @@ const PANELS = [
     chip: "a surge in donors aged 18 to 35",
     hook: "Younger donors, transparent giving, lower overhead. Blockchain rails offered all three, if the experience could feel human instead of financial.",
     context:
-      "St. Jude was seeking new ways to fundraise with a younger, tech-savvy generation. The challenges: ensure transparency in how donations are used, reduce transactional overhead, and simplify the process. Rising trust in blockchain made a micro-donation platform viable.",
+      "St. Jude wanted to reach a younger, tech-comfortable generation, and the usual channels were not doing it. Three things had to be true at once. Donors had to see exactly where their money went, the overhead had to come down, and giving had to stay simple. Trust in blockchain had risen far enough to make a micro-donation platform worth trying.",
     approach:
-      "A micro-donation website powered by blockchain: small contributions with minimal fees, every donation recorded as a transparent, immutable transaction donors can track. Gamification made it engaging, with badges for milestones and a growing sequin forest that visualizes collective impact, one donation at a time. Crypto mechanics, designed to feel like planting something that grows.",
-    work: "The full giving experience, from first visit to a personal stake in the collective forest.",
+      "A micro-donation site on blockchain rails. Small gifts, minimal fees, and every donation written as a transparent, immutable record a donor can follow. The mechanics are financial, so the experience could not be. We made it something you grow instead: badges for milestones, and a sequin forest that fills in as the collective gives, one donation at a time. Crypto underneath, planting something above.",
+    work: "The full giving experience, from a first visit to a personal stake in a forest that belongs to everybody.",
     outcome:
-      "A surge in donations from the 18 to 35 age group compared to traditional platforms, and drastically reduced administrative overhead. Proof that emerging tech and philanthropy compound each other.",
+      "A surge in giving from 18 to 35 year olds compared to the traditional platforms, and a sharp drop in administrative overhead. Emerging technology and philanthropy do not merely coexist. They compound.",
     img: "/images/work/sequin-forest.webp",
   },
   {
@@ -238,7 +238,7 @@ const PANELS = [
     meta: "ALSAC / St. Jude · User testing, UX/UI, development",
     chip: "$2.2B mission · five years of iteration",
     hook: "The most important form in childhood cancer, refined for five years.",
-    body: "Five years of continuous, test-driven redesign of stjude.org/donate: user testing, iteration, and a mobile-first rebuild of every step between impulse and impact. New channels followed, from crypto giving to an Amazon merch storefront, each one turning a modern surface into a way to fund the mission.",
+    body: "stjude.org/donate is where the mission actually gets funded, and I spent five years making that path shorter. Continuous, test-driven redesign: user testing, iteration, and a mobile-first rebuild of every step between impulse and impact. New channels followed, from crypto giving to an Amazon storefront, each one turning a modern surface into a way to fund the work.",
     img: "/images/work/donation.webp",
   },
   {
@@ -251,7 +251,7 @@ const PANELS = [
     meta: "ALSAC / St. Jude · Ideation, UX design",
     chip: "featured at CES · built with Meta",
     hook: "Walk the halls of St. Jude from anywhere on Earth.",
-    body: "An immersive VR campus experience built in conjunction with Meta: donors walk the hospital's halls and meet its heroes in first person. Comfort-first interaction, narrative pacing over spectacle. Featured at the Consumer Electronics Show.",
+    body: "Most people will never set foot on the St. Jude campus, and presence is what turns sympathy into commitment. So we built the campus in VR with Meta. Donors walk the halls and meet the people who work there in first person. Comfort-first interaction, and narrative pacing instead of spectacle. It was featured at the Consumer Electronics Show.",
     img: "/images/work/hall-of-heroes.webp",
   },
   {
@@ -294,7 +294,7 @@ const PANELS = [
     meta: "Lokion, SimpleFocus, Hilton · Lead design",
     chip: "new interfaces win by translating trust",
     hook: "Agency work in the years before mobile-first was a strategy.",
-    body: "Design for Nokia, FedEx, Hilton, ServiceMaster, Viking, Cellular South, and First Tennessee. Lead design on Viking's line of digital ranges, on the redesign of First Tennessee's online banking, and on Hilton's Android booking application, one of the era's first major hotel booking apps, drawn for thumbs and small screens when every kilobyte and keystroke cost something. The through-line held: new interfaces win by translating the trust people already have.",
+    body: "Nokia, FedEx, Hilton, ServiceMaster, Viking, Cellular South, First Tennessee. I led design on Viking's line of digital ranges, on the redesign of First Tennessee's online banking, and on Hilton's Android booking application, one of the first serious hotel booking apps, drawn for thumbs and small screens back when every kilobyte and every keystroke cost something. A luxury stove and a bank taught me the same lesson, and I have never stopped using it. New interfaces do not win by being new. They win by translating trust people already have.",
     img: null,
   },
 
