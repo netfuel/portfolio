@@ -1067,13 +1067,6 @@ a.topnav__tab:hover { color: var(--bone); }
   color: var(--bone-dim);
   max-width: 70ch;
 }
-.panel__note {
-  margin: 0;
-  font-family: var(--mono);
-  font-size: 10.5px;
-  letter-spacing: 0.05em;
-  color: var(--bone-faint);
-}
 .panel__lead {
   margin: 0;
   font-family: var(--mono);
@@ -1114,7 +1107,6 @@ a.topnav__tab:hover { color: var(--bone); }
 .panel__card .beat__label { color: rgba(8, 8, 10, 0.5); }
 .panel__card .beat__text,
 .panel__card .panel__lead { color: rgba(8, 8, 10, 0.82); }
-.panel__card .panel__note { color: rgba(8, 8, 10, 0.42); }
 .panel__card .index-item { border-top-color: rgba(8, 8, 10, 0.14); }
 .panel__card .index-item__note { color: rgba(8, 8, 10, 0.68); }
 

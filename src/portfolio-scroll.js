@@ -10,7 +10,7 @@ const mobile = matchMedia("(max-width: 720px)").matches;
 // Blocks that fade and lift into view as they enter — the intro head, each
 // case-study beat, every media band, index rows, and the outro pieces.
 const REVEAL_SEL =
-  ".panel__head, .beat, .panel__media, .panel__note, .index-item, .outro__contact";
+  ".panel__head, .beat, .panel__media, .index-item, .outro__contact";
 
 export function initPortfolioScroll() {
   const panels = gsap.utils.toArray(".panel");

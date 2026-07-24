@@ -43,7 +43,6 @@ const PANELS = [
       "A 29-board journey told through Daksh, detailed designs for every state the playground can be in, and dev specs handed to WXP engineering. We put it in front of real developers during the Phase 2 cycle.",
     outcome:
       "The playground became the front door. It is where developers try the SDK before committing to anything, and it became the foundation we later extended to connectors and the AI code assistant. The steepest drop-off on the platform used to be environment setup. Now it is a five-minute first win.",
-    note: "Artifacts on file: Playground Journey (29 boards), Phase 2, Cloud Storage brief, Design Brief.",
     img: null,
   },
   {
@@ -64,7 +63,6 @@ const PANELS = [
       "An end-to-end BETA prototype covering the whole loop: prompt, generation, code applied against the live document, feedback. Updated designs with Steph Corrales, a design brief, and DACI alignment with the CodeGen engineering team.",
     outcome:
       "A working BETA that let Adobe evaluate its own code-generation model with actual add-on developers instead of internal guesses. It was also the first time I designed the thing I now work on every day: AI sitting inside a creative tool, with trust, feedback, and human control built in from the start rather than bolted on later.",
-    note: "Artifacts on file: QuickStart Design Brief, QuickStart Designs (62 pages).",
     img: null,
   },
   {
@@ -85,7 +83,6 @@ const PANELS = [
       "Design briefs, journey maps, and detailed designs for the unified surface: mixed add-on and connector listings, playground sessions typed by integration, connector settings, publish, private-link and insights views, and the deletion and lifecycle flows that closed a gap developers had lived with for years.",
     outcome:
       "One coherent surface where add-ons, connectors, and MCP integrations sit side by side. It is the interaction backbone for Express moving from plugins that wait for a click to services and agents that act on their own.",
-    note: "Artifacts on file: Connectors DevEx Design Brief, Detailed Designs.",
     img: null,
   },
   {
@@ -106,7 +103,6 @@ const PANELS = [
       "A design brief, a deep-dive analysis deck, and a one-pager mapping all six archetypes across description, motivation, needs, pain points, and technical skill. Each persona is written in first person and annotated with what AI changed.",
     outcome:
       "A persona framework the extensibility org could actually plan against. The playground, the code assistant, connectors, and MCP all trace back to a stated AI-era need rather than a hunch. The thesis it landed on is simple: every one of these archetypes is moving toward AI-augmented development.",
-    note: "Artifacts on file: Persona Definitions Update, Deep Dive, One-pager.",
     img: null,
   },
   {
@@ -127,7 +123,6 @@ const PANELS = [
       "A design brief and detailed designs for the whole path from signing in to a first successful test, across Express, developer.adobe.com, and the CLI touchpoints.",
     outcome:
       "Fewer dead ends and a shorter road to a build that works. It is the plainest version of the thing I keep arguing for: developer experience deserves the same product-grade care as anything with a marketing budget behind it.",
-    note: "Artifacts on file: First Mile Dev Journey, Design Brief, Designs.",
     img: null,
   },
   {
@@ -148,7 +143,6 @@ const PANELS = [
       "Scored findings for every area, the highlights and the lowlights, and recommendations specific enough to act on: standardized support templates, add-on deletion, submission-status notifications, a searchable snippet repository, documentation for error scenarios, and a real process with DevRel for keeping docs current.",
     outcome:
       "The verdict was that the add-on developer experience is strong, with named gaps. That became the evidence base for everything that followed: First Mile, the investment in the playground, and the support and documentation changes. Several of the recommendations shipped in later cycles.",
-    note: "Artifacts on file: Heuristic Review of Adobe Express Add-On DX (49 pages).",
     img: null,
   },
   {
@@ -476,7 +470,6 @@ const buildPanel = (panel, index) => {
     if (work) inner.append(work);
     inner.append(buildMedia(panel, "b"));
     if (outcome) inner.append(outcome);
-    if (panel.note) inner.append(el("p", "panel__note", panel.note));
   } else if (panel.kind === "condensed") {
     inner.append(el("p", "panel__lead", panel.body), buildMedia(panel, "a"));
   } else if (panel.kind === "index") {
