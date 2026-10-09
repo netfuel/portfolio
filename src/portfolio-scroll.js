@@ -35,6 +35,9 @@ export function initPortfolioScroll() {
     if (i === active) return;
     active = i;
     nodes.forEach((nd, k) => nd.classList.toggle("is-active", k === i));
+    // The panel crossing the centre also lights its own media: captures sit
+    // desaturated at rest and return to true colour while you are reading them.
+    panels.forEach((p, k) => p.classList.toggle("is-active", k === i));
     if (eraEl) eraEl.textContent = eras[i];
   };
   const moveMarker = (frac) => {

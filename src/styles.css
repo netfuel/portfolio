@@ -1474,3 +1474,118 @@ html.is-static .rail__marker { display: none; }
   .cv__foot { border-top: 1px solid #ccc; }
   a { text-decoration: none; }
 }
+
+/* ==========================================================================
+   Media bands — real captures and redraws
+   Captures are bright Adobe UI and the page is near-black, so they sit
+   desaturated under an accent wash at rest and return to true colour while
+   their panel owns the viewport centre. Redraws are already in the palette
+   and are never filtered.
+   ========================================================================== */
+
+.panel__media--shot img {
+  filter: grayscale(1) contrast(1.08) brightness(0.74);
+  transition: filter 700ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+.panel__media--shot::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: var(--accent);
+  mix-blend-mode: color;
+  opacity: 0.16;
+  transition: opacity 700ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+.panel.is-active .panel__media--shot img { filter: none; }
+.panel.is-active .panel__media--shot::after { opacity: 0; }
+
+@media (prefers-reduced-motion: reduce) {
+  .panel__media--shot img,
+  .panel__media--shot::after { transition: none; }
+}
+/* Static mode reads as a plain document: show the work in full colour */
+.is-static .panel__media--shot img { filter: none; }
+.is-static .panel__media--shot::after { opacity: 0; }
+
+/* ── Redraws ──────────────────────────────────────────────────────────────
+   Inline SVG so the marks inherit the page's faces and tokens. Sizes are in
+   the 1400 x 787 user space of the drawing, not in page pixels.
+   ────────────────────────────────────────────────────────────────────────── */
+
+.panel__media--redraw { background: var(--raise, #0b0b0e); }
+.panel__media--redraw svg.rd {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.rd__ground   { fill: #0b0b0e; }
+svg.rd        { font-family: var(--mono); }
+
+.rd__eyebrow  { font-size: 13px; letter-spacing: 0.14em; fill: var(--bone-faint); }
+.rd__colhead  { font-size: 14px; letter-spacing: 0.08em; fill: var(--bone-faint); }
+.rd__colhead--accent { fill: var(--accent); }
+.rd__rowhead  { font-size: 17px; fill: var(--bone-dim); }
+.rd__cite     { font-size: 12px; fill: var(--bone-ghost); }
+.rd__legend   { font-size: 13px; letter-spacing: 0.05em; fill: var(--bone-faint); }
+.rd__caption  { font-size: 15px; fill: var(--bone-faint); }
+.rd__body     { font-size: 18px; fill: var(--bone-dim); }
+.rd__rule     { stroke: var(--hairline); stroke-width: 1; }
+.rd__spine    { stroke: var(--hairline-2); stroke-width: 1; }
+
+.rd__display  {
+  font-family: var(--serif);
+  font-size: 58px;
+  fill: var(--bone);
+  letter-spacing: -0.01em;
+}
+.rd__display--accent { fill: var(--accent); }
+
+/* severity cells */
+.rd__cell        { stroke: var(--hairline); stroke-width: 1; }
+.rd__s0          { fill: rgba(211, 231, 79, 0.05); }
+.rd__s1          { fill: rgba(211, 231, 79, 0.13); }
+.rd__s2          { fill: rgba(211, 231, 79, 0.26); }
+.rd__s3          { fill: rgba(211, 231, 79, 0.50); stroke: transparent; }
+.rd__s4          { fill: var(--accent); stroke: transparent; }
+.rd__cell--none  { fill: none; stroke: var(--hairline); stroke-dasharray: 3 5; }
+.rd__cellnum     { font-size: 20px; fill: var(--bone-dim); }
+.rd__num2        { fill: var(--bone); }
+.rd__num3, .rd__num4 { fill: #08080a; font-weight: 700; }
+.rd__cellnum--none   { font-size: 12px; fill: var(--bone-ghost); letter-spacing: 0.06em; }
+
+/* persona cards */
+.rd__card       { fill: none; stroke: var(--hairline); stroke-width: 1; }
+.rd__card--new  { stroke: var(--accent); fill: rgba(211, 231, 79, 0.04); }
+.rd__tick       { font-size: 12px; letter-spacing: 0.12em; fill: var(--accent); }
+.rd__name       { font-family: var(--serif); font-size: 30px; fill: var(--bone); }
+.rd__name--new  { fill: var(--accent); }
+.rd__quote      { font-size: 15px; fill: var(--bone-dim); }
+
+/* before / after */
+.rd__was        { font-family: var(--serif); font-size: 26px; fill: rgba(232, 227, 214, 0.38); }
+.rd__empty      { fill: none; stroke: var(--hairline); stroke-dasharray: 3 6; }
+.rd__missing    { font-size: 14px; letter-spacing: 0.08em; fill: var(--bone-ghost); }
+.rd__change     { font-size: 16px; fill: var(--bone-dim); }
+.rd__change--new{ fill: var(--accent); }
+
+/* journey */
+.rd__node       { fill: #0b0b0e; stroke: var(--hairline-2); stroke-width: 1; }
+.rd__node--lit  { fill: var(--accent); stroke: var(--accent); }
+.rd__station    { font-family: var(--serif); font-size: 26px; fill: var(--bone); }
+.rd__step       { font-size: 13px; letter-spacing: 0.1em; fill: var(--bone-ghost); }
+.rd__phase      { fill: rgba(211, 231, 79, 0.10); stroke: var(--hairline); }
+.rd__phase--1   { fill: rgba(211, 231, 79, 0.22); }
+.rd__phase--2   { fill: var(--accent); stroke: transparent; }
+.rd__phaselabel { font-size: 15px; letter-spacing: 0.06em; fill: var(--bone); }
+.rd__phaselabel--dark { fill: #08080a; }
+
+/* outcome plate */
+.rd__figure     { font-family: var(--serif); font-size: 68px; fill: var(--bone); font-variant-numeric: tabular-nums; }
+.rd__figure--accent { fill: var(--accent); }
+
+/* early years */
+.rd__roster     { font-size: 18px; letter-spacing: 0.04em; fill: var(--bone-dim); }

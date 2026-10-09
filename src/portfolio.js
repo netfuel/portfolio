@@ -1,5 +1,6 @@
 import "./styles.css";
 import { runLoader } from "./loader.js";
+import { redraw } from "./redraws.js";
 
 // ──────────────────────────────────────────────────────────────────────────
 // Content — a scroll of pinned panels, present to past. Each panel is one of:
@@ -43,7 +44,7 @@ const PANELS = [
       "A 29-board journey told through Daksh, detailed designs for every state the playground can be in, and dev specs handed to WXP engineering. We put it in front of real developers during the Phase 2 cycle.",
     outcome:
       "The playground became the front door. It is where developers try the SDK before committing to anything, and it became the foundation we later extended to connectors and the AI code assistant. The steepest drop-off on the platform used to be environment setup. Now it is a five-minute first win.",
-    img: null,
+    media: { a: "/images/work/playground-a.webp", b: "/images/work/playground-b.webp" },
   },
   {
     kind: "study",
@@ -63,7 +64,7 @@ const PANELS = [
       "An end-to-end BETA prototype covering the whole loop: prompt, generation, code applied against the live document, feedback. Updated designs with Steph Corrales, a design brief, and DACI alignment with the CodeGen engineering team.",
     outcome:
       "A working BETA that let Adobe evaluate its own code-generation model with actual add-on developers instead of internal guesses. It was also the first time I designed the thing I now work on every day: AI sitting inside a creative tool, with trust, feedback, and human control built in from the start rather than bolted on later.",
-    img: null,
+    media: { a: "/images/work/quickstart-a.webp", b: "/images/work/quickstart-b.webp" },
   },
   {
     kind: "study",
@@ -83,7 +84,7 @@ const PANELS = [
       "Design briefs, journey maps, and detailed designs for the unified surface: mixed add-on and connector listings, playground sessions typed by integration, connector settings, publish, private-link and insights views, and the deletion and lifecycle flows that closed a gap developers had lived with for years.",
     outcome:
       "One coherent surface where add-ons, connectors, and MCP integrations sit side by side. It is the interaction backbone for Express moving from plugins that wait for a click to services and agents that act on their own.",
-    img: null,
+    media: { a: "/images/work/connectors-a.webp" },   // slot b is a redraw
   },
   {
     kind: "study",
@@ -103,7 +104,7 @@ const PANELS = [
       "A design brief, a deep-dive analysis deck, and a one-pager mapping all six archetypes across description, motivation, needs, pain points, and technical skill. Each persona is written in first person and annotated with what AI changed.",
     outcome:
       "A persona framework the extensibility org could actually plan against. The playground, the code assistant, connectors, and MCP all trace back to a stated AI-era need rather than a hunch. The thesis it landed on is simple: every one of these archetypes is moving toward AI-augmented development.",
-    img: null,
+    media: {},                                       // both slots are redraws
   },
   {
     kind: "study",
@@ -123,7 +124,7 @@ const PANELS = [
       "A design brief and detailed designs for the whole path from signing in to a first successful test, across Express, developer.adobe.com, and the CLI touchpoints.",
     outcome:
       "Fewer dead ends and a shorter road to a build that works. It is the plainest version of the thing I keep arguing for: developer experience deserves the same product-grade care as anything with a marketing budget behind it.",
-    img: null,
+    media: { a: "/images/work/first-mile-a.webp", b: "/images/work/first-mile-b.webp" },
   },
   {
     kind: "study",
@@ -143,7 +144,7 @@ const PANELS = [
       "Scored findings for every area, the highlights and the lowlights, and recommendations specific enough to act on: standardized support templates, add-on deletion, submission-status notifications, a searchable snippet repository, documentation for error scenarios, and a real process with DevRel for keeping docs current.",
     outcome:
       "The verdict was that the add-on developer experience is strong, with named gaps. That became the evidence base for everything that followed: First Mile, the investment in the playground, and the support and documentation changes. Several of the recommendations shipped in later cycles.",
-    img: null,
+    media: {},                                       // both slots are redraws
   },
   {
     kind: "index",
@@ -179,7 +180,7 @@ const PANELS = [
         note: "A framework for information-rich views in Adobe's internal engineering platform: customizable widgets, standardized tables and detail views, and real-time state for deployments and incidents.",
       },
     ],
-    img: null,
+    media: {},
   },
 
   // ── ALSAC / St. Jude · 2012 – 2023 ──────────────────────────────────────
@@ -201,7 +202,7 @@ const PANELS = [
       "Onboarding, dashboard, impact reporting, and education flows. A complete product designed, tested, and delivered inside a nonprofit's existing stack.",
     outcome:
       "Repeat donations rose 22% and the average gift grew 5%. The part that stayed with me was the feedback. Donors said they felt more valued and more connected to the mission, because for the first time they could see what their money did. Philanthropy is a relationship business. Relationships can be designed.",
-    img: "/images/work/loyalty.webp",
+    media: { a: "/images/work/loyalty.webp" },        // slot b is a redraw
   },
   {
     kind: "study",
@@ -220,7 +221,7 @@ const PANELS = [
     work: "The full giving experience, from a first visit to a personal stake in a forest that belongs to everybody.",
     outcome:
       "A surge in giving from 18 to 35 year olds compared to the traditional platforms, and a sharp drop in administrative overhead. Emerging technology and philanthropy do not merely coexist. They compound.",
-    img: "/images/work/sequin-forest.webp",
+    media: { a: "/images/work/sequin-forest.webp", b: "/images/work/sequin-forest-b.webp" },
   },
   {
     kind: "condensed",
@@ -233,7 +234,7 @@ const PANELS = [
     chip: "$2.2B mission · five years of iteration",
     hook: "The most important form in childhood cancer, refined for five years.",
     body: "stjude.org/donate is where the mission actually gets funded, and I spent five years making that path shorter. Continuous, test-driven redesign: user testing, iteration, and a mobile-first rebuild of every step between impulse and impact. New channels followed, from crypto giving to an Amazon storefront, each one turning a modern surface into a way to fund the work.",
-    img: "/images/work/donation.webp",
+    media: { a: "/images/work/donation.webp" },
   },
   {
     kind: "condensed",
@@ -246,7 +247,7 @@ const PANELS = [
     chip: "featured at CES · built with Meta",
     hook: "Walk the halls of St. Jude from anywhere on Earth.",
     body: "Most people will never set foot on the St. Jude campus, and presence is what turns sympathy into commitment. So we built the campus in VR with Meta. Donors walk the halls and meet the people who work there in first person. Comfort-first interaction, and narrative pacing instead of spectacle. It was featured at the Consumer Electronics Show.",
-    img: "/images/work/hall-of-heroes.webp",
+    media: { a: "/images/work/hall-of-heroes.webp" },
   },
   {
     kind: "index",
@@ -274,7 +275,7 @@ const PANELS = [
         note: "Kicked off the innovation program that grew into the VR, AR, and IoT practice behind Hall of Heroes and the Virtual Tour.",
       },
     ],
-    img: null,
+    media: {},
   },
 
   // ── The agency years · 2000 – 2012 ──────────────────────────────────────
@@ -289,7 +290,7 @@ const PANELS = [
     chip: "new interfaces win by translating trust",
     hook: "Agency work in the years before mobile-first was a strategy.",
     body: "Nokia, FedEx, Hilton, ServiceMaster, Viking, Cellular South, First Tennessee. I led design on Viking's line of digital ranges, on the redesign of First Tennessee's online banking, and on Hilton's Android booking application, one of the first serious hotel booking apps, drawn for thumbs and small screens back when every kilobyte and every keystroke cost something. A luxury stove and a bank taught me the same lesson, and I have never stopped using it. New interfaces do not win by being new. They win by translating trust people already have.",
-    img: null,
+    media: {},                                       // slot a is a redraw
   },
 
   {
@@ -357,24 +358,66 @@ const placeholderSVG = (slug, label) => {
   );
 };
 
-// Media band, 16:9, interspersed in the reading flow. Slot "a" shows the real
-// image when there is one; other slots always draw a generative placeholder.
+// Alt text for the real captures. Redraws carry their own aria-label.
+const ALT = {
+  "playground:a":
+    "The in-app playground: script and add-on panes running live against the Adobe Express canvas, with the console open.",
+  "playground:b":
+    "The full 29-board developer journey, with Daksh's first session called out.",
+  "quickstart:a":
+    "The code assistant generating a grid and a circle onto the live document, including a task it could not generate.",
+  "quickstart:b":
+    "Line-level error reporting in the edit dialog, and the rating form attached to every generation.",
+  "connectors:a":
+    "One developer panel in Adobe Express holding add-ons and connectors side by side.",
+  "first-mile:a":
+    "Enabling dev mode: the Adobe Developer Terms of Use gate inside Adobe Express.",
+  "first-mile:b":
+    "The CLI, the Adobe sign-in and the permissions wall, designed as one path rather than three products.",
+  "donor-loyalty:a":
+    "The donor loyalty product running behind a supporter's profile, showing the impact of their gift.",
+  "sequin-forest:a":
+    "The virtual sequin forest, grown one micro-donation at a time.",
+  "donation-experience:a":
+    "stjude.org/donate, rebuilt mobile first across five years of testing and iteration.",
+  "hall-of-heroes:a":
+    "Hall of Heroes: walking the St. Jude campus in VR, built with Meta and shown at CES.",
+  "sequin-forest:b":
+    "Claiming and customizing a sequin, the mechanic that turns a donation into a place in the forest.",
+};
+
+// Media band, 16:9, interspersed in the reading flow. A slot is one of three
+// things, in this order: a redraw (inline SVG, drawn in the site's own type
+// and palette because the source is a white slide), a real capture cropped
+// from the design files, or the generative placeholder that stands in until
+// one of those lands.
 const buildMedia = (panel, slot = "a") => {
   const media = el("figure", "panel__media");
-  if (slot === "a" && panel.img) {
+
+  const art = redraw(panel.slug, slot);
+  if (art) {
+    media.classList.add("panel__media--redraw");
+    media.innerHTML = art;
+    return media;
+  }
+
+  const src = (panel.media && panel.media[slot]) || null;
+  if (src) {
+    media.classList.add("panel__media--shot");
     const img = document.createElement("img");
-    img.src = panel.img;
-    img.alt = `${panel.title}, project imagery`;
+    img.src = src;
+    img.alt = ALT[panel.slug + ":" + slot] || `${panel.title}, project imagery`;
     img.loading = "lazy";
     img.decoding = "async";
     img.draggable = false;
     media.append(img);
-  } else {
-    media.classList.add("panel__media--ph");
-    const seed = slot === "a" ? panel.slug : `${panel.slug}-${slot}`;
-    media.innerHTML = placeholderSVG(seed, panel.tick);
-    media.append(el("figcaption", "panel__media-note", "[ imagery in production ]"));
+    return media;
   }
+
+  media.classList.add("panel__media--ph");
+  const seed = slot === "a" ? panel.slug : `${panel.slug}-${slot}`;
+  media.innerHTML = placeholderSVG(seed, panel.tick);
+  media.append(el("figcaption", "panel__media-note", "[ imagery in production ]"));
   return media;
 };
 
