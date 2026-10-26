@@ -22,7 +22,9 @@ const PANELS = [
     era: "",
     title: "Selected work, present to past.",
     hook: "Senior Experience Designer building the places where humans and AI systems meet: developer platforms, agentic extensibility, and generative tools at Adobe.",
-    body: "Twenty-five years of shipped work. Scroll to travel it, or jump from the timeline on the left.",
+    body: "25+ years of shipped work. Scroll to travel it, or use the timeline on the left.",
+    proof:
+      "In-app IDE shipped in 4 phases · AI code assistant in BETA · +22% repeat giving at St. Jude",
   },
 
   // ── Adobe · Extensibility · 2023 – Present ──────────────────────────────
@@ -35,7 +37,7 @@ const PANELS = [
     title: "In-App Add-on Playground",
     meta: "Adobe Express · Design lead · 4 shipped phases",
     chip: "zero-setup coding, inside the tool",
-    hook: "What if trying a platform's APIs took zero setup? A full code playground, living inside the design tool itself.",
+    hook: "What if trying a platform's APIs took zero setup? A code playground living inside the design tool itself.",
     context:
       "The first hour of add-on development was mostly setup. Install Node, learn a CLI, scaffold a project, wire up a local dev server, all before writing a single line of add-on code. That is a lot to ask of someone who is only curious. The wall did not filter out weak developers. It filtered out the ones who were still deciding, and those were exactly the people Adobe needed.",
     approach:
@@ -123,7 +125,7 @@ const PANELS = [
     work:
       "A design brief and detailed designs for the whole path from signing in to a first successful test, across Express, developer.adobe.com, and the CLI touchpoints.",
     outcome:
-      "Fewer dead ends and a shorter road to a build that works. It is the plainest version of the thing I keep arguing for: developer experience deserves the same product-grade care as anything with a marketing budget behind it.",
+      "Fewer dead ends and a shorter road to a build that works. Time-to-first-build is the number we manage against; the before and after are Adobe's to share. It is the plainest version of the thing I keep arguing for: developer experience deserves the same product-grade care as anything with a marketing budget behind it.",
     media: { a: "/images/work/first-mile-a.webp", b: "/images/work/first-mile-b.webp" },
   },
   {
@@ -232,7 +234,7 @@ const PANELS = [
     title: "The St. Jude Donation Experience",
     meta: "ALSAC / St. Jude · User testing, UX/UI, development",
     chip: "$2.2B mission · five years of iteration",
-    hook: "The most important form in childhood cancer, refined for five years.",
+    hook: "The most important form in childhood cancer. Five years of refinement.",
     body: "stjude.org/donate is where the mission actually gets funded, and I spent five years making that path shorter. Continuous, test-driven redesign: user testing, iteration, and a mobile-first rebuild of every step between impulse and impact. New channels followed, from crypto giving to an Amazon storefront, each one turning a modern surface into a way to fund the work.",
     media: { a: "/images/work/donation.webp" },
   },
@@ -291,6 +293,31 @@ const PANELS = [
     hook: "Agency work in the years before mobile-first was a strategy.",
     body: "Nokia, FedEx, Hilton, ServiceMaster, Viking, Cellular South, First Tennessee. I led design on Viking's line of digital ranges, on the redesign of First Tennessee's online banking, and on Hilton's Android booking application, one of the first serious hotel booking apps, drawn for thumbs and small screens back when every kilobyte and every keystroke cost something. A luxury stove and a bank taught me the same lesson, and I have never stopped using it. New interfaces do not win by being new. They win by translating trust people already have.",
     media: {},                                       // slot a is a redraw
+  },
+
+  {
+    kind: "index",
+    slug: "principles",
+    tick: "ethos",
+    year: "2000 – 2026",
+    era: "How I work",
+    title: "Three principles",
+    meta: "Carried from a luxury stove to agentic AI",
+    items: [
+      {
+        title: "Answer the next question before it is asked.",
+        note: "Good developer experience is anticipation. Every screen should already contain the answer to what a developer is about to wonder, whether that is what autosave is doing or what happens after submit.",
+      },
+      {
+        title: "Map where an agent should act, and where it must ask.",
+        note: "Software that moves on its own still answers to the person in the loop. The craft of agentic UX is drawing that line deliberately: confirmation where it matters, autonomy where it earns it.",
+      },
+      {
+        title: "New interfaces win by translating trust.",
+        note: "A stove, a bank, a hotel, a model that writes code. People do not adopt new technology because it is new. They adopt it when it carries the trust they already have somewhere familiar.",
+      },
+    ],
+    media: {},
   },
 
   {
@@ -363,7 +390,7 @@ const ALT = {
   "playground:a":
     "The in-app playground: script and add-on panes running live against the Adobe Express canvas, with the console open.",
   "playground:b":
-    "The full 29-board developer journey, with Daksh's first session called out.",
+    "Four boards from the 29-board developer journey: the Daksh persona, the playground entry point, a script run filling the canvas, and the phased roadmap.",
   "quickstart:a":
     "The code assistant generating a grid and a circle onto the live document, including a task it could not generate.",
   "quickstart:b":
@@ -386,6 +413,24 @@ const ALT = {
     "Claiming and customizing a sequin, the mechanic that turns a donation into a place in the forest.",
 };
 
+// Visible captions for captures whose story is not legible at page scale.
+// A caption names what the reader is looking at so a detail (a generated
+// green circle, a permissions wall) reads as evidence rather than a glitch.
+const CAPS = {
+  "playground:b":
+    "Four of 29 journey boards: the persona, the entry point, a script run against the live canvas, and the phased road to what shipped.",
+  "quickstart:a":
+    "The assistant at work: a generated 4x4 grid, a green circle drawn onto the live document, and one task it refused, with the refusal stated plainly.",
+  "quickstart:b":
+    "Trust surfaces: line-level edits on generated code, and the rating form attached to every generation.",
+  "connectors:a":
+    "Detailed design: the unified integrations surface. Add-ons and connectors share one home; placeholder marks show where developer-supplied art lands.",
+  "first-mile:a":
+    "The wall, as shipped: Dev Mode gated behind the Developer Terms of Use, the first moment First Mile redesigned.",
+  "first-mile:b":
+    "Before: three products sharing a login. The CLI, Adobe sign-in, and the permissions wall, redrawn as one continuous path.",
+};
+
 // Media band, 16:9, interspersed in the reading flow. A slot is one of three
 // things, in this order: a redraw (inline SVG, drawn in the site's own type
 // and palette because the source is a white slide), a real capture cropped
@@ -404,13 +449,35 @@ const buildMedia = (panel, slot = "a") => {
   const src = (panel.media && panel.media[slot]) || null;
   if (src) {
     media.classList.add("panel__media--shot");
-    const img = document.createElement("img");
-    img.src = src;
-    img.alt = ALT[panel.slug + ":" + slot] || `${panel.title}, project imagery`;
-    img.loading = "lazy";
-    img.decoding = "async";
-    img.draggable = false;
-    media.append(img);
+    let visual;
+    if (/\.(mp4|webm)$/i.test(src)) {
+      // A motion capture: drop an .mp4/.webm into /images/work and point a
+      // slot at it. Muted, looping, and inert, like a living screenshot.
+      visual = document.createElement("video");
+      visual.src = src;
+      visual.muted = true;
+      visual.loop = true;
+      visual.autoplay = !matchMedia("(prefers-reduced-motion: reduce)").matches;
+      visual.playsInline = true;
+      visual.preload = "metadata";
+      visual.setAttribute(
+        "aria-label",
+        ALT[panel.slug + ":" + slot] || `${panel.title}, project capture`
+      );
+    } else {
+      visual = document.createElement("img");
+      visual.src = src;
+      visual.alt = ALT[panel.slug + ":" + slot] || `${panel.title}, project imagery`;
+      visual.loading = "lazy";
+      visual.decoding = "async";
+      visual.draggable = false;
+    }
+    media.append(visual);
+    const cap = CAPS[panel.slug + ":" + slot];
+    if (cap) {
+      media.classList.add("panel__media--captioned");
+      media.append(el("figcaption", "panel__media-cap", cap));
+    }
     return media;
   }
 
@@ -456,10 +523,12 @@ const buildPanel = (panel, index) => {
     inner.classList.add("panel__inner--center");
     const head = el("header", "panel__head");
     head.append(
-      el("h2", "panel__title panel__title--display", panel.title),
+      // The intro statement is the page's one h1; every panel title below is an h2
+      el("h1", "panel__title panel__title--display", panel.title),
       el("p", "panel__hook panel__hook--lead", panel.hook)
     );
     if (panel.body) head.append(el("p", "panel__body", panel.body));
+    if (panel.proof) head.append(el("p", "panel__proof", panel.proof));
     inner.append(head);
     section.append(inner);
     return section;
@@ -536,6 +605,7 @@ const buildPanel = (panel, index) => {
 const buildRail = (mount) => {
   const readout = el("div", "rail__readout");
   readout.append(el("span", "rail__era", PANELS[0].era || ""));
+  readout.append(el("span", "rail__year", PANELS[0].year || ""));
 
   const line = el("div", "rail__line");
   line.append(el("span", "rail__serif rail__serif--top"));
@@ -552,6 +622,7 @@ const buildRail = (mount) => {
     node.style.top = ((i / (n - 1)) * 100).toFixed(3) + "%";
     node.setAttribute("aria-label", panel.title);
     node.append(el("span", "rail__dot"));
+    node.append(el("span", "rail__tick", panel.title));
     nodes.append(node);
   });
   line.append(nodes);

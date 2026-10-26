@@ -18,9 +18,16 @@ export function runLoader(tasks) {
   const countEl = el.querySelector("[data-count]");
   const lines = el.querySelectorAll(".loader__line");
 
-  const MIN_TIME = 1500;  // never flash — the loader earns its moment
-  const MAX_TIME = 7000;  // never trap — force completion if something hangs
+  const MIN_TIME = 900;   // brief by design: the loader is an entrance, not an act
+  const MAX_TIME = 4000;  // never trap — force completion if something hangs
   const start = performance.now();
+
+  // A reader who moves is a reader who is ready — any input skips the wait
+  let skipped = false;
+  const requestSkip = () => { skipped = true; };
+  ["wheel", "keydown", "pointerdown", "touchstart"].forEach((evt) =>
+    window.addEventListener(evt, requestSkip, { once: true, passive: true })
+  );
 
   const state = { shown: 0, target: 0 };
   let settled = 0;
@@ -106,7 +113,8 @@ export function runLoader(tasks) {
 
     // Dev-only: sessionStorage flag freezes the loader for visual inspection
     const held = import.meta.env.DEV && sessionStorage.getItem("loaderHold");
-    if (!exiting && !held && allDone && performance.now() - start >= MIN_TIME) {
+    if (skipped && !exiting) { allDone = true; state.target = 1; }
+    if (!exiting && !held && allDone && (skipped || performance.now() - start >= MIN_TIME)) {
       // Let the displayed value catch up to 100 before the curtain moves
       state.target = 1;
       if (state.shown > 0.995) exit();

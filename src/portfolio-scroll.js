@@ -18,11 +18,13 @@ export function initPortfolioScroll() {
   const marker = rail && rail.querySelector(".rail__marker");
   const nodes = gsap.utils.toArray(".rail__node");
   const eraEl = rail && rail.querySelector(".rail__era");
+  const yearEl = rail && rail.querySelector(".rail__year");
   if (!panels.length) return;
 
   const n = panels.length;
   const nodeFrac = (i) => (n > 1 ? i / (n - 1) : 0);
   const eras = panels.map((p) => p.dataset.era || "");
+  const years = panels.map((p) => p.dataset.year || "");
 
   const revealPanels = () => {
     const el = document.getElementById("panels");
@@ -39,6 +41,7 @@ export function initPortfolioScroll() {
     // desaturated at rest and return to true colour while you are reading them.
     panels.forEach((p, k) => p.classList.toggle("is-active", k === i));
     if (eraEl) eraEl.textContent = eras[i];
+    if (yearEl) yearEl.textContent = years[i];
   };
   const moveMarker = (frac) => {
     if (marker) marker.style.top = (frac * 100).toFixed(3) + "%";
@@ -101,21 +104,23 @@ export function initPortfolioScroll() {
   smootherRef.current = smoother;
   if (import.meta.env.DEV) window.__smoother = smoother;
 
-  // Reveal each block as it enters — legible, section by section
+  // Reveal each block as it enters — legible, section by section. One trigger
+  // per block with `once` so even an instant jump (scrollbar yank, deep link)
+  // can never skip a reveal and leave content hidden.
   const targets = gsap.utils.toArray(REVEAL_SEL);
-  gsap.set(targets, { autoAlpha: 0, y: 28 });
-  ScrollTrigger.batch(targets, {
-    start: "top 88%",
-    onEnter: (els) =>
-      gsap.to(els, {
+  targets.forEach((t) =>
+    gsap.fromTo(
+      t,
+      { autoAlpha: 0, y: 28 },
+      {
         autoAlpha: 1,
         y: 0,
         duration: 0.7,
-        stagger: 0.08,
         ease: "power2.out",
-        overwrite: true,
-      }),
-  });
+        scrollTrigger: { trigger: t, start: "top 92%", once: true },
+      }
+    )
+  );
 
   trackRail();
   setActive(0);
