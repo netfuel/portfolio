@@ -23,8 +23,6 @@ const PANELS = [
     title: "Selected work, present to past.",
     hook: "Senior Experience Designer building the places where humans and AI systems meet: developer platforms, agentic extensibility, and generative tools at Adobe.",
     body: "25+ years of shipped work. Scroll to travel it, or use the timeline on the left.",
-    proof:
-      "In-app IDE shipped in 4 phases · AI code assistant in BETA · +22% repeat giving at St. Jude",
   },
 
   // ── Adobe · Extensibility · 2023 – Present ──────────────────────────────
